@@ -1953,12 +1953,13 @@ function openSheet() {
   showSheet(); sh.scrollTop = y;
 }
 /* sheets: freeze the page behind them, drag down to close */
-let lockY = 0;
-function lockScroll(on) {
-  const b = document.body;
-  if (on) { if (b.dataset.locked) return; lockY = scrollY; b.dataset.locked = "1"; Object.assign(b.style, { position: "fixed", top: -lockY + "px", left: "0", right: "0" }); }
-  else { if (!b.dataset.locked) return; delete b.dataset.locked; Object.assign(b.style, { position: "", top: "", left: "", right: "" }); scrollTo(0, lockY); }
-}
+// The page stays exactly where it is (no re-layout, nothing jumps); scrolling behind an open sheet is simply blocked.
+function lockScroll(on) { document.documentElement.classList.toggle("locked", on); }
+document.addEventListener("touchmove", e => {
+  if (!document.documentElement.classList.contains("locked") || e.target.closest("input,textarea,select")) return;
+  const sh = e.target.closest("#sheet");
+  if (!sh || sh.scrollHeight <= sh.clientHeight + 1) e.preventDefault();
+}, { passive: false });
 function showSheet() { FIG_PAUSE = true; setTimeout(() => { FIG_PAUSE = false; }, 430); $("#sheet").classList.add("show"); $("#scrim").classList.add("show"); lockScroll(true); }
 (() => {
   const sh = $("#sheet"), scrim = $("#scrim");
