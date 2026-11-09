@@ -186,6 +186,10 @@ p{margin:0}
 .ex.fold{padding:10px 12px;gap:0;background:color-mix(in srgb, var(--surface) 70%, transparent);cursor:pointer;transition:transform .15s,background .2s}
 .ex.fold:active{transform:scale(.98);background:var(--surface)}
 .ex.fold .editb{pointer-events:none}
+.ex-h.tapfold{cursor:pointer;border-radius:12px;margin:-4px;padding:4px;transition:background .2s}
+.ex-h.tapfold:active{background:color-mix(in srgb, var(--c) 10%, transparent)}
+.foldi{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb, var(--c) 14%, transparent);color:var(--c);flex-shrink:0;align-self:center;animation:rise .3s ease-out both}
+.foldi svg{width:16px;height:16px}
 .ex.fold .ex-h{align-items:center}
 .ex.fold .thumb{width:56px;height:46px}
 .ex.fold .thumb .ex-n{display:none}
@@ -1610,9 +1614,9 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   const mate = ex.ss ? p.find(x => x.i === ex.ss - 1 && !x.skip) : null;
   const ss = mate ? `<div class="ss">Superset with ${mate.ex.n.split(" (")[0].toLowerCase()}</div>` : "";
   return `<article class="ex ${ok === n ? "all" : ""} ${isCur ? "cur" : ""}" style="--c:${col}" data-card="${k}">
-    <header class="ex-h">${SET().ui.figs ? "" : `<button class="ex-n" data-act="demo" data-w="${SCHEDULE[dow(d)]}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${i + 1}</button>`}<button class="thumb" ${SET().ui.figs ? "" : "hidden"} data-act="demo" data-w="${SCHEDULE[dow(d)]}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${figSVG(ex.id)}<span class="ex-n">${i + 1}</span><span class="play"><svg viewBox="0 0 10 10"><path d="M2.5 1.5v7l6-3.5z"/></svg></span></button><div class="ex-t">${isCur ? `<div class="upnext">Up next</div>` : ""}<h3>${ex.n}</h3>
+    <header class="ex-h${ok === n && S.open.has(k) ? " tapfold" : ""}"${ok === n && S.open.has(k) ? ` data-act="fold" data-v="${k}" role="button" aria-label="Close ${ex.n}"` : ""}>${SET().ui.figs ? "" : `<button class="ex-n" data-act="demo" data-w="${SCHEDULE[dow(d)]}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${i + 1}</button>`}<button class="thumb" ${SET().ui.figs ? "" : "hidden"} data-act="demo" data-w="${SCHEDULE[dow(d)]}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${figSVG(ex.id)}<span class="ex-n">${i + 1}</span><span class="play"><svg viewBox="0 0 10 10"><path d="M2.5 1.5v7l6-3.5z"/></svg></span></button><div class="ex-t">${isCur ? `<div class="upnext">Up next</div>` : ""}<h3>${ex.n}</h3>
       <p class="ex-m">${n} × ${ex.r}${ex.per ? " " + ex.per : ""} · ${eff}${ex.rest ? " · rest " + ex.restL : ""}</p>${ss}</div>
-      <span class="ex-c num" data-cnt="${k}">${ok}/${n}</span></header>
+      <span class="ex-c num" data-cnt="${k}">${ok}/${n}</span>${ok === n && S.open.has(k) ? `<span class="foldi" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M6 14.5l6-6 6 6"/></svg></span>` : ""}</header>
     ${wuHTML}
     ${ex.chk ? "" : `<div class="sets"><div class="set-h"><span>Set</span><span style="text-align:center">${ex.bw ? "+kg" : "kg"}</span><span style="text-align:center">Reps</span><span></span></div>${rows}</div>`}
     ${ex.chk ? `<div class="sets">${rows}</div>` : ""}
@@ -1621,7 +1625,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
     ${noteHTML}
     <div class="ex-a"><details class="more"><summary>Swap${ex.cue ? " & form" : ""}</summary><div class="mb">
       <p><span class="muted">No machine free?</span> ${ex.sw}</p>${ex.cue ? `<p>${ex.cue}</p>` : ""}</div></details>
-      <span class="acts">${ok === n && S.open.has(k) ? `<button class="linkb" data-act="fold" data-v="${k}">Hide</button>` : ""}${!note && S.noteEdit !== ex.id ? `<button class="linkb" data-act="note" data-v="${ex.id}">Note</button>` : ""}${ok < n && pos < p.length - 1 ?`<button class="linkb" data-act="later" data-v="${it.i}">Do later</button>` : ""}${ok === 0 ? `<button class="linkb" data-act="skip" data-v="${it.i}">Skip</button>` : ""}</span></div>
+      <span class="acts">${!note && S.noteEdit !== ex.id ? `<button class="linkb" data-act="note" data-v="${ex.id}">Note</button>` : ""}${ok < n && pos < p.length - 1 ?`<button class="linkb" data-act="later" data-v="${it.i}">Do later</button>` : ""}${ok === 0 ? `<button class="linkb" data-act="skip" data-v="${it.i}">Skip</button>` : ""}</span></div>
   </article>`;
 }
 function refreshToday() {
@@ -2183,8 +2187,8 @@ document.addEventListener("click", e => {
   if (a === "demo") return openDemo(b.dataset.w, +b.dataset.v);
   if (a === "note") { S.noteEdit = b.dataset.v; flipList(); setTimeout(() => { const el = $("#note-" + b.dataset.v); if (el) el.focus(); }, 60); return; }
   if (a === "notedone") { S.noteEdit = null; flipList(); return; }
-  if (a === "expand") { S.open.add(b.dataset.v); flipList(); return; }
-  if (a === "fold") { S.open.delete(b.dataset.v); flipList(); return; }
+  if (a === "expand") { S.open.add(b.dataset.v); if (!replaceCard(b.dataset.v)) flipList(); return; }
+  if (a === "fold") { S.open.delete(b.dataset.v); if (!replaceCard(b.dataset.v)) flipList(); return; }
   if (a === "retry") { render(true); return; }
   if (a === "copyerr") { const t = JSON.stringify(errLog(), null, 1); try { navigator.clipboard.writeText(t).then(() => toast("Error log copied"), () => toast("Copy isn't allowed here")); } catch (e) { toast("Copy isn't allowed here"); } return; }
   if (a === "undo") { if (UNDO) { UNDO(); UNDO = null; } $("#toast").classList.remove("show"); return; }
@@ -2291,6 +2295,21 @@ function toggleSet(btn) {
 /* ---- reorder / skip / express ---- */
 const foldT = {};
 function scheduleFold(k) { clearTimeout(foldT[k]); foldT[k] = setTimeout(() => { delete foldT[k]; foldCard(k); }, 850); }
+function replaceCard(k) {
+  const d = S.sel, list = $("#exlist"), card = list && list.querySelector(`.ex[data-card="${k}"]`);
+  if (!card || S.edit) return false;
+  const p = plan(d), it = p.find(x => x.k === k); if (!it) return false;
+  const sibs = []; for (let e = card.nextElementSibling; e; e = e.nextElementSibling) sibs.push(e);
+  const before = sibs.map(e => e.getBoundingClientRect().top);
+  const tmp = document.createElement("div"); tmp.innerHTML = exCard(d, wkOf(d), it, p.indexOf(it), dayDoc(d), p, false);
+  const nc = tmp.firstElementChild; nc.querySelectorAll(".note-pill").forEach(x => { x.querySelector("span").textContent = notes()[x.dataset.v] || ""; });
+  card.replaceWith(nc); updateCurrent();
+  if (REDUCED || !nc.animate) return true;
+  const after = sibs.map(e => e.getBoundingClientRect().top);
+  nc.animate([{ opacity: .5, transform: "scale(.985)" }, { opacity: 1, transform: "none" }], { duration: 280, easing: "ease-out" });
+  sibs.forEach((e, i) => { const dy = before[i] - after[i]; if (Math.abs(dy) > 1) e.animate([{ transform: `translateY(${dy}px)` }, { transform: "none" }], { duration: 400, easing: "cubic-bezier(.3,1.15,.4,1)" }); });
+  return true;
+}
 function foldCard(k) {
   const d = S.sel, list = $("#exlist"), card = list && list.querySelector(`.ex[data-card="${k}"]`);
   if (!card || !card.classList.contains("all") || S.edit || S.open.has(k)) return;
