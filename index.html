@@ -1359,6 +1359,18 @@ const ERRK = "aub.err";
 function logErr(msg) { try { const a = JSON.parse(localStorage.getItem(ERRK) || "[]"); a.push({ t: new Date().toISOString(), tab: S.tab, m: String(msg).slice(0, 400) }); localStorage.setItem(ERRK, JSON.stringify(a.slice(-15))); } catch (e) {} }
 const errLog = () => { try { return JSON.parse(localStorage.getItem(ERRK) || "[]"); } catch (e) { return []; } };
 addEventListener("error", e => logErr((e.message || "error") + (e.lineno ? " @" + e.lineno + ":" + e.colno : "")));
+// Freeze detector: a heartbeat every 250 ms; if it arrives late while the app is on screen,
+// the app was stuck. Logged with the screen and the last taps, so a freeze can be traced.
+const TAPS = [];
+document.addEventListener("click", e => { const b = e.target.closest("[data-act],[data-tab]"); if (!b) return; TAPS.push((b.dataset.act || "tab") + (b.dataset.tab ? ":" + b.dataset.tab : "") + (b.dataset.v ? ":" + String(b.dataset.v).slice(0, 12) : "") + (b.closest(".set") ? ":set" : "")); if (TAPS.length > 8) TAPS.shift(); }, true);
+let hbAt = performance.now(), hbSkip = false;
+document.addEventListener("visibilitychange", () => { hbSkip = true; });
+addEventListener("pageshow", () => { hbSkip = true; });
+setInterval(() => {
+  const now = performance.now(), gap = now - hbAt; hbAt = now;
+  if (hbSkip || document.hidden) { hbSkip = document.hidden; return; }
+  if (gap > 1500) logErr(`Freeze: the app was stuck for ${(gap / 1000).toFixed(1)} s on ${S.tab}. Last taps: ${TAPS.join(", ") || "none"}`);
+}, 250);
 addEventListener("unhandledrejection", e => logErr("promise: " + ((e.reason && (e.reason.stack || e.reason.message)) || e.reason)));
 function render(anim = true, dir = 0) {
   try { renderView(anim, dir); }
@@ -2010,7 +2022,7 @@ function openSheet() {
       <div class="srow"><span>Restore a backup<small>Paste a backup copied from this app</small></span><button class="btn ghost" data-act="importopen" style="width:auto;height:38px;padding:0 14px;font-size:14px">Import</button></div>
       ${S.importing ? `<div class="srow stack"><textarea id="importtxt" rows="4" placeholder="Paste the backup text here" style="width:100%;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);padding:10px;font:inherit;font-size:14px"></textarea>
         <div style="display:flex;gap:8px"><button class="btn ghost" data-act="importcancel" style="height:42px">Cancel</button><button class="btn" data-act="importgo" style="height:42px;--c:var(--good)">Import</button></div></div>` : ""}
-      <div class="srow"><span>Error log<small>${errLog().length ? errLog().length + " problem" + (errLog().length > 1 ? "s" : "") + " recorded, last " + errLog().slice(-1)[0].t.slice(0, 16).replace("T", " ") : "No problems recorded"}</small></span><button class="btn ghost" data-act="copyerr" style="width:auto;height:38px;padding:0 14px;font-size:14px" ${errLog().length ? "" : "disabled"}>Copy</button></div>
+      <div class="srow"><span>Problem log<small>${errLog().length ? errLog().length + " problem" + (errLog().length > 1 ? "s" : "") + " recorded (errors and freezes), last " + new Date(errLog().slice(-1)[0].t).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "No errors or freezes recorded"}</small></span><button class="btn ghost" data-act="copyerr" style="width:auto;height:38px;padding:0 14px;font-size:14px" ${errLog().length ? "" : "disabled"}>Copy</button></div>
       <div class="srow"><span>Reset settings<small>Your logs are kept</small></span><button class="btn ghost" data-act="resetset" style="width:auto;height:38px;padding:0 14px;font-size:14px">Reset</button></div>
     </div></div>
     <div class="sgroup"><div class="lbl">Home screen</div><div class="sbox"><div class="srow stack" style="padding:12px 0">
