@@ -1442,10 +1442,12 @@ function workWeight(d, it) {
 const score = (ex, w, r) => ex.bw ? (r || 0) + (w || 0) * .5 : (w || 0) * (1 + (r || 0) / 30);
 function bestBefore(ex, d) { return memo("best|" + ex.id + "|" + d, () => { let b = 0; for (const h of exHistory(ex.id)) if (h.date < d) for (const q of h.sets) b = Math.max(b, score(ex, q.w, q.r)); return b; }); }
 const notes = () => S.docs.notes || {};
-function sessionMin(doc) { if (!doc || !doc.start) return null; return Math.max(1, Math.round(((doc.done && doc.end ? doc.end : Date.now()) - doc.start) / 60000)); }
+const IDLE = 30 * 60000; // 30 min without a ticked set = you left the gym
+function sessionEnd(doc) { const now = Date.now(); if (doc.done && doc.end) return doc.end; return doc.last && now - doc.last > IDLE ? doc.last : now; }
+function sessionMin(doc) { if (!doc || !doc.start) return null; return Math.max(1, Math.round((sessionEnd(doc) - doc.start) / 60000)); }
 function bannerMeta(d) {
   const doc = dayDoc(d), m = sessionMin(doc);
-  if (m != null && d === today() && !(doc && doc.done)) return `In progress · ${m} min`;
+  if (m != null && d === today() && !(doc && doc.done)) return doc.last && Date.now() - doc.last > IDLE ? `Paused · ${m} min so far` : `In progress · ${m} min`;
   if (m != null && doc && doc.done && doc.end) return `Finished in ${m} min`;
   const p = plan(d), live = p.filter(x => !x.skip).length, sk = p.length - live, wk = wkOf(d);
   return `${live} exercises${sk ? ` · ${sk} skipped` : ""} · ${isExpress(d) ? (wk.light ? "≈ 8 min" : "≈ 25 min") : wk.time}`;
@@ -1887,7 +1889,8 @@ function tick() {
   $("#tval").style.strokeDashoffset = (113.1 * (1 - left / (T.total * 1000))).toFixed(1);
   if (left <= 0) {
     clearInterval(tIv); const el = $("#timer"); el.classList.add("over"); $("#ttime").textContent = "Go";
-    $("#tlab").textContent = "Rest over · next set"; SND.timer();
+    const late = Date.now() - T.end > 3000;
+    $("#tlab").textContent = late ? "Rest finished while you were away" : "Rest over · next set"; if (!late) SND.timer();
     T = null; setTimeout(() => { if (!T) el.classList.remove("show", "over"); }, 5000);
   }
 }
@@ -2134,6 +2137,7 @@ function toggleSet(btn) {
     }
     st.ok = true; row.classList.add("ok", "just"); btn.setAttribute("aria-pressed", "true");
     if (!doc.start && d === today()) doc.start = Date.now();
+    if (d === today()) doc.last = Date.now();
     if (!ex.chk && (st.w != null || st.r != null)) {
       const sc = score(ex, st.w, st.r), prev = bestBefore(ex, d);
       const todayBest = Math.max(0, ...arr.filter((x, j) => x && x.ok && j !== i && x.pr).map(x => score(ex, x.w, x.r)));
@@ -2243,7 +2247,7 @@ function summary(d) {
   if (!REDUCED) sh.querySelectorAll("[data-count]").forEach(el => { const end = +el.dataset.count, t0 = performance.now(); const stp = t => { const q = Math.min(1, (t - t0) / 900); el.textContent = Math.round(end * (1 - Math.pow(1 - q, 3))); if (q < 1) requestAnimationFrame(stp); }; requestAnimationFrame(stp); });
 }
 function celebrate() {
-  const dd = ensureDay(S.sel); if (!dd.end && dd.start) { dd.end = Date.now(); touch("d" + S.sel); }
+  const dd = ensureDay(S.sel); if (!dd.end && dd.start) { dd.end = sessionEnd({ ...dd, done: false }); touch("d" + S.sel); }
   const sd = S.sel; setTimeout(() => { if (S.tab === "today" && S.sel === sd && isDone(sd) && !$("#sheet").classList.contains("show")) summary(sd); }, REDUCED ? 0 : 1100);
   T = null; clearInterval(tIv); $("#timer").classList.remove("show", "over");
   if (SET().ui.confetti) confetti(); SND.done(); const s = streaks();
@@ -2345,7 +2349,17 @@ if (UI0 && UI0.timer && UI0.timer.end > Date.now() + 1000) {
 connect();
 // keep "today" fresh if the app stays open overnight
 let lastDay = today();
-document.addEventListener("visibilitychange", () => { if (!document.hidden && today() !== lastDay) { if (S.sel === lastDay) S.sel = today(); if (S.night === lastDay) S.night = today(); lastDay = today(); render(false); } });
+function onResume() {
+  try {
+    if (today() !== lastDay) { if (S.sel === lastDay) S.sel = today(); if (S.night === lastDay) S.night = today(); lastDay = today(); S.open.clear(); render(false); }
+    else if (S.tab === "today") { const bm = $("#bmeta"); if (bm) bm.textContent = bannerMeta(S.sel); }
+    if (T) { clearInterval(tIv); tIv = setInterval(tick, 200); tick(); }
+  } catch (e) { logErr("resume: " + ((e && e.stack) || e)); }
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden) onResume(); });
+addEventListener("pageshow", e => { if (e.persisted) onResume(); });
+addEventListener("focus", onResume);
+document.addEventListener("freeze", () => { if (saveT) saveNow(); saveUI(); });
 })();
 </script>
 
