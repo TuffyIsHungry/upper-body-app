@@ -106,6 +106,9 @@ input,select{font:inherit;color:inherit}
 .top h1{margin:0;font-family:var(--display);font-weight:700;font-size:32px;line-height:1;letter-spacing:.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
 .icon-btn.sync{position:relative}
+.today-btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 13px 0 10px;border-radius:14px;background:color-mix(in srgb, var(--glow) 18%, var(--surface));color:var(--fg);font-weight:600;font-size:14px;box-shadow:var(--elev);transition:transform .15s}
+.today-btn:active{transform:scale(.94)}
+.today-btn svg{width:18px;height:18px;color:var(--glow)}
 .sync i{position:absolute;top:7px;right:7px;width:8px;height:8px;border-radius:50%;background:var(--faint);box-shadow:0 0 0 2px var(--surface)}
 .sync[data-s="ok"] i{background:var(--good)}
 .sync[data-s="saving"] i{background:var(--warn);animation:blink 1s infinite}
@@ -588,6 +591,7 @@ html.rm *,html.rm *::before,html.rm *::after{animation-duration:.01ms!important;
       <h1 id="title">Today</h1>
     </div>
     <div class="top-r">
+      <button class="today-btn" id="gotoday" data-act="gotoday" hidden aria-label="Back to today"><svg class="i" viewBox="0 0 24 24"><path d="M9.5 7.5L5 12l4.5 4.5"/><path d="M5.5 12H14a5 5 0 0 1 0 10h-1.5"/></svg><span>Today</span></button>
       <button class="icon-btn gear sync" id="sync" data-s="loading" data-act="sheet" aria-label="Settings"><i></i><span class="vh">Loading</span>
         <svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3 5.5 5.5"/></svg>
       </button>
@@ -1371,6 +1375,16 @@ const view = $("#view");
 const TABS = ["today", "week", "progress", "food", "sleep"];
 const CH = {}; // chart point data for tooltips
 
+function syncTodayBtn() {
+  const b = $("#gotoday"), show = S.tab === "today" && S.sel !== today();
+  if (b.hidden === !show) return;
+  b.hidden = !show; if (show && !REDUCED && b.animate) b.animate([{ opacity: 0, transform: "scale(.8)" }, { opacity: 1, transform: "none" }], { duration: 260, easing: "cubic-bezier(.3,1.4,.5,1)" });
+}
+function goToday() {
+  const t = today(); if (S.sel === t) return;
+  const fwd = S.sel < t; S.sel = t; S.edit = false; S.open.clear();
+  render(false); scrollTo(0, 0); if (!REDUCED) view.classList.add(fwd ? "swipe-l" : "swipe-r"); saveUI();
+}
 function setHeader(eyebrow, title) { $("#eyebrow").textContent = eyebrow; $("#title").textContent = title; }
 
 const ERRK = "aub.err";
@@ -1414,6 +1428,7 @@ function renderView(anim = true, dir = 0) {
   document.querySelectorAll(".tabs [data-tab]").forEach(b => b.setAttribute("aria-selected", b.dataset.tab === S.tab));
   document.documentElement.style.setProperty("--glow", { today: TYPES[wkOf(S.sel).type], week: "var(--pull)", progress: "var(--push)", food: "var(--legs)", sleep: "var(--core)" }[S.tab]);
   $("#ind").style.transform = `translateX(${TABS.indexOf(S.tab) * 100}%)`;
+  syncTodayBtn();
 }
 let pendingSoft = false;
 function softRender() {
@@ -2169,7 +2184,7 @@ function go(tab, anim = true) {
   S.tab = tab; if (location.hash !== "#" + tab) location.hash = tab;
   render(anim, dir); scrollTo(0, 0); saveUI();
 }
-document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b && b.dataset.tab !== S.tab) go(b.dataset.tab); });
+document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (!b) return; if (b.dataset.tab !== S.tab) go(b.dataset.tab); else if (S.tab === "today") goToday(); });
 window.addEventListener("hashchange", () => { const t = location.hash.slice(1); if (TABS.includes(t) && t !== S.tab) go(t); });
 
 document.addEventListener("click", e => {
@@ -2184,6 +2199,7 @@ document.addEventListener("click", e => {
   if (a === "wk") { S.weekOff += +b.dataset.v; render(true, +b.dataset.v); return; }
   if (a === "metric") { S.metric = b.dataset.v; softRenderAnim(); return; }
   if (a === "pick") { S.exSel = b.dataset.v; softRenderAnim(); view.querySelector("#exsel").scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "center" }); return; }
+  if (a === "gotoday") return goToday();
   if (a === "demo") return openDemo(b.dataset.w, +b.dataset.v);
   if (a === "note") { S.noteEdit = b.dataset.v; flipList(); setTimeout(() => { const el = $("#note-" + b.dataset.v); if (el) el.focus(); }, 60); return; }
   if (a === "notedone") { S.noteEdit = null; flipList(); return; }
