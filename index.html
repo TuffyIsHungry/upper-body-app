@@ -183,7 +183,9 @@ p{margin:0}
 .upnext{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:var(--c);margin-bottom:2px}
 .upnext::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c);animation:pulse 1.6s ease-in-out infinite}
 @keyframes pulse{50%{opacity:.3;transform:scale(.7)}}
-.ex.fold{padding:10px 12px;gap:0;background:color-mix(in srgb, var(--surface) 70%, transparent)}
+.ex.fold{padding:10px 12px;gap:0;background:color-mix(in srgb, var(--surface) 70%, transparent);cursor:pointer;transition:transform .15s,background .2s}
+.ex.fold:active{transform:scale(.98);background:var(--surface)}
+.ex.fold .editb{pointer-events:none}
 .ex.fold .ex-h{align-items:center}
 .ex.fold .thumb{width:56px;height:46px}
 .ex.fold .thumb .ex-n{display:none}
@@ -547,6 +549,8 @@ input[type=range].vol{width:100%;accent-color:var(--good);height:28px}
 .tundo{margin-left:12px;padding:3px 10px;border-radius:8px;background:color-mix(in srgb, var(--bg) 18%, transparent);color:inherit;font-weight:700;pointer-events:auto}
 .toast{pointer-events:auto}
 .sum-h h2{font-size:34px;line-height:1;margin-top:4px}
+body.timer-on{padding-bottom:calc(var(--tabh) + env(safe-area-inset-bottom, 0px) + 120px)}
+button,input,select,textarea,[data-act]{touch-action:manipulation}
 html.rm *,html.rm *::before,html.rm *::after{animation-duration:.01ms!important;animation-delay:0ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 .motion-note{display:flex;gap:12px;align-items:center}
 .motion-note p{flex:1;min-width:0}
@@ -1441,7 +1445,7 @@ function vToday() {
 function finBtn(d) {
   const wk = wkOf(d), col = TYPES[wk.type];
   if (isDone(d)) return `<button class="btn ghost" data-act="fin" style="--c:${col}"><span class="done-note">${IC.ok} ${wk.light ? "Core session" : "Workout"} complete</span></button>
-    <p class="small muted" style="text-align:center;margin-top:6px">Tap to reopen</p>`;
+    <p class="small muted" style="text-align:center;margin-top:6px">Tap an exercise above to change its sets · tap here to reopen the workout</p>`;
   return `<button class="btn" data-act="fin" style="--c:${col}">${IC.check.replace("<svg", '<svg class="i" style="stroke:currentColor;stroke-width:2.4"')} Finish ${wk.light ? "session" : "workout"}</button>`;
 }
 const BARBELL = { bpr: "If you use a barbell", hsq: "Back squat, 20 kg bar", rdl: "20 kg bar" };
@@ -1492,10 +1496,10 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
     const n0 = setsFor(d, ex), a0 = ((doc && doc.ex && doc.ex[k]) || []).slice(0, n0);
     if (!it.skip && a0.filter(x => x && x.ok).length === n0 && !S.open.has(k)) {
       const sum = ex.chk ? `${n0} × ${ex.r}${ex.per ? " " + ex.per : ""}` : a0.map(x => x.w != null || x.r != null ? `${x.w ? kg(x.w) + "×" : ""}${x.r ?? "–"}${x.pr ? " ★" : ""}` : "✓").join(" · ");
-      return `<article class="ex fold" style="--c:${col}" data-card="${k}"><header class="ex-h">
+      return `<article class="ex fold" style="--c:${col}" data-card="${k}" data-act="expand" data-v="${k}" role="button" aria-label="Edit ${ex.n}"><header class="ex-h">
         <button class="thumb" data-act="demo" data-w="${SCHEDULE[dow(d)]}" data-v="${it.i}" aria-label="Show how to do ${ex.n}" ${SET().ui.figs ? "" : "hidden"}>${figSVG(ex.id)}</button>
         <div class="ex-t"><h3>${ex.n}</h3><p class="ex-m num">${sum}</p></div>
-        <button class="linkb" data-act="expand" data-v="${k}">Edit</button><span class="donei">${IC.check}</span></header></article>`;
+        <span class="linkb editb">Edit</span><span class="donei">${IC.check}</span></header></article>`;
     }
   }
   if (it.skip) return `<article class="ex skipped" style="--c:${col}" data-card="${k}"><header class="ex-h"><span class="ex-n">${pos + 1}</span>
@@ -2013,6 +2017,16 @@ document.addEventListener("touchmove", e => {
   const sh = e.target.closest("#sheet");
   if (!sh || sh.scrollHeight <= sh.clientHeight + 1) e.preventDefault();
 }, { passive: false });
+new MutationObserver(() => document.body.classList.toggle("timer-on", $("#timer").classList.contains("show"))).observe($("#timer"), { attributes: true, attributeFilter: ["class"] });
+const unstick = () => {
+  const sh = $("#sheet"), sc = $("#scrim");
+  if (sh.classList.contains("show")) return;
+  if (sc.classList.contains("show")) { sc.classList.remove("show"); logErr("unstick: scrim was left on"); }
+  if (document.documentElement.classList.contains("locked")) { lockScroll(false); logErr("unstick: scroll lock was left on"); }
+  if (sc.style.opacity || sh.style.transform) { sc.style.opacity = ""; sc.style.transition = ""; sh.style.transform = ""; sh.style.transition = ""; }
+};
+document.addEventListener("pointerdown", unstick, { capture: true });
+document.addEventListener("touchstart", unstick, { capture: true, passive: true });
 function showSheet() { FIG_PAUSE = true; setTimeout(() => { FIG_PAUSE = false; }, 430); $("#sheet").classList.add("show"); $("#scrim").classList.add("show"); lockScroll(true); }
 (() => {
   const sh = $("#sheet"), scrim = $("#scrim");
