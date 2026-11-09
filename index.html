@@ -534,6 +534,21 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 input[type=range].vol{width:100%;accent-color:var(--good);height:28px}
 .gear svg{transition:transform .5s cubic-bezier(.3,1.3,.5,1)}
 .gear:active svg{transform:rotate(60deg)}
+.wu-row{position:relative;display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:14px;background:var(--surface-2);transition:background .3s}
+.wu-row.ok{background:color-mix(in srgb, var(--c) 12%, var(--surface-2))}
+.wu-row.just::before{content:"";position:absolute;inset:0;border-radius:14px;background:var(--c);opacity:0;animation:rowf .8s ease-out;pointer-events:none}
+.wchk{position:relative;flex-shrink:0;width:34px;height:34px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;transition:border-color .25s;margin-top:1px}
+.wchk::before{content:"";position:absolute;inset:-2px;border-radius:50%;background:var(--c);transform:scale(0);transition:transform .35s cubic-bezier(.3,1.5,.5,1)}
+.wchk svg{position:relative;z-index:1;width:17px;height:17px;stroke:var(--on-c);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.wchk path{stroke-dasharray:24;stroke-dashoffset:24;transition:stroke-dashoffset .3s .12s}
+.wu-row.ok .wchk{border-color:var(--c)} .wu-row.ok .wchk::before{transform:scale(1)} .wu-row.ok .wchk path{stroke-dashoffset:0}
+.wchk .rip{position:absolute;inset:-2px;border-radius:50%;border:2px solid var(--c);pointer-events:none;animation:rip .65s cubic-bezier(.2,.7,.3,1) forwards}
+.wchk .spk{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px;border-radius:50%;background:var(--c);pointer-events:none;opacity:0;animation:spk .6s var(--dl,0ms) cubic-bezier(.15,.8,.3,1) forwards}
+.wu-txt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:14px}
+.wu-txt b{font-weight:600}
+.wu-sets{font-size:14px} .wu-sets b{font-family:var(--display);font-size:16px;color:var(--c)}
+.wu-txt small{font-size:12.5px;color:var(--muted);line-height:1.4}
+.wu-row.ok .wu-txt{opacity:.75}
 .warm{background:var(--surface-2);border-radius:12px;padding:9px 12px;font-size:14px}
 .warm summary{list-style:none;font-weight:600;color:var(--c);cursor:pointer}
 .warm summary::-webkit-details-marker{display:none}
@@ -1474,6 +1489,38 @@ function plateText(w) {
   for (const pl of PLATES) while (side >= pl - 1e-6) { used.push(pl); side -= pl; }
   return `Per side: <b>${used.join(" + ")}</b>${side > .01 ? ` <span class="muted">(${kg(side * 2)} kg can't be loaded)</span>` : ""}`;
 }
+const WU = {
+  sdp: { s: [[.5, 10], [.7, 5], [.85, 3]], t: "Shoulders take a few sets to feel good. Rest about 60 s between these." },
+  idp: { s: [[.6, 8]], t: "One lighter set to get used to the incline angle." },
+  ote: { s: [[.5, 12]], t: "Elbows like a light set before the deep stretch overhead." },
+  pup: { bw: true, t: "Hang from the bar for 20 s, then 5 easy reps: band-assisted, or lat pulldown at about half your weight." },
+  csr: { s: [[.6, 8]], t: "One lighter set to find your chest position on the pad." },
+  idc: { s: [[.5, 12]], t: "Biceps get a big stretch on the incline: one light set first." },
+  hsq: { s: [[0, 10], [.5, 8], [.7, 5], [.85, 3]], t: "Start with 10 bodyweight squats. Then ramp up, resting 60–90 s between sets.", bar: 1 },
+  rdl: { s: [[.5, 8], [.75, 5]], t: "Your legs are warm from squats, so two ramp sets are enough. Practise pushing the hips back." },
+  scf: { bw: true, t: "15 slow calf raises with no weight, with a full stretch at the bottom." },
+  bpr: { s: [[0, 10], [.5, 8], [.7, 5], [.85, 3]], t: "Empty bar first, then ramp up. Rest about 60 s between sets.", bar: 1 },
+  msp: { s: [[.6, 8]], t: "Your shoulders are warm, but one lighter set helps you find the machine's path." },
+  ngp: { s: [[.5, 10], [.75, 5]], t: "Pull with control and let the lats stretch fully at the top." },
+  scr: { s: [[.6, 8]], t: "One lighter set to set your grip and posture." },
+  abw: { bw: true, t: "5 short rollouts, half the range, before going all the way out. Protects your lower back." },
+  lpr: { s: [[.5, 10], [.7, 6], [.85, 3]], t: "Knees and hips need a few sets to loosen up. Rest about 60 s between sets." },
+  bss: { bw: true, t: "One set of 6 per side with no weight to find your balance and foot position." },
+  llc: { s: [[.5, 12]], t: "Leg press barely warms the hamstrings, so do one light set first." },
+  sca: { s: [[.5, 15]], t: "One light set with a full stretch at the bottom." },
+  mlr: { s: [[.4, 12]], t: "Your shoulders are cold on leg day: 10 arm circles, then one very light set." },
+};
+const GEN_WU = "Before you start: 3–5 min of easy rowing or bike and 10 band pull-aparts (a warm-up, not cardio). ";
+function wuText(d, it, first) {
+  const w = WU[it.ex.id]; if (!w) return null;
+  let sets = "";
+  if (!w.bw) {
+    const W = workWeight(d, it), st = wuStep(it.ex);
+    sets = w.s.map(([f, r]) => f === 0 ? `${w.bar ? "empty bar (20 kg)" : "bodyweight"} × ${r}` : W ? `<b class="num">${kg(roundTo(W * f, st))}</b> kg × ${r}` : `~${Math.round(f * 100)}% × ${r}`).join(" · ");
+    if (!W) sets += ` <span class="muted">(exact weights appear once you enter one)</span>`;
+  }
+  return { sets, tip: (first ? GEN_WU : "") + w.t };
+}
 const wuStep = ex => !BARBELL[ex.id] && /Dumbbell|dumbbell/.test(ex.n) ? 2 : 2.5;
 const roundTo = (v, st) => Math.max(st, Math.round(v / st) * st);
 function workWeight(d, it) {
@@ -1548,12 +1595,13 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
     foot = `<span>Last (${fDM(last.date)}): <span class="num">${last.sets.slice(0, 4).map(s => `${kg(s.w)}×${s.r}`).join(", ")}</span></span>
       ${hit ? `<span class="hint">Top of range hit. Add ${ex.bw ? "weight" : step} today</span>` : rr ? `<span class="hint">Aim for 1 more rep than last time</span>` : ""}`;
   } else if (!ex.chk) foot = `<span>First time: pick a weight you can do for ${range(ex.r) ? range(ex.r)[0] : ex.r} reps at ${eff}.</span>`;
-  // warm-up ramp for the first lift of the day, plates for barbell lifts, personal note
-  let extra = "";
-  const firstLift = p.find(x => !x.skip && !x.ex.chk);
-  if (firstLift === it && !ex.bw && ok === 0) {
-    const W = workWeight(d, it), st = wuStep(ex);
-    extra += `<details class="warm" open><summary>Warm-up sets</summary><div class="wu">${W ? [[.5, 10], [.7, 5], [.85, 3]].map(([f, r]) => `<span><b class="num">${kg(roundTo(W * f, st))}</b> kg × ${r}</span>`).join("") + `<small class="muted">Based on ${kg(W)} kg. Not counted as working sets.</small>` : `<small class="muted">3 ramp sets: 10 reps at ~50%, 5 at ~70%, 3 at ~85% of your working weight. Enter a weight and the exact numbers appear here.</small>`}</div></details>`;
+  // warm-up checkbox (only where it helps), plates for barbell lifts, personal note
+  let extra = "", wuHTML = "";
+  const firstLift = p.find(x => !x.skip && !x.ex.chk), wu = wuText(d, it, firstLift === it);
+  if (wu) {
+    const on = !!(doc && doc.wu && doc.wu[k]);
+    wuHTML = `<div class="wu-row ${on ? "ok" : ""}" data-wu="${k}"><button class="wchk" data-act="wu" data-v="${k}" aria-pressed="${on}" aria-label="Warm-up done">${IC.check}</button>
+      <div class="wu-txt"><b>Warm up</b>${wu.sets ? `<span class="wu-sets" id="wu-${k}">${wu.sets}</span>` : ""}<small>${wu.tip}</small></div></div>`;
   }
   if (BARBELL[ex.id]) { const W = workWeight(d, it); extra += `<div class="plates" id="pl-${k}" data-note="${BARBELL[ex.id]}">${W ? plateText(W) + ` <span class="muted">· ${BARBELL[ex.id]}</span>` : `<span class="muted">Type a weight to see the plates per side</span>`}</div>`; }
   const note = notes()[ex.id];
@@ -1565,6 +1613,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
     <header class="ex-h">${SET().ui.figs ? "" : `<button class="ex-n" data-act="demo" data-w="${SCHEDULE[dow(d)]}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${i + 1}</button>`}<button class="thumb" ${SET().ui.figs ? "" : "hidden"} data-act="demo" data-w="${SCHEDULE[dow(d)]}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${figSVG(ex.id)}<span class="ex-n">${i + 1}</span><span class="play"><svg viewBox="0 0 10 10"><path d="M2.5 1.5v7l6-3.5z"/></svg></span></button><div class="ex-t">${isCur ? `<div class="upnext">Up next</div>` : ""}<h3>${ex.n}</h3>
       <p class="ex-m">${n} × ${ex.r}${ex.per ? " " + ex.per : ""} · ${eff}${ex.rest ? " · rest " + ex.restL : ""}</p>${ss}</div>
       <span class="ex-c num" data-cnt="${k}">${ok}/${n}</span></header>
+    ${wuHTML}
     ${ex.chk ? "" : `<div class="sets"><div class="set-h"><span>Set</span><span style="text-align:center">${ex.bw ? "+kg" : "kg"}</span><span style="text-align:center">Reps</span><span></span></div>${rows}</div>`}
     ${ex.chk ? `<div class="sets">${rows}</div>` : ""}
     ${extra}
@@ -2178,6 +2227,14 @@ document.addEventListener("click", e => {
   if (a === "later") return doLater(+b.dataset.v);
   if (a === "skip" || a === "unskip") return setSkip(+b.dataset.v, a === "skip");
   if (a === "resetorder") { const doc = ensureDay(S.sel); delete doc.order; touch("d" + S.sel); flipList(); return; }
+  if (a === "wu") {
+    SND.unlock();
+    const d = S.sel, doc = ensureDay(d); doc.wu = doc.wu || {}; const k = b.dataset.v, on = !doc.wu[k];
+    if (on) doc.wu[k] = true; else delete doc.wu[k];
+    const row = b.closest(".wu-row"); row.classList.toggle("ok", on); b.setAttribute("aria-pressed", on);
+    if (on) { burst(b); SND.tick(); row.classList.add("just"); setTimeout(() => row.classList.remove("just"), 700); if (!doc.start && d === today()) doc.start = Date.now(); startTimer(60, "after warm-up", TYPES[wkOf(d).type]); }
+    touch("d" + d); return;
+  }
   if (a === "chk") return toggleSet(b);
   if (a === "fin") return toggleFinish();
   if (a === "meal" || a === "habit") return toggleFood(a, b);
@@ -2364,6 +2421,7 @@ view.addEventListener("input", e => {
     const doc = ensureDay(S.sel), k = row.dataset.ex, i = +row.dataset.i, arr = doc.ex[k] || (doc.ex[k] = []);
     while (arr.length <= i) arr.push(null);
     const st = arr[i] || (arr[i] = {}); st[el.dataset.f] = num(el.value); touch("d" + S.sel);
+    if (el.dataset.f === "w") { const ws = document.getElementById("wu-" + k), itw = plan(S.sel).find(x => x.k === k); if (ws && itw) { const p0 = plan(S.sel), t = wuText(S.sel, itw, p0.find(x => !x.skip && !x.ex.chk) === itw); if (t) ws.innerHTML = t.sets; } }
     if (el.dataset.f === "w") { const pl = document.getElementById("pl-" + k), wk2 = wkOf(S.sel), it2 = plan(S.sel).find(x => x.k === k); if (pl && it2) { const W = workWeight(S.sel, it2); pl.innerHTML = W ? plateText(W) + ` <span class="muted">· ${pl.dataset.note}</span>` : `<span class="muted">Type a weight to see the plates per side</span>`; } }
   } else if (el.dataset.f === "bw") {
     const doc = ensureDay(S.sel); doc.bw = num(el.value); touch("d" + S.sel);
