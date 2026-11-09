@@ -693,12 +693,17 @@ const DEFAULT_START = "2026-11-09";
 const pad = n => String(n).padStart(2, "0");
 const ymd = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const parse = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
-const addD = (s, n) => { const x = parse(s); x.setDate(x.getDate() + n); return ymd(x); };
-const mondayOf = s => { const x = parse(s); x.setDate(x.getDate() - ((x.getDay() + 6) % 7)); return ymd(x); };
-const today = () => ymd(new Date());
-const diffD = (a, b) => Math.round((parse(b) - parse(a)) / 864e5);
-const dow = s => parse(s).getDay();
-const fmt = (s, o) => parse(s).toLocaleDateString("en-GB", o);
+// Calendar maths on plain day numbers (days since 1 Jan 1970), cached: no Date objects in hot loops.
+const DNUM = new Map(), DSTR = new Map(), FMTC = new Map();
+const dnum = s => { let v = DNUM.get(s); if (v === undefined) { const [y, m, d] = s.split("-").map(Number); v = Math.round(Date.UTC(y, m - 1, d) / 864e5); DNUM.set(s, v); } return v; };
+const fromN = n => { let v = DSTR.get(n); if (v === undefined) { const x = new Date(n * 864e5); v = `${x.getUTCFullYear()}-${pad(x.getUTCMonth() + 1)}-${pad(x.getUTCDate())}`; DSTR.set(n, v); } return v; };
+const addD = (s, n) => fromN(dnum(s) + n);
+const mondayOf = s => { const n = dnum(s); return fromN(n - ((n + 3) % 7)); };
+let todayAt = 0, todayVal = "";
+const today = () => { const t = Date.now(); if (t - todayAt > 1000) { todayAt = t; todayVal = ymd(new Date()); } return todayVal; };
+const diffD = (a, b) => dnum(b) - dnum(a);
+const dow = s => (dnum(s) + 4) % 7; // 1 Jan 1970 was a Thursday
+const fmt = (s, o) => { const k = s + "|" + o.weekday + o.day + o.month; let v = FMTC.get(k); if (v === undefined) { v = parse(s).toLocaleDateString("en-GB", o); FMTC.set(k, v); } return v; };
 const fShort = s => fmt(s, { weekday: "short", day: "numeric", month: "short" });
 const fDM = s => fmt(s, { day: "numeric", month: "short" });
 const fLong = s => fmt(s, { weekday: "long", day: "numeric", month: "long" });
@@ -709,13 +714,21 @@ const LS = "aub.v1";
 const S = { open: new Set(), docs: {}, tab: "today", sel: today(), weekOff: 0, exSel: null, metric: "w", night: today(), mode: "loading" };
 try { const j = JSON.parse(localStorage.getItem(LS) || "{}"); if (j && typeof j === "object") S.docs = j; } catch (e) {}
 const stableStr = v => v === undefined ? "u" : JSON.stringify(v, (k, x) => x && typeof x === "object" && !Array.isArray(x) ? Object.keys(x).sort().reduce((o, q) => (o[q] = x[q], o), {}) : x);
-const saveLocal = () => { try { localStorage.setItem(LS, JSON.stringify(S.docs)); } catch (e) {} };
+let DV = 0; const MEMO = new Map();
+function dataChanged() { DV++; MEMO.clear(); }
+function memo(key, f) { if (MEMO.has(key)) return MEMO.get(key); const v = f(); MEMO.set(key, v); return v; }
+// saving to the phone is batched: one write shortly after you stop typing, and always before the app goes to the background
+let saveT = 0;
+const saveNow = () => { clearTimeout(saveT); saveT = 0; try { localStorage.setItem(LS, JSON.stringify(S.docs)); } catch (e) {} };
+const saveLocal = () => { if (!saveT) saveT = setTimeout(saveNow, 300); };
+document.addEventListener("visibilitychange", () => { if (document.hidden && saveT) saveNow(); });
+addEventListener("pagehide", () => { if (saveT) saveNow(); });
 
 let col = null;
 const dirty = new Set(), inflight = new Set(), again = new Set(), timers = {};
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 function touch(id) {
-  saveLocal(); dirty.add(id);
+  dataChanged(); saveLocal(); dirty.add(id);
   clearTimeout(timers[id]); timers[id] = setTimeout(() => flush(id), 600);
 }
 async function flush(id) {
@@ -768,7 +781,7 @@ async function connect() {
       for (const id of Object.keys(S.docs)) if (!have.has(id)) dirty.add(id);
       for (const id of [...dirty]) flush(id);
     }
-    if (changed) { saveLocal(); applySettings(); softRender(); }
+    if (changed) { dataChanged(); saveLocal(); applySettings(); softRender(); }
   }, err => { clearTimeout(slow); col = null; S.mode = "local"; setSync("local"); });
 }
 
@@ -906,28 +919,30 @@ const num = v => { if (v === "" || v == null) return null; const n = Number(Stri
 const kg = n => n == null ? "" : String(Math.round(n * 100) / 100);
 const range = r => { const m = String(r).match(/(\d+)\s*[–-]\s*(\d+)/); return m ? [+m[1], +m[2]] : null; };
 
-function exHistory(exId) {
-  const out = [];
-  for (const id of Object.keys(S.docs).sort()) {
-    if (id[0] !== "d") continue;
-    const doc = S.docs[id]; if (!doc.ex) continue;
-    const sets = [];
-    for (const k of Object.keys(doc.ex)) {
-      if (k.split("@")[0] !== exId) continue;
-      for (const st of doc.ex[k] || []) if (st && st.ok && (st.w != null || st.r != null)) sets.push({ w: st.w ?? 0, r: st.r ?? 0 });
+// one pass over all logged days builds every exercise's history; reused until the logs change
+function allHistory() {
+  return memo("H", () => {
+    const H = {};
+    for (const id of Object.keys(S.docs).sort()) {
+      if (id[0] !== "d") continue;
+      const doc = S.docs[id]; if (!doc || !doc.ex) continue;
+      const byEx = {};
+      for (const k in doc.ex) {
+        const exId = k.split("@")[0];
+        for (const st of doc.ex[k] || []) if (st && st.ok && (st.w != null || st.r != null)) (byEx[exId] || (byEx[exId] = [])).push({ w: st.w ?? 0, r: st.r ?? 0 });
+      }
+      for (const exId in byEx) {
+        const sets = byEx[exId]; let top = sets[0], e1 = 0, br = 0;
+        for (const q of sets) { if (q.w > top.w || (q.w === top.w && q.r > top.r)) top = q; e1 = Math.max(e1, q.w * (1 + q.r / 30)); br = Math.max(br, q.r); }
+        (H[exId] || (H[exId] = [])).push({ date: doc.date, sets, top, e1, br });
+      }
     }
-    if (!sets.length) continue;
-    let top = sets[0], e1 = 0, br = 0;
-    for (const s of sets) {
-      if (s.w > top.w || (s.w === top.w && s.r > top.r)) top = s;
-      e1 = Math.max(e1, s.w * (1 + s.r / 30)); br = Math.max(br, s.r);
-    }
-    out.push({ date: doc.date, sets, top, e1, br });
-  }
-  return out;
+    return H;
+  });
 }
-const lastBefore = (exId, d) => { const h = exHistory(exId).filter(x => x.date < d); return h[h.length - 1] || null; };
-function bwSeries() { return Object.values(S.docs).filter(x => x && x.date && x.bw != null).map(x => ({ date: x.date, v: x.bw })).sort((a, b) => a.date < b.date ? -1 : 1); }
+const exHistory = exId => allHistory()[exId] || [];
+const lastBefore = (exId, d) => { const h = exHistory(exId); for (let i = h.length - 1; i >= 0; i--) if (h[i].date < d) return h[i]; return null; };
+function bwSeries() { return memo("bw", () => Object.values(S.docs).filter(x => x && x.date && x.bw != null).map(x => ({ date: x.date, v: x.bw })).sort((a, b) => a.date < b.date ? -1 : 1)); }
 function weekAvgBW(mon) {
   const v = []; for (let i = 0; i < 7; i++) { const x = dayDoc(addD(mon, i)); if (x && x.bw != null) v.push(x.bw); }
   return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
@@ -946,7 +961,8 @@ function weightAdvice(delta) {
   if (delta <= 0.5) return { t: "Slightly fast", a: "Fine for now. If it stays above 0.5 kg, remove 150 kcal.", c: "var(--pull)", row: -1 };
   return { t: "Gaining too fast", a: "Remove about 150 kcal a day to limit fat gain.", c: "var(--warn)", row: 2 };
 }
-function streaks() {
+function streaks() { return memo("streaks|" + today(), streaksCalc); }
+function streaksCalc() {
   const t = today();
   const dates = Object.values(S.docs).filter(x => x && x.date && x.done).map(x => x.date).sort();
   const start = [getStart(), dates[0] || t].sort()[0];
@@ -1424,7 +1440,7 @@ function workWeight(d, it) {
   const last = lastBefore(it.ex.id, d); return last && last.top.w > 0 ? last.top.w : null;
 }
 const score = (ex, w, r) => ex.bw ? (r || 0) + (w || 0) * .5 : (w || 0) * (1 + (r || 0) / 30);
-function bestBefore(ex, d) { let b = 0; for (const h of exHistory(ex.id)) if (h.date < d) for (const q of h.sets) b = Math.max(b, score(ex, q.w, q.r)); return b; }
+function bestBefore(ex, d) { return memo("best|" + ex.id + "|" + d, () => { let b = 0; for (const h of exHistory(ex.id)) if (h.date < d) for (const q of h.sets) b = Math.max(b, score(ex, q.w, q.r)); return b; }); }
 const notes = () => S.docs.notes || {};
 function sessionMin(doc) { if (!doc || !doc.start) return null; return Math.max(1, Math.round(((doc.done && doc.end ? doc.end : Date.now()) - doc.start) / 60000)); }
 function bannerMeta(d) {
@@ -2228,7 +2244,7 @@ function summary(d) {
 }
 function celebrate() {
   const dd = ensureDay(S.sel); if (!dd.end && dd.start) { dd.end = Date.now(); touch("d" + S.sel); }
-  setTimeout(() => summary(S.sel), REDUCED ? 0 : 1100);
+  const sd = S.sel; setTimeout(() => { if (S.tab === "today" && S.sel === sd && isDone(sd) && !$("#sheet").classList.contains("show")) summary(sd); }, REDUCED ? 0 : 1100);
   T = null; clearInterval(tIv); $("#timer").classList.remove("show", "over");
   if (SET().ui.confetti) confetti(); SND.done(); const s = streaks();
   toast(s.cur > 1 ? `Workout done. ${s.cur}-day streak` : "Workout done. Streak started");
