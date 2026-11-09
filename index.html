@@ -76,7 +76,7 @@
 }
 
 @property --glow{syntax:"<color>";inherits:true;initial-value:#4A90FF}
-:root{transition:--glow .9s ease}
+#glow{transition:--glow .9s ease}
 *{box-sizing:border-box}
 html,body{background:var(--bg)}
 body{
@@ -87,7 +87,7 @@ body{
   padding-block:0 calc(var(--tabh) + env(safe-area-inset-bottom, 0px) + 44px);
   overflow-x:hidden;
 }
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:color-mix(in srgb, var(--bg) 80%, transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top, 0px);z-index:10;background:var(--bg)}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 input,select{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--pull);outline-offset:2px}
@@ -99,7 +99,7 @@ input,select{font:inherit;color:inherit}
 .num{font-variant-numeric:tabular-nums}
 
 /* ---------- header ---------- */
-.top{position:sticky;top:env(safe-area-inset-top, 0px);z-index:9;background:color-mix(in srgb, var(--bg) 78%, transparent);-webkit-backdrop-filter:blur(16px) saturate(1.3);backdrop-filter:blur(16px) saturate(1.3);margin:0 -16px;padding-left:16px;padding-right:16px;
+.top{position:sticky;top:env(safe-area-inset-top, 0px);z-index:9;background:color-mix(in srgb, var(--bg) 96%, transparent);box-shadow:0 1px 0 color-mix(in srgb, var(--fg) 6%, transparent);margin:0 -16px;padding-left:16px;padding-right:16px;
   display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-block:14px 10px}
 .top .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .top h1{margin:0;font-family:var(--display);font-weight:700;font-size:32px;line-height:1;letter-spacing:.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -452,7 +452,7 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 /* ---------- tab bar ---------- */
 .tabs{position:fixed;z-index:20;left:max(12px, env(safe-area-inset-left, 0px));right:max(12px, env(safe-area-inset-right, 0px));
   bottom:calc(env(safe-area-inset-bottom, 0px) + 8px);max-width:540px;margin:0 auto;padding:0 6px;border-radius:26px;
-  background:color-mix(in srgb, var(--surface) 76%, transparent);-webkit-backdrop-filter:blur(22px) saturate(1.6);backdrop-filter:blur(22px) saturate(1.6);
+  background:color-mix(in srgb, var(--surface) 76%, transparent);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
   border:1px solid color-mix(in srgb, var(--fg) 9%, transparent);box-shadow:0 16px 36px -12px rgba(0,0,0,.5)}
 .tabs-in{position:relative;max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr);height:var(--tabh)}
 .tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted);position:relative;z-index:1;transition:color .25s}
@@ -488,13 +488,13 @@ table.t tr.hl td{color:var(--c);font-weight:600}
   background:var(--fg);color:var(--bg);font-weight:600;font-size:14.5px;padding:11px 16px;border-radius:14px;box-shadow:var(--shadow);
   transition:transform .45s cubic-bezier(.3,1.3,.4,1);max-width:calc(100vw - 32px);text-align:center}
 .toast.show{transform:translate(-50%,0)}
-.scrim{position:fixed;inset:0;z-index:30;touch-action:none;will-change:opacity;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim{position:fixed;inset:0;z-index:30;touch-action:none;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .3s}
 .scrim.show{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;overscroll-behavior:contain;will-change:transform;backface-visibility:hidden;contain:layout paint;max-width:560px;margin:0 auto;background:var(--surface);border-radius:24px 24px 0 0;
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;overscroll-behavior:contain;contain:layout paint;max-width:560px;margin:0 auto;background:var(--surface);border-radius:24px 24px 0 0;
   padding:10px max(18px, env(safe-area-inset-right, 0px)) calc(env(safe-area-inset-bottom, 0px) + 22px) max(18px, env(safe-area-inset-left, 0px));
   transform:translate3d(0,105%,0);transition:transform .42s cubic-bezier(.22,1,.36,1);max-height:86vh;overflow-y:auto;display:flex;flex-direction:column;gap:14px}
 .sheet.show{transform:translate3d(0,0,0)}
-.sheet.dragging{overflow:hidden}
+.sheet.dragging{overflow:hidden;will-change:transform}
 .sheet .grab{width:44px;height:5px;border-radius:3px;background:var(--faint);opacity:.6;margin:2px auto 6px;flex-shrink:0}
 .sheet h2{margin:0;font-family:var(--display);font-size:26px}
 .sheet input[type=date]{height:46px;border-radius:12px;border:0;background:var(--surface-2);padding:0 12px;font-size:16px;font-weight:600;width:100%}
@@ -1260,7 +1260,8 @@ function drawFig(svg, k) {
 }
 
 function figScan(root = document) {
-  root.querySelectorAll("svg.fig").forEach((s, i) => { if (s._seen) return; s._seen = 1; s._time = REDUCED ? 0 : i * 700; drawFig(s, REDUCED ? 1 : 0); });
+  // cards get one still frame (the end of the movement); only the How-to card animates
+  root.querySelectorAll("svg.fig").forEach(s => { if (s._seen) return; s._seen = 1; s._time = 0; drawFig(s, s.classList.contains("big") && !REDUCED ? 0 : 1); });
 }
 // one rep: hold start, lift (~1 s), squeeze, lower slowly (~1.7 s)
 const TEMPO = [[350, "Get set"], [950, "Lift"], [400, "Squeeze"], [1700, "Lower slowly"]], TEMPO_T = TEMPO.reduce((a, b) => a + b[0], 0);
@@ -1272,24 +1273,20 @@ function tempoAt(ms) {
   if (t < TEMPO[2][0]) return [1, 2]; t -= TEMPO[2][0];
   return [1 - easeIO(t / TEMPO[3][0]), 3];
 }
-let figPrev = 0, figLast = 0, FIG_PAUSE = false;
+let figRAF = 0, figPrev = 0, figLast = 0, FIG_PAUSE = false;
+function startFigLoop() { if (!figRAF && !REDUCED) { figPrev = 0; figRAF = requestAnimationFrame(figLoop); } }
 function figLoop(now) {
-  requestAnimationFrame(figLoop);
+  const s = document.querySelector("#sheet.show svg.fig.big");
+  if (!s || REDUCED) { figRAF = 0; return; } // the loop stops by itself when the card closes
+  figRAF = requestAnimationFrame(figLoop);
   const dt = Math.min(100, now - (figPrev || now)); figPrev = now;
-  if (REDUCED || document.hidden || FIG_PAUSE) return;
-  const figs = document.querySelectorAll("svg.fig"); if (!figs.length) return;
-  for (const s of figs) if (!s._paused) s._time = (s._time || 0) + dt * (s._speed || 1);
-  if (now - figLast < 30) return; figLast = now;
-  const vh = innerHeight;
-  for (const s of figs) {
-    const r = s.getBoundingClientRect();
-    if (r.bottom < -20 || r.top > vh + 20 || r.width === 0) continue;
-    const [k, ph] = tempoAt(s._time || 0);
-    drawFig(s, k);
-    if (s._label) { const t = s._paused ? "Paused" : TEMPO[ph][1]; if (s._label.textContent !== t) { s._label.textContent = t; s._label.dataset.ph = ph; } }
-  }
+  if (document.hidden || FIG_PAUSE) return;
+  if (!s._paused) s._time = (s._time || 0) + dt * (s._speed || 1);
+  if (now - figLast < 15) return; figLast = now;
+  const [k, ph] = tempoAt(s._time || 0);
+  drawFig(s, k);
+  if (s._label) { const t = s._paused ? "Paused" : TEMPO[ph][1]; if (s._label.textContent !== t) { s._label.textContent = t; s._label.dataset.ph = ph; } }
 }
-requestAnimationFrame(figLoop);
 
 /* ================= icons ================= */
 const IC = {
@@ -1310,7 +1307,20 @@ const CH = {}; // chart point data for tooltips
 
 function setHeader(eyebrow, title) { $("#eyebrow").textContent = eyebrow; $("#title").textContent = title; }
 
+const ERRK = "aub.err";
+function logErr(msg) { try { const a = JSON.parse(localStorage.getItem(ERRK) || "[]"); a.push({ t: new Date().toISOString(), tab: S.tab, m: String(msg).slice(0, 400) }); localStorage.setItem(ERRK, JSON.stringify(a.slice(-15))); } catch (e) {} }
+const errLog = () => { try { return JSON.parse(localStorage.getItem(ERRK) || "[]"); } catch (e) { return []; } };
+addEventListener("error", e => logErr((e.message || "error") + (e.lineno ? " @" + e.lineno + ":" + e.colno : "")));
+addEventListener("unhandledrejection", e => logErr("promise: " + ((e.reason && (e.reason.stack || e.reason.message)) || e.reason)));
 function render(anim = true, dir = 0) {
+  try { renderView(anim, dir); }
+  catch (e) {
+    logErr((e && e.stack) || e);
+    view.className = "view";
+    view.innerHTML = `<section class="card"><h2 class="sec-t">This screen didn't load</h2><p class="small muted" style="margin-bottom:12px">Your data is safe. Try again, and if it keeps happening, copy the error log in Settings and send it to Claude.</p><button class="btn" data-act="retry">Try again</button></section>`;
+  }
+}
+function renderView(anim = true, dir = 0) {
   const fn = { today: vToday, week: vWeek, progress: vProgress, food: vFood, sleep: vSleep }[S.tab];
   for (const k in CH) delete CH[k];
   view.innerHTML = fn();
@@ -1545,7 +1555,7 @@ function openDemo(wkKey, i) {
     <div><div class="lbl" style="margin-bottom:4px">Machine taken?</div><p class="how">Swap for <b>${ex.sw}</b>, or tap “Do later” on the card.</p></div>
     <button class="btn" data-act="close">Got it</button>`;
   figScan($("#sheet"));
-  const dfig = $("#sheet svg.fig"); if (dfig) { dfig._time = 0; dfig._label = $("#dphase"); }
+  const dfig = $("#sheet svg.fig"); if (dfig) { dfig._time = 0; dfig._label = $("#dphase"); startFigLoop(); }
   $("#sheet").scrollTop = 0;
   showSheet();
 }
@@ -1931,7 +1941,7 @@ function openSheet() {
       ${SEG("rest.adj", "Rest length", [[-15, "−15 s"], [0, "Plan"], [30, "+30 s"]])}
     </div></div>
     <div class="sgroup"><div class="lbl">Workout screen</div><div class="sbox">
-      ${SWI("ui.figs", "Exercise animations on cards")}
+      ${SWI("ui.figs", "Exercise pictures on cards", "Tap a picture to see it move")}
       ${SWI("ui.confetti", "Confetti when you finish")}
       ${SWI("ui.scroll", "Scroll to the next exercise")}
       ${SWI("ui.swipe", "Swipe to change day")}
@@ -1945,6 +1955,7 @@ function openSheet() {
       <div class="srow"><span>Restore a backup<small>Paste a backup copied from this app</small></span><button class="btn ghost" data-act="importopen" style="width:auto;height:38px;padding:0 14px;font-size:14px">Import</button></div>
       ${S.importing ? `<div class="srow stack"><textarea id="importtxt" rows="4" placeholder="Paste the backup text here" style="width:100%;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);padding:10px;font:inherit;font-size:14px"></textarea>
         <div style="display:flex;gap:8px"><button class="btn ghost" data-act="importcancel" style="height:42px">Cancel</button><button class="btn" data-act="importgo" style="height:42px;--c:var(--good)">Import</button></div></div>` : ""}
+      <div class="srow"><span>Error log<small>${errLog().length ? errLog().length + " problem" + (errLog().length > 1 ? "s" : "") + " recorded, last " + errLog().slice(-1)[0].t.slice(0, 16).replace("T", " ") : "No problems recorded"}</small></span><button class="btn ghost" data-act="copyerr" style="width:auto;height:38px;padding:0 14px;font-size:14px" ${errLog().length ? "" : "disabled"}>Copy</button></div>
       <div class="srow"><span>Reset settings<small>Your logs are kept</small></span><button class="btn ghost" data-act="resetset" style="width:auto;height:38px;padding:0 14px;font-size:14px">Reset</button></div>
     </div></div>
     <div class="sgroup"><div class="lbl">Home screen</div><div class="sbox"><div class="srow stack" style="padding:12px 0">
@@ -2015,7 +2026,7 @@ function closeSheet(thrown) { $("#sheet").classList.remove("show"); $("#scrim").
 function go(tab, anim = true) {
   const dir = Math.sign(TABS.indexOf(tab) - TABS.indexOf(S.tab));
   S.tab = tab; if (location.hash !== "#" + tab) location.hash = tab;
-  render(anim, dir); scrollTo(0, 0);
+  render(anim, dir); scrollTo(0, 0); saveUI();
 }
 document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (b && b.dataset.tab !== S.tab) go(b.dataset.tab); });
 window.addEventListener("hashchange", () => { const t = location.hash.slice(1); if (TABS.includes(t) && t !== S.tab) go(t); });
@@ -2037,6 +2048,8 @@ document.addEventListener("click", e => {
   if (a === "notedone") { S.noteEdit = null; flipList(); return; }
   if (a === "expand") { S.open.add(b.dataset.v); flipList(); return; }
   if (a === "fold") { S.open.delete(b.dataset.v); flipList(); return; }
+  if (a === "retry") { render(true); return; }
+  if (a === "copyerr") { const t = JSON.stringify(errLog(), null, 1); try { navigator.clipboard.writeText(t).then(() => toast("Error log copied"), () => toast("Copy isn't allowed here")); } catch (e) { toast("Copy isn't allowed here"); } return; }
   if (a === "undo") { if (UNDO) { UNDO(); UNDO = null; } $("#toast").classList.remove("show"); return; }
   if (a === "set") {
     const k = b.dataset.k, cur = getPath(k);
@@ -2271,7 +2284,7 @@ $("#sheet").addEventListener("change", e => {
   }
 });
 
-setInterval(() => { if (S.tab === "today") { const bm = $("#bmeta"); if (bm) bm.textContent = bannerMeta(S.sel); } }, 20000);
+setInterval(() => { if (S.tab === "today" && !document.hidden) { const d0 = dayDoc(S.sel); if (d0 && d0.start && !d0.done) { const bm = $("#bmeta"); if (bm) bm.textContent = bannerMeta(S.sel); } } }, 20000);
 
 view.addEventListener("keydown", e => { if (e.target.dataset && e.target.dataset.note && e.key === "Enter") { e.preventDefault(); S.noteEdit = null; flipList(); } });
 
@@ -2288,11 +2301,31 @@ view.addEventListener("touchend", e => {
   render(false); view.classList.add(dx < 0 ? "swipe-l" : "swipe-r");
 }, { passive: true });
 
+/* remember where you were, so a restart by iOS doesn't throw you back to the top */
+const UIK = "aub.ui";
+function saveUI() {
+  try { localStorage.setItem(UIK, JSON.stringify({ tab: S.tab, sel: S.sel, y: Math.round(scrollY), t: Date.now(), day: today(),
+    timer: T ? { end: T.end, total: T.total, label: T.label, c: $("#timer").style.getPropertyValue("--c") } : null })); } catch (e) {}
+}
+document.addEventListener("visibilitychange", () => { if (document.hidden) saveUI(); });
+addEventListener("pagehide", saveUI);
+let suT = 0; addEventListener("scroll", () => { clearTimeout(suT); suT = setTimeout(saveUI, 500); }, { passive: true });
+let UI0 = null; try { UI0 = JSON.parse(localStorage.getItem(UIK) || "null"); } catch (e) {}
+if (UI0 && Date.now() - UI0.t > 45 * 60000) UI0 = null;
+
 /* ================= boot ================= */
-const h0 = location.hash.slice(1); if (TABS.includes(h0)) S.tab = h0;
+const h0 = location.hash.slice(1);
+if (TABS.includes(h0)) S.tab = h0; else if (UI0 && TABS.includes(UI0.tab)) S.tab = UI0.tab;
+if (UI0 && UI0.day === today() && UI0.sel) S.sel = UI0.sel;
 applySettings();
 MQ.addEventListener && MQ.addEventListener("change", () => { applyMotion(); render(false); });
 render(true);
+if (UI0 && UI0.y && (TABS.includes(h0) ? h0 === UI0.tab : true)) requestAnimationFrame(() => scrollTo(0, UI0.y));
+if (UI0 && UI0.timer && UI0.timer.end > Date.now() + 1000) {
+  const tm = UI0.timer; T = { end: tm.end, total: tm.total, label: tm.label, lastS: null };
+  const el = $("#timer"); el.style.setProperty("--c", tm.c || "var(--pull)"); el.classList.add("show");
+  $("#tlab").textContent = "Rest · " + tm.label; clearInterval(tIv); tIv = setInterval(tick, 200); tick();
+}
 connect();
 // keep "today" fresh if the app stays open overnight
 let lastDay = today();
