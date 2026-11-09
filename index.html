@@ -80,6 +80,7 @@
 *{box-sizing:border-box}
 html,body{background:var(--bg)}
 body{
+  transition:background-color .45s ease;
   color:var(--fg); font-family:var(--body); font-size:16px; line-height:1.45;
   -webkit-font-smoothing:antialiased; -webkit-tap-highlight-color:transparent;
   padding-left:max(16px, env(safe-area-inset-left, 0px));
@@ -520,6 +521,8 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .pals{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;padding:10px 0}
 .pal{display:flex;flex-direction:column;align-items:center;gap:7px;padding:10px 4px 8px;border-radius:14px;background:var(--surface);font-size:12.5px;font-weight:600;box-shadow:inset 0 0 0 2px transparent;transition:box-shadow .2s,transform .2s}
 .pal[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--fg)}
+.pal{border:1px solid color-mix(in srgb, var(--fg) 10%, transparent)}
+.pal .pcard{width:70%;height:7px;border-radius:4px;opacity:.9}
 .pal .dots{display:flex}
 .pal .dots i{width:16px;height:16px;border-radius:50%;margin-left:-4px;box-shadow:0 0 0 2px var(--surface)}
 .pal .dots i:first-child{margin-left:0}
@@ -799,26 +802,45 @@ function setPath(path, v) {
   o[ks[ks.length - 1]] = v; S.docs.settings = st; touch("settings"); applySettings();
 }
 const getPath = path => path.split(".").reduce((o, k) => o == null ? o : o[k], SET());
+// Each palette: accent colors (d = dark mode, l = light mode) and a background family [page, card, raised, line, equipment].
 const PALS = {
-  classic: { n: "Classic", d: ["#FF6A2B", "#4A90FF", "#35C46D", "#A182FF"], l: ["#E5560B", "#1B6FD6", "#22914B", "#6C47DE"] },
-  ocean: { n: "Ocean", d: ["#2EC4B6", "#4CC9F0", "#6C8CFF", "#B07CFF"], l: ["#0E8C80", "#0A7CA6", "#3352D6", "#7B45D6"] },
-  sunset: { n: "Sunset", d: ["#FF5D5D", "#FF9F1C", "#FFCE3A", "#FF6FB5"], l: ["#D63333", "#C46A00", "#9C7400", "#C7307F"] },
-  forest: { n: "Forest", d: ["#8BC34A", "#26A69A", "#D4E157", "#FFB74D"], l: ["#4E7D1E", "#137A70", "#78820F", "#B26A00"] },
-  candy: { n: "Candy", d: ["#FF7AB6", "#7AA2FF", "#5EE6C8", "#C08BFF"], l: ["#D23A80", "#3C66D9", "#11937A", "#8A4FE0"] },
-  mono: { n: "Mono", d: ["#8AA4FF", "#8AA4FF", "#8AA4FF", "#8AA4FF"], l: ["#3D5BD9", "#3D5BD9", "#3D5BD9", "#3D5BD9"] },
+  classic: { n: "Classic", d: ["#FF6A2B", "#4A90FF", "#35C46D", "#A182FF"], l: ["#E5560B", "#1B6FD6", "#22914B", "#6C47DE"],
+    bd: ["#0C0F14", "#151920", "#1D222B", "#29303B", "#2E3542"], bl: ["#F2F3F6", "#FFFFFF", "#EBEDF1", "#DADEE5", "#D3D8E0"] },
+  ocean: { n: "Ocean", d: ["#2EC4B6", "#4CC9F0", "#6C8CFF", "#B07CFF"], l: ["#0E8C80", "#0A7CA6", "#3352D6", "#7B45D6"],
+    bd: ["#06131A", "#0C1E26", "#132830", "#1F3741", "#203943"], bl: ["#EDF5F7", "#FFFFFF", "#E0EDF0", "#C9DDE2", "#C5D9DE"] },
+  sunset: { n: "Sunset", d: ["#FF5D5D", "#FF9F1C", "#FFCE3A", "#FF6FB5"], l: ["#D63333", "#C46A00", "#9C7400", "#C7307F"],
+    bd: ["#150C0F", "#201418", "#2A1B20", "#3A262D", "#3C2830"], bl: ["#FBF3EF", "#FFFFFF", "#F4E7E1", "#E8D4CB", "#E5CFC5"] },
+  forest: { n: "Forest", d: ["#8BC34A", "#26A69A", "#D4E157", "#FFB74D"], l: ["#4E7D1E", "#137A70", "#78820F", "#B26A00"],
+    bd: ["#0A110C", "#121B14", "#19241B", "#253327", "#27362A"], bl: ["#F1F5EE", "#FFFFFF", "#E5ECE0", "#D1DCCA", "#CCD8C4"] },
+  candy: { n: "Candy", d: ["#FF7AB6", "#7AA2FF", "#5EE6C8", "#C08BFF"], l: ["#D23A80", "#3C66D9", "#11937A", "#8A4FE0"],
+    bd: ["#110C18", "#1A1424", "#231C30", "#322940", "#352B44"], bl: ["#F7F1FA", "#FFFFFF", "#EFE5F4", "#DFD1E8", "#DCCDE6"] },
+  mono: { n: "Mono", d: ["#8AA4FF", "#8AA4FF", "#8AA4FF", "#8AA4FF"], l: ["#3D5BD9", "#3D5BD9", "#3D5BD9", "#3D5BD9"],
+    bd: ["#0C0E16", "#151824", "#1D2130", "#2A2F42", "#2C3245"], bl: ["#F1F2F7", "#FFFFFF", "#E7E9F2", "#D5D8E6", "#D1D5E3"] },
 };
 function palVals(st) {
-  if (st.palette === "custom") { const c = /^#[0-9a-f]{6}$/i.test(st.custom) ? st.custom : "#FF6A2B"; return { d: [c, c, c, c], l: [0, 0, 0, 0].map(() => `color-mix(in srgb, ${c} 80%, #000)`) }; }
+  if (st.palette === "custom") {
+    const c = /^#[0-9a-f]{6}$/i.test(st.custom) ? st.custom : "#FF6A2B", mx = (p, base) => `color-mix(in srgb, ${c} ${p}%, ${base})`;
+    return { d: [c, c, c, c], l: [0, 0, 0, 0].map(() => mx(80, "#000")),
+      bd: [mx(7, "#0A0B0E"), mx(9, "#14161B"), mx(11, "#1C1F26"), mx(15, "#272B33"), mx(15, "#2C3038")],
+      bl: [mx(6, "#F4F5F7"), "#FFFFFF", mx(8, "#ECEEF1"), mx(13, "#DCDFE4"), mx(13, "#D6DAE0")] };
+  }
   return PALS[st.palette] || PALS.classic;
 }
+const isLightNow = () => { const r = document.documentElement; return r.matches("[data-app-theme=light]") || (!r.matches("[data-app-theme=dark]") && (r.matches("[data-theme=light]") || (!r.matches("[data-theme=dark]") && matchMedia("(prefers-color-scheme: light)").matches))); };
 function applySettings() {
   const st = SET(), root = document.documentElement;
   if (st.theme === "light" || st.theme === "dark") root.dataset.appTheme = st.theme; else delete root.dataset.appTheme;
-  const v = palVals(st), css = a => `--push:${a[0]};--pull:${a[1]};--legs:${a[2]};--core:${a[3]};`;
+  const v = palVals(st);
+  const css = (a, g) => `--push:${a[0]};--pull:${a[1]};--legs:${a[2]};--core:${a[3]};--bg:${g[0]};--surface:${g[1]};--surface-2:${g[2]};--line:${g[3]};--eqpad:${g[4]};`;
+  const D = css(v.d, v.bd), Lt = css(v.l, v.bl);
   let el = document.getElementById("palette"); if (!el) { el = document.createElement("style"); el.id = "palette"; document.body.appendChild(el); }
-  el.textContent = `:root{${css(v.d)}}@media (prefers-color-scheme: light){:root:not([data-theme="dark"]):not([data-app-theme="dark"]){${css(v.l)}}}:root[data-theme="light"]{${css(v.l)}}:root[data-app-theme="light"]{${css(v.l)}}:root[data-app-theme="dark"]{${css(v.d)}}`;
+  el.textContent = `:root{${D}}@media (prefers-color-scheme: light){:root:not([data-theme="dark"]):not([data-app-theme="dark"]){${Lt}}}:root[data-theme="light"]{${Lt}}:root[data-app-theme="light"]{${Lt}}:root[data-app-theme="dark"]{${D}}`;
+  // status bar / app switcher color follows the background
+  const bg = (isLightNow() ? v.bl : v.bd)[0];
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", /^#/.test(bg) ? bg : (isLightNow() ? "#F2F3F6" : "#0C0F14")));
   if (typeof applyMotion === "function") applyMotion();
 }
+matchMedia("(prefers-color-scheme: light)").addEventListener?.("change", () => applySettings());
 
 /* ================= sound ================= */
 const SND = {
@@ -1934,7 +1956,8 @@ function openSheet() {
   const store = { cloud: "Saved to your Claude account. Private to you, and it follows you to any device where you open this page.", local: STANDALONE ? "Saved on this iPhone, inside the app. Copy a backup now and then and keep it in Notes." : "Saved on this phone only (in this browser). Open the app while signed in to Claude to keep it in your account.", loading: "Connecting…" }[S.mode] || "";
   const SWI = (k, label, sub) => `<div class="srow"><span>${label}${sub ? `<small>${sub}</small>` : ""}</span><button class="sw" role="switch" aria-checked="${!!getPath(k)}" data-act="set" data-k="${k}" aria-label="${label}"></button></div>`;
   const SEG = (k, label, opts, sub) => `<div class="srow"><span>${label}${sub ? `<small>${sub}</small>` : ""}</span><div class="seg" role="group" aria-label="${label}">${opts.map(([v, l]) => `<button data-act="set" data-k="${k}" data-v="${v}" aria-pressed="${String(getPath(k)) === String(v)}">${l}</button>`).join("")}</div></div>`;
-  const pal = (id, p) => `<button class="pal" data-act="set" data-k="palette" data-v="${id}" aria-pressed="${st.palette === id}"><span class="dots">${(document.documentElement.matches("[data-app-theme=light]") || (!document.documentElement.matches("[data-app-theme=dark]") && matchMedia("(prefers-color-scheme: light)").matches) ? p.l : p.d).map(c => `<i style="background:${c}"></i>`).join("")}</span>${p.n}</button>`;
+  const lt = isLightNow();
+  const pal = (id, p) => { const g = lt ? p.bl : p.bd; return `<button class="pal" data-act="set" data-k="palette" data-v="${id}" aria-pressed="${st.palette === id}" style="background:${g[0]};color:${lt ? "#131720" : "#EEF1F6"};--ring:${g[2]}"><span class="dots">${(lt ? p.l : p.d).map(c => `<i style="background:${c};box-shadow:0 0 0 2px ${g[0]}"></i>`).join("")}</span><span class="pcard" style="background:${g[1]}"></span>${p.n}</button>`; };
   sh.classList.add("full"); sh.style.removeProperty("--c");
   sh.innerHTML = `<div class="grab" style="margin-top:8px"></div><div class="sheet-h" style="padding-top:2px"><h2>Settings</h2><button class="linkb" data-act="close" style="--c:var(--pull);font-size:16px">Done</button></div>
     <div class="sgroup"><div class="lbl">Appearance</div><div class="sbox">
