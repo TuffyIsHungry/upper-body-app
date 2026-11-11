@@ -74,6 +74,25 @@
   --fig:#DFE5EE; --fig2:#5D6779; --hair:#9AA4B5; --shorts:#3B4454; --shoe:#AEB7C6; --eqf:#4A5363; --eqpad:#2E3542; --elev:inset 0 1px 0 rgba(255,255,255,.045),0 12px 28px -16px rgba(0,0,0,.75);
   color-scheme:dark;
 }
+/* in-between themes: Soft = muted light, Dim = lifted dark (backgrounds come from the palette) */
+:root[data-app-theme="soft"]{
+  --fg:#12161E; --muted:#454D5A; --faint:#727A87;
+  --push:#E5560B; --pull:#1B6FD6; --legs:#22914B; --core:#6C47DE;
+  --good:#1E8443; --warn:#9E6513; --on-c:#FFFFFF;
+  --shadow:0 10px 30px rgba(20,25,35,.18);
+  --fig:#262D3B; --fig2:#8C95A3; --hair:#141820; --shorts:#56627A; --shoe:#141820; --eqf:#7F8897;
+  --elev:0 1px 2px rgba(20,25,35,.06),0 8px 22px -14px rgba(20,25,35,.28);
+  color-scheme:light;
+}
+:root[data-app-theme="dim"]{
+  --fg:#F1F3F7; --muted:#A9B1BE; --faint:#7D8695;
+  --push:#FF6A2B; --pull:#4A90FF; --legs:#35C46D; --core:#A182FF;
+  --good:#3ACB73; --warn:#F2B13C; --on-c:#FFFFFF;
+  --shadow:0 10px 30px rgba(0,0,0,.32);
+  --fig:#E4E9F1; --fig2:#7A8496; --hair:#A6AFBF; --shorts:#4E5768; --shoe:#B8C0CD; --eqf:#66707F;
+  --elev:inset 0 1px 0 rgba(255,255,255,.06),0 12px 28px -16px rgba(0,0,0,.55);
+  color-scheme:dark;
+}
 
 @property --glow{syntax:"<color>";inherits:true;initial-value:#4A90FF}
 #glow{transition:--glow .9s ease}
@@ -457,6 +476,9 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .times label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .times input{height:48px;border-radius:12px;border:1.5px solid transparent;background:var(--surface-2);font-size:20px;font-weight:600;text-align:center;padding:0 8px;width:100%;min-width:0}
 .times input:focus{outline:none;border-color:var(--c)}
+.times input,#calcwake{-webkit-appearance:none;appearance:none;display:block}
+.times input::-webkit-date-and-time-value{text-align:center}
+#calcwake{min-height:44px}
 .qual{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .qual button{height:44px;border-radius:12px;background:var(--surface-2);font-weight:700;font-family:var(--display);font-size:19px;color:var(--muted);transition:background .2s,color .2s,transform .2s}
 .qual button[aria-pressed="true"]{background:var(--c);color:var(--on-c);transform:translateY(-2px)}
@@ -523,6 +545,9 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .srow > span{font-size:15px;font-weight:500;min-width:0}
 .srow > span small{display:block;color:var(--muted);font-size:12.5px;font-weight:400;margin-top:1px}
 .srow.stack{flex-direction:column;align-items:stretch;gap:8px}
+.seg.themes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.seg.themes button{display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 2px 7px}
+.seg.themes i{width:20px;height:20px;border-radius:50%;box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--fg) 22%, transparent)}
 .srow .seg{flex-shrink:0}
 .srow .seg button{padding:7px 10px;font-size:13px}
 .sw{position:relative;width:50px;height:30px;border-radius:99px;background:var(--line);flex-shrink:0;transition:background .25s}
@@ -855,17 +880,30 @@ function palVals(st) {
   }
   return PALS[st.palette] || PALS.classic;
 }
-const isLightNow = () => { const r = document.documentElement; return r.matches("[data-app-theme=light]") || (!r.matches("[data-app-theme=dark]") && (r.matches("[data-theme=light]") || (!r.matches("[data-theme=dark]") && matchMedia("(prefers-color-scheme: light)").matches))); };
+// Mix two colors: exact hex when both are hex (needed for the status bar color), CSS color-mix otherwise (custom palette).
+function mixC(a, b, p) {
+  const H = /^#[0-9a-f]{6}$/i;
+  if (!H.test(a) || !H.test(b)) return `color-mix(in srgb, ${a}, ${b} ${p}%)`;
+  const ch = (c, i) => parseInt(c.slice(1 + i * 2, 3 + i * 2), 16);
+  return "#" + [0, 1, 2].map(i => Math.round(ch(a, i) * (1 - p / 100) + ch(b, i) * p / 100).toString(16).padStart(2, "0")).join("").toUpperCase();
+}
+// The two in-between background families, derived from each palette so the tint stays the same.
+const dimFam = g => [mixC(g[0], "#FFFFFF", 15), mixC(g[1], "#FFFFFF", 18), mixC(g[2], "#FFFFFF", 20), mixC(g[3], "#FFFFFF", 23), mixC(g[4], "#FFFFFF", 23)];
+const softFam = g => [mixC(g[0], "#000000", 19), mixC(g[0], "#000000", 9), mixC(g[2], "#000000", 17), mixC(g[3], "#000000", 19), mixC(g[4], "#000000", 21)];
+const THEME_MODE = () => { const r = document.documentElement, a = r.dataset.appTheme; if (a) return a; return r.matches("[data-theme=light]") || (!r.matches("[data-theme=dark]") && matchMedia("(prefers-color-scheme: light)").matches) ? "light" : "dark"; };
+const isLightNow = () => { const m = THEME_MODE(); return m === "light" || m === "soft"; };
+// Background family + accents for the mode currently shown.
+function famNow(v) { const m = THEME_MODE(); return m === "soft" ? { g: softFam(v.bl), a: v.l } : m === "dim" ? { g: dimFam(v.bd), a: v.d } : m === "light" ? { g: v.bl, a: v.l } : { g: v.bd, a: v.d }; }
 function applySettings() {
   const st = SET(), root = document.documentElement;
-  if (st.theme === "light" || st.theme === "dark") root.dataset.appTheme = st.theme; else delete root.dataset.appTheme;
+  if (["light", "soft", "dim", "dark"].includes(st.theme)) root.dataset.appTheme = st.theme; else delete root.dataset.appTheme;
   const v = palVals(st);
   const css = (a, g) => `--push:${a[0]};--pull:${a[1]};--legs:${a[2]};--core:${a[3]};--bg:${g[0]};--surface:${g[1]};--surface-2:${g[2]};--line:${g[3]};--eqpad:${g[4]};`;
-  const D = css(v.d, v.bd), Lt = css(v.l, v.bl);
+  const D = css(v.d, v.bd), Lt = css(v.l, v.bl), So = css(v.l, softFam(v.bl)), Di = css(v.d, dimFam(v.bd));
   let el = document.getElementById("palette"); if (!el) { el = document.createElement("style"); el.id = "palette"; document.body.appendChild(el); }
-  el.textContent = `:root{${D}}@media (prefers-color-scheme: light){:root:not([data-theme="dark"]):not([data-app-theme="dark"]){${Lt}}}:root[data-theme="light"]{${Lt}}:root[data-app-theme="light"]{${Lt}}:root[data-app-theme="dark"]{${D}}`;
+  el.textContent = `:root{${D}}@media (prefers-color-scheme: light){:root:not([data-theme="dark"]):not([data-app-theme]){${Lt}}}:root[data-theme="light"]:not([data-app-theme]){${Lt}}:root[data-app-theme="light"]{${Lt}}:root[data-app-theme="dark"]{${D}}:root[data-app-theme="soft"]{${So}}:root[data-app-theme="dim"]{${Di}}`;
   // status bar / app switcher color follows the background
-  const bg = (isLightNow() ? v.bl : v.bd)[0];
+  const bg = famNow(v).g[0];
   document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", /^#/.test(bg) ? bg : (isLightNow() ? "#F2F3F6" : "#0C0F14")));
   if (typeof applyMotion === "function") applyMotion();
 }
@@ -1901,14 +1939,14 @@ function vSleep() {
   }
   const bed = (s && s.bed) || "22:00", wake = (s && s.wake) || "05:30", q = s && s.q;
   const shown = sleepH({ bed, wake });
-  let h = `<div class="nights" style="--c:var(--core)">${chips}</div>`;
+  let h = `<div class="nights" id="sl-nights" style="--c:var(--core)">${chips}</div>`;
   h += `<section class="card" style="--c:var(--core)"><div class="lbl">${n === t ? "Last night" : "Night ending " + fShort(n)}</div>
-    <div class="big-h num" style="margin:6px 0 4px;${h0 == null ? "color:var(--faint)" : ""}">${Math.floor(Math.round(shown * 60) / 60)}<small>h</small>${pad(Math.round(shown * 60) % 60)}<small>min</small></div>
-    <p class="small ${h0 == null ? "muted" : ""}" style="margin-bottom:12px">${h0 == null ? "Not logged yet. Set your times, it saves automatically." : shown >= 7.5 ? "On target. This is where muscle gets built." : shown >= 7 ? "Close. Try 30 min earlier tonight." : "Short night. Keep today's sets at the easy end of the RIR range."}</p>
+    <div class="big-h num" id="sl-big" style="margin:6px 0 4px;${h0 == null ? "color:var(--faint)" : ""}">${Math.floor(Math.round(shown * 60) / 60)}<small>h</small>${pad(Math.round(shown * 60) % 60)}<small>min</small></div>
+    <p id="sl-msg" class="small ${h0 == null ? "muted" : ""}" style="margin-bottom:12px">${h0 == null ? "Not logged yet. Change a time, or tap Save if these are right." : shown >= 7.5 ? "On target. This is where muscle gets built." : shown >= 7 ? "Close. Try 30 min earlier tonight." : "Short night. Keep today's sets at the easy end of the RIR range."}</p>
     <div class="times"><label for="bed">Lights out<input type="time" id="bed" data-f="bed" value="${bed}"></label><label for="wake">Woke up<input type="time" id="wake" data-f="wake" value="${wake}"></label></div>
     <div class="lbl" style="margin:14px 0 8px">How rested do you feel?</div>
     <div class="qual" role="group" aria-label="Sleep quality 1 to 5">${[1, 2, 3, 4, 5].map(v => `<button data-act="q" data-v="${v}" aria-pressed="${q === v}">${v}</button>`).join("")}</div>
-    ${h0 == null ? `<button class="btn" data-act="logsleep" style="margin-top:14px;--c:var(--core)">Save this night</button>` : ""}</section>`;
+    <div id="sl-save">${h0 == null ? `<button class="btn" data-act="logsleep" style="margin-top:14px;--c:var(--core)">Save this night</button>` : ""}</div></section>`;
   // last 14 nights chart
   const nights = [];
   for (let i = 13; i >= 0; i--) { const d = addD(t, -i), x = dayDoc(d); nights.push({ date: d, h: sleepH(x && x.sleep), q: x && x.sleep && x.sleep.q }); }
@@ -1916,9 +1954,9 @@ function vSleep() {
   const last7 = nights.slice(7).filter(x => x.h != null);
   const avg7 = last7.length ? last7.reduce((a, b) => a + b.h, 0) / last7.length : null;
   const onT = last7.filter(x => x.h >= 7.5).length;
-  h += `<div class="tiles"><div class="tile"><span class="lbl">7-night avg</span><b class="num">${avg7 != null ? fH(avg7) : "–"}</b><span class="muted">target 7 h 30</span></div>
+  h += `<div class="tiles" id="sl-tiles"><div class="tile"><span class="lbl">7-night avg</span><b class="num">${avg7 != null ? fH(avg7) : "–"}</b><span class="muted">target 7 h 30</span></div>
     <div class="tile"><span class="lbl">On target</span><b class="num"><span data-count="${onT}">${onT}</span><small>/ ${last7.length || 7}</small></b><span class="muted">nights ≥ 7 h 30</span></div></div>`;
-  h += `<section class="card" style="--c:var(--core)"><h2 class="sec-t">Last 14 nights</h2>${logged.length ? barChart(nights) : ghostChart("Log a few nights to see the pattern.", "var(--core)")}
+  h += `<section class="card" id="sl-chart" style="--c:var(--core)"><h2 class="sec-t">Last 14 nights</h2>${logged.length ? barChart(nights) : ghostChart("Log a few nights to see the pattern.", "var(--core)")}
     <div class="legend" style="margin-top:8px"><span><i style="--c:var(--core)"></i>≥ 7 h 30</span><span><i style="--c:color-mix(in srgb, var(--core) 35%, var(--surface-2))"></i>below target</span><span class="muted">dashed = 7 h 30</span></div></section>`;
   h += `<section class="card" style="--c:var(--pull)"><h2 class="sec-t">Bedtime calculator</h2>
     <div class="field"><label for="calcwake" class="small muted">I need to wake at</label><input type="time" id="calcwake" class="in" style="width:130px" value="${(S.docs.settings && S.docs.settings.wake) || "05:30"}"></div>
@@ -2061,11 +2099,12 @@ function openSheet() {
   const SWI = (k, label, sub) => `<div class="srow"><span>${label}${sub ? `<small>${sub}</small>` : ""}</span><button class="sw" role="switch" aria-checked="${!!getPath(k)}" data-act="set" data-k="${k}" aria-label="${label}"></button></div>`;
   const SEG = (k, label, opts, sub) => `<div class="srow"><span>${label}${sub ? `<small>${sub}</small>` : ""}</span><div class="seg" role="group" aria-label="${label}">${opts.map(([v, l]) => `<button data-act="set" data-k="${k}" data-v="${v}" aria-pressed="${String(getPath(k)) === String(v)}">${l}</button>`).join("")}</div></div>`;
   const lt = isLightNow();
-  const pal = (id, p) => { const g = lt ? p.bl : p.bd; return `<button class="pal" data-act="set" data-k="palette" data-v="${id}" aria-pressed="${st.palette === id}" style="background:${g[0]};color:${lt ? "#131720" : "#EEF1F6"};--ring:${g[2]}"><span class="dots">${(lt ? p.l : p.d).map(c => `<i style="background:${c};box-shadow:0 0 0 2px ${g[0]}"></i>`).join("")}</span><span class="pcard" style="background:${g[1]}"></span>${p.n}</button>`; };
+  const pal = (id, p) => { const { g, a } = famNow(p); return `<button class="pal" data-act="set" data-k="palette" data-v="${id}" aria-pressed="${st.palette === id}" style="background:${g[0]};color:${lt ? "#131720" : "#EEF1F6"};--ring:${g[2]}"><span class="dots">${a.map(c => `<i style="background:${c};box-shadow:0 0 0 2px ${g[0]}"></i>`).join("")}</span><span class="pcard" style="background:${g[1]}"></span>${p.n}</button>`; };
   sh.classList.add("full"); sh.style.removeProperty("--c");
   sh.innerHTML = `<div class="grab" style="margin-top:8px"></div><div class="sheet-h" style="padding-top:2px"><h2>Settings</h2><button class="linkb" data-act="close" style="--c:var(--pull);font-size:16px">Done</button></div>
     <div class="sgroup"><div class="lbl">Appearance</div><div class="sbox">
-      ${SEG("theme", "Theme", [["auto", "Auto"], ["light", "Light"], ["dark", "Dark"]])}
+      ${(() => { const v = palVals(st), sw = { auto: `linear-gradient(135deg, ${v.bl[0]} 50%, ${v.bd[0]} 50%)`, light: v.bl[0], soft: softFam(v.bl)[0], dim: dimFam(v.bd)[0], dark: v.bd[0] };
+        return `<div class="srow stack"><span>Theme<small>Soft and Dim sit between Light and Dark</small></span><div class="seg themes" role="group" aria-label="Theme">${[["auto", "Auto"], ["light", "Light"], ["soft", "Soft"], ["dim", "Dim"], ["dark", "Dark"]].map(([k, l]) => `<button data-act="set" data-k="theme" data-v="${k}" aria-pressed="${st.theme === k}"><i style="background:${sw[k]}"></i>${l}</button>`).join("")}</div></div>`; })()}
       <div class="srow stack"><span>Colors<small>Used for workout types, charts and buttons</small></span>
         <div class="pals">${Object.entries(PALS).map(([id, p]) => pal(id, p)).join("")}</div>
         <div class="pals" style="grid-template-columns:1fr;padding-top:0"><label class="pal" style="flex-direction:row;justify-content:center;gap:12px" aria-pressed="${st.palette === "custom"}">Custom color <input type="color" id="custom" value="${/^#[0-9a-f]{6}$/i.test(st.custom) ? st.custom : "#FF6A2B"}" aria-label="Custom color"></label></div></div>
@@ -2259,7 +2298,7 @@ document.addEventListener("click", e => {
   if (a === "fin") return toggleFinish();
   if (a === "meal" || a === "habit") return toggleFood(a, b);
   if (a === "night") { S.night = b.dataset.v; render(false); return; }
-  if (a === "q") { const doc = ensureDay(S.night); doc.sleep = { ...(doc.sleep || { bed: "22:00", wake: "05:30" }), q: +b.dataset.v }; touch("d" + S.night); render(false); return; }
+  if (a === "q") { const doc = ensureDay(S.night); doc.sleep = { ...(doc.sleep || { bed: ($("#bed") || {}).value || "22:00", wake: ($("#wake") || {}).value || "05:30" }), q: +b.dataset.v }; touch("d" + S.night); render(false); return; }
   if (a === "logsleep") { const doc = ensureDay(S.night); doc.sleep = { bed: $("#bed").value || "22:00", wake: $("#wake").value || "05:30", ...(doc.sleep && doc.sleep.q ? { q: doc.sleep.q } : {}) }; touch("d" + S.night); toast("Night saved"); render(false); return; }
 });
 function softRenderAnim() {
@@ -2460,15 +2499,31 @@ view.addEventListener("input", e => {
     if (el.dataset.f === "w") { const pl = document.getElementById("pl-" + k), wk2 = wkOf(S.sel), it2 = plan(S.sel).find(x => x.k === k); if (pl && it2) { const W = workWeight(S.sel, it2); pl.innerHTML = W ? plateText(W) + ` <span class="muted">· ${pl.dataset.note}</span>` : `<span class="muted">Type a weight to see the plates per side</span>`; } }
   } else if (el.dataset.f === "bw") {
     const doc = ensureDay(S.sel); doc.bw = num(el.value); touch("d" + S.sel);
-  }
+  } else if (el.dataset.f === "bed" || el.dataset.f === "wake") sleepTime(el);
+  else if (el.id === "calcwake" && el.value) $("#calcout").textContent = bedFor(el.value);
 });
+// Save a bedtime / wake-up change and refresh the numbers around it, without rebuilding the page.
+// (Rebuilding removed the time field while the iPhone picker was still open, which closed it after every spin.)
+function sleepTime(el) {
+  const bed = $("#bed"), wake = $("#wake"); if (!bed || !wake) return;
+  const v = { bed: bed.value, wake: wake.value }; if (!v.bed || !v.wake) return; // half-cleared field: wait for a real time
+  const doc = ensureDay(S.night), old = doc.sleep || {};
+  if (old.bed === v.bed && old.wake === v.wake) return;
+  doc.sleep = { ...old, ...v }; touch("d" + S.night); patchSleep();
+}
+function patchSleep() {
+  if (S.tab !== "sleep") return;
+  const tpl = document.createElement("template"); for (const k in CH) delete CH[k]; tpl.innerHTML = vSleep();
+  const nScroll = ($("#sl-nights") || {}).scrollLeft || 0;
+  ["sl-nights", "sl-big", "sl-msg", "sl-save", "sl-tiles", "sl-chart"].forEach(id => { const a = document.getElementById(id), b = tpl.content.getElementById(id); if (a && b) a.replaceWith(b); });
+  const n = $("#sl-nights"); if (n) n.scrollLeft = nScroll;
+  view.querySelectorAll("#sl-tiles [data-count]").forEach(e => e.textContent = e.dataset.count);
+}
 view.addEventListener("change", e => {
   const el = e.target;
   if (el.id === "exsel") { S.exSel = el.value; softRenderAnim(); }
   else if (el.dataset.f === "bed" || el.dataset.f === "wake") {
-    const doc = ensureDay(S.night); doc.sleep = { ...(doc.sleep || { bed: "22:00", wake: "05:30" }), [el.dataset.f]: el.value };
-    if (!doc.sleep.bed) doc.sleep.bed = $("#bed").value; if (!doc.sleep.wake) doc.sleep.wake = $("#wake").value;
-    touch("d" + S.night); render(false);
+    sleepTime(el);
   } else if (el.id === "calcwake" && el.value) {
     $("#calcout").textContent = bedFor(el.value);
     S.docs.settings = { ...(S.docs.settings || {}), wake: el.value }; touch("settings");
