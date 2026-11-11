@@ -540,6 +540,34 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .sgroup{display:flex;flex-direction:column;margin-top:18px}
 .sgroup > .lbl{margin:0 0 6px 2px}
 .sbox{background:var(--surface-2);border-radius:16px;padding:2px 14px}
+.g-open{width:100%;text-align:left;border-top:0!important;color:var(--fg)}
+.g-open svg{width:18px;height:18px;color:var(--muted);flex-shrink:0}
+.g-back{display:inline-flex;align-items:center;gap:2px;font-size:16px;margin-left:-6px}
+.g-back svg{width:20px;height:20px}
+.g-title{font-family:var(--display);font-size:30px;line-height:1.05;margin:2px 0 6px}
+.g-lead{color:var(--muted);font-size:14.5px;margin:0}
+.g-box{padding:14px 14px 15px;display:flex;flex-direction:column;gap:11px;font-size:14.5px;line-height:1.5}
+.g-box p{margin:0}
+.g-box .bul{font-size:14.5px}
+.g-ol{padding-left:20px}
+.g-week{display:flex;flex-direction:column;gap:5px}
+.g-day{display:grid;grid-template-columns:40px 1fr;column-gap:10px;align-items:baseline;padding:8px 10px 8px 12px;border-radius:11px;background:var(--surface);box-shadow:inset 3px 0 0 var(--c)}
+.g-day b{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);grid-row:span 2;align-self:center}
+.g-day span{font-weight:700;color:var(--c)} .g-day small{color:var(--muted);font-size:12.5px}
+.g-day.now{box-shadow:inset 3px 0 0 var(--c),0 0 0 1.5px var(--c)}
+.g-bars{display:flex;flex-direction:column;gap:6px}
+.g-bar{display:grid;grid-template-columns:84px 1fr 22px;align-items:center;gap:9px;font-size:13px;color:var(--muted)}
+.g-bar i{height:9px;border-radius:5px;background:var(--surface);overflow:hidden;display:block}
+.g-bar em{display:block;height:100%;border-radius:5px;background:color-mix(in srgb, var(--fg) 28%, var(--surface))}
+.g-bar b{text-align:right;color:var(--fg);font-size:13.5px}
+.g-bar.pri{color:var(--fg);font-weight:600} .g-bar.pri em{background:var(--push)}
+.g-key{display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--push);margin-right:4px;vertical-align:-1px}
+.g-tl{display:flex;gap:4px}
+.g-ph{min-width:0;padding:8px 4px;border-radius:10px;background:var(--surface);text-align:center;display:flex;flex-direction:column;gap:1px;border-top:3px solid var(--c2)}
+.g-ph b{font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .g-ph small{font-size:11.5px;color:var(--muted)}
+.g-re{--c2:var(--pull)} .g-build{--c2:var(--legs)} .g-push{--c2:var(--push)} .g-deload{--c2:var(--core)}
+.g-ph.now{background:color-mix(in srgb, var(--c2) 18%, var(--surface));box-shadow:0 0 0 1.5px var(--c2)}
+.g-rows{display:flex;flex-direction:column;gap:8px;font-size:14px}
 .srow{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:50px;padding:8px 0;border-top:1px solid var(--line)}
 .srow:first-child{border-top:0}
 .srow > span{font-size:15px;font-weight:500;min-width:0}
@@ -2093,7 +2121,8 @@ function toast(m, undo) {
 
 /* ================= settings sheet ================= */
 function openSheet() {
-  const st = SET(), sh = $("#sheet"), y = sh.classList.contains("show") && sh.classList.contains("full") ? sh.scrollTop : 0;
+  if (S.guide) return openGuide();
+  const st = SET(), sh = $("#sheet"), y = S.setY != null ? S.setY : sh.classList.contains("show") && sh.classList.contains("full") ? sh.scrollTop : 0; S.setY = null;
   const STANDALONE = !window.claude;
   const store = { cloud: "Saved to your Claude account. Private to you, and it follows you to any device where you open this page.", local: STANDALONE ? "Saved on this iPhone, inside the app. Copy a backup now and then and keep it in Notes." : "Saved on this phone only (in this browser). Open the app while signed in to Claude to keep it in your account.", loading: "Connecting…" }[S.mode] || "";
   const SWI = (k, label, sub) => `<div class="srow"><span>${label}${sub ? `<small>${sub}</small>` : ""}</span><button class="sw" role="switch" aria-checked="${!!getPath(k)}" data-act="set" data-k="${k}" aria-label="${label}"></button></div>`;
@@ -2132,6 +2161,7 @@ function openSheet() {
       ${SWI("ui.swipe", "Swipe to change day")}
     </div></div>
     <div class="sgroup"><div class="lbl">Program</div><div class="sbox">
+      <button class="srow g-open" data-act="guide"><span>How the plan works<small>Goal, weekly split, phases, effort and progression</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="srow stack"><span>Week 1 starts on<small>Re-entry, build, push and deload weeks count from this Monday</small></span><input type="date" id="start" value="${getStart()}"></div>
     </div></div>
     <div class="sgroup"><div class="lbl">Your data</div><div class="sbox">
@@ -2147,6 +2177,99 @@ function openSheet() {
       <ol class="bul small" style="padding-left:20px"><li>Open this page in <b>Safari</b>.</li><li>Tap <b>Share</b>, then <b>Add to Home Screen</b>.</li><li>Keep “Open as Web App” on and tap <b>Add</b>.</li></ol></div></div></div>
     <div style="height:18px"></div>`;
   showSheet(); sh.scrollTop = y;
+}
+/* ---------- "How the plan works" (Settings → Program) ---------- */
+function openGuide() {
+  const sh = $("#sheet"), t = today(), ph = phase(t), w = ph.w;
+  const DAYS = [1, 2, 3, 4, 5, 6, 0], DN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const week = DAYS.map(i => { const k = SCHEDULE[i], p = PROGRAM[k]; return `<div class="g-day${dow(t) === i ? " now" : ""}" style="--c:${TYPES[p.type]}"><b>${DN[i]}</b><span>${p.name}</span><small>${p.focus} · ${p.time}</small></div>`; }).join("");
+  // weekly hard sets per muscle, counted from the plan itself
+  const sets = {}; for (const k of SCHEDULE) { if (PROGRAM[k].light) continue; for (const e of PROGRAM[k].ex) sets[e.m] = (sets[e.m] || 0) + e.s; }
+  const PRI = new Set(["Lats", "Side delts", "Abs", "Rear delts"]), mx = Math.max(...Object.values(sets));
+  const bars = Object.entries(sets).sort((a, b) => (PRI.has(b[0]) - PRI.has(a[0])) || b[1] - a[1]).map(([m, n]) =>
+    `<div class="g-bar${PRI.has(m) ? " pri" : ""}"><span>${m}</span><i><em style="width:${Math.round(n / mx * 100)}%"></em></i><b class="num">${n}</b></div>`).join("");
+  const PH = [["re", "1–2", "Re-entry", 2.2], ["build", "3–4", "Build", 1.9], ["push", "5–8", "Push", 3], ["deload", "9", "Deload", 1.9]];
+  const inFirst = w >= 1 && w <= 9;
+  const tl = PH.map(([k, wk, l, n]) => `<div class="g-ph g-${k}${inFirst && ph.key === k ? " now" : ""}" style="flex:${n}"><b>${l}</b><small>wk ${wk}</small></div>`).join("");
+  const where = w < 1 ? `Week 1 starts on ${fShort(getStart())}.` : `You are in <b>week ${w}</b> · ${ph.label}.`;
+  const H = (title, body, c) => `<div class="sgroup"><div class="lbl">${title}</div><div class="sbox g-box"${c ? ` style="--c:${c}"` : ""}>${body}</div></div>`;
+  sh.classList.add("full"); sh.style.removeProperty("--c");
+  sh.innerHTML = `<div class="grab" style="margin-top:8px"></div><div class="sheet-h" style="padding-top:2px"><button class="linkb g-back" data-act="guideback" style="--c:var(--pull)"><svg class="i" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Settings</button><button class="linkb" data-act="close" style="--c:var(--pull);font-size:16px">Done</button></div>
+    <h2 class="g-title">How the plan works</h2>
+    <p class="g-lead">${where} Here is what the plan is built to do, and why each part is there.</p>
+
+    ${H("The goal", `<p>An upper body that looks wide and athletic: the classic <b>V-shape</b>.</p>
+      <ul class="bul" style="--c:var(--push)">
+        <li><b>Wider shoulders</b> from the side delts. They create the width at the top.</li>
+        <li><b>A wider back</b> from the lats. They make the waist look smaller.</li>
+        <li><b>Visible abs</b>, trained directly 4 times a week and kept visible by gaining slowly.</li>
+        <li><b>Legs in proportion.</b> Enough to stay balanced and strong, not a priority.</li>
+      </ul>
+      <p>You eat a small surplus (a <b>lean bulk</b>) so you build muscle with as little fat as possible.</p>`)}
+
+    ${H("Your week", `<p>Six training days and one light day. Each muscle is trained <b>twice a week</b>: once on an A day and once on a B day, with different exercises.</p>
+      <div class="g-week">${week}</div>
+      <p class="small muted">Push = chest, shoulders, triceps. Pull = back, rear delts, biceps. Sessions stay around 45–60 minutes because the small exercises at the end are done in supersets.</p>`)}
+
+    ${H("Where the work goes", `<p>Hard sets per muscle in one full week. Muscles grow best between about 10 and 20 hard sets a week, so the plan puts your priority muscles at the top of that range and keeps the others lower.</p>
+      <div class="g-bars">${bars}</div>
+      <p class="small muted"><span class="g-key"></span> Priority muscles. Rear delts get extra indirect work from rows and pull-ups.</p>`)}
+
+    ${H("The phases", `<p>The weeks follow a cycle so you come back from your break safely, then keep progressing without burning out.</p>
+      <div class="g-tl">${tl}</div>
+      <div class="g-rows">
+        <div><b>Weeks 1–2 · Re-entry.</b> 2 sets per exercise at about 70% of your old weights, 3–4 reps short of failure. Muscle comes back fast after a break; tendons and joints need longer. Easy now means no injuries later.</div>
+        <div><b>Weeks 3–4 · Build.</b> All sets, still 2–3 reps short of failure. Add weight every week.</div>
+        <div><b>Weeks 5–8 · Push.</b> Efforts as written on each exercise. This is where most growth happens.</div>
+        <div><b>Week 9 · Deload.</b> Half the sets, same weights. Fatigue drops, strength shows up.</div>
+        <div><b>After that:</b> 6 Push weeks + 1 Deload week, repeating as long as you follow the plan.</div>
+      </div>`)}
+
+    ${H("How hard to go: RIR", `<p><b>RIR</b> means <b>reps in reserve</b>: how many more reps you could still have done with good form.</p>
+      <ul class="bul" style="--c:var(--pull)">
+        <li><b>RIR 2</b>: you stop with 2 good reps left.</li>
+        <li><b>RIR 0</b>: you couldn't do one more. That is failure.</li>
+        <li>Big lifts (presses, squats, rows) stay at <b>RIR 1–2</b>. Failing there is risky and costs a lot of recovery.</li>
+        <li>Small isolation work (laterals, curls, flyes) goes to <b>RIR 0–1</b>. It's safe and recovers fast.</li>
+        <li>Lateral raises: the last set goes to failure, because side delts respond well to it.</li>
+      </ul>`)}
+
+    ${H("How you progress", `<p>Every exercise has a rep range, for example <b>8–12</b>. The plan uses <b>double progression</b>:</p>
+      <ol class="bul g-ol" style="--c:var(--legs)">
+        <li>Pick a weight you can lift for the bottom of the range.</li>
+        <li>Each session, try to add a rep on some sets.</li>
+        <li>Once <b>every set</b> reaches the top of the range, add weight: about 2.5 kg on barbells and machines, 1–2 kg on dumbbells and cables.</li>
+        <li>You drop back to the bottom of the range and build up again.</li>
+      </ol>
+      <p class="small muted">The Today tab does this for you: it shows your last numbers and says “Top of range hit” when it's time to add weight.</p>`)}
+
+    ${H("How a session is built", `<ul class="bul" style="--c:var(--push)">
+        <li><b>Heaviest lift first</b>, while you're fresh. It gets a warm-up and 2–3 min of rest.</li>
+        <li><b>Then the secondary lifts</b>, with about 2 min of rest.</li>
+        <li><b>Small exercises last</b>, with 60–90 s of rest. Two of them are paired as a superset to save time.</li>
+        <li>The rest timer starts by itself when you tick a set.</li>
+      </ul>`)}
+
+    ${H("Busy weeks", `<ul class="bul" style="--c:var(--core)">
+        <li><b>Express</b> keeps only the 3 exercises per day that matter most for shoulders, lats and abs (about 25 min). Turn on <b>Exam week</b> to use it for a whole week.</li>
+        <li>Short on time on a single exercise? <b>Skip it</b>. One missed exercise changes nothing.</li>
+        <li>Missed a whole day? Just do today's workout. Don't do two in one day.</li>
+        <li><b>Sunday</b> is core and mobility, 15 minutes, optional. If you're sore or slept badly, skip it.</li>
+      </ul>`)}
+
+    ${H("Food and sleep", `<ul class="bul" style="--c:var(--legs)">
+        <li>About <b>${KCAL} kcal</b> and <b>${PROT} g protein</b> a day.</li>
+        <li>Aim to gain about <b>0.2–0.35 kg a week</b>. The Progress tab compares your weekly average weight and tells you if you should eat more or less.</li>
+        <li><b>7 h 30</b> of sleep. It's when the muscle you trained for actually gets built.</li>
+      </ul>`)}
+
+    ${H("When something isn't working", `<ul class="bul" style="--c:var(--warn)">
+        <li><b>A lift is stuck for 2–3 weeks:</b> check your sleep and your weight trend first. If both are fine, swap the exercise for the alternative shown on its card.</li>
+        <li><b>Something hurts</b> (joint pain, not normal muscle burn): swap to the alternative or skip the exercise that day.</li>
+        <li><b>Always tired, everything feels heavy:</b> take a deload week early. That's a normal adjustment, not giving up.</li>
+      </ul>`)}
+    <div style="height:18px"></div>`;
+  showSheet(); sh.scrollTop = 0;
 }
 /* sheets: freeze the page behind them, drag down to close */
 // The page stays exactly where it is (no re-layout, nothing jumps); scrolling behind an open sheet is simply blocked.
@@ -2215,7 +2338,7 @@ function showSheet() { FIG_PAUSE = true; setTimeout(() => { FIG_PAUSE = false; }
   sh.addEventListener("touchend", end); sh.addEventListener("touchcancel", end);
   scrim.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
 })();
-function closeSheet(thrown) { $("#sheet").classList.remove("show"); $("#scrim").classList.remove("show"); lockScroll(false); setTimeout(() => { if (!$("#sheet").classList.contains("show")) $("#sheet").classList.remove("full"); }, 450); }
+function closeSheet(thrown) { S.guide = false; $("#sheet").classList.remove("show"); $("#scrim").classList.remove("show"); lockScroll(false); setTimeout(() => { if (!$("#sheet").classList.contains("show")) $("#sheet").classList.remove("full"); }, 450); }
 
 /* ================= events ================= */
 function go(tab, anim = true) {
@@ -2229,7 +2352,9 @@ window.addEventListener("hashchange", () => { const t = location.hash.slice(1); 
 document.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
   const a = b.dataset.act;
-  if (a === "sheet") return openSheet();
+  if (a === "sheet") { S.guide = false; return openSheet(); }
+  if (a === "guide") { S.setY = null; S.guideFrom = $("#sheet").scrollTop; S.guide = true; return openSheet(); }
+  if (a === "guideback") { S.guide = false; S.setY = S.guideFrom || 0; return openSheet(); }
   if (a === "close") return closeSheet();
   if (a === "t15") { if (T) { T.end += 15000; T.total += 15; } return; }
   if (a === "tskip") { T = null; clearInterval(tIv); $("#timer").classList.remove("show", "over"); return; }
