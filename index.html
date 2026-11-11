@@ -399,7 +399,7 @@ details.more .mb{padding-top:8px;display:flex;flex-direction:column;gap:6px;colo
 .chart.on .xh,.chart.on .fd{opacity:1}
 .chart .bar{fill:var(--c);transition:opacity .2s}
 .chart .bar.lo{fill:color-mix(in srgb, var(--c) 35%, var(--surface-2))}
-.chart.on .bar{opacity:.45} .chart.on .bar.sel{opacity:1}
+.chart.on .bar{opacity:.4} .chart.on .bar.pick{opacity:1;stroke:var(--fg);stroke-width:1.5}
 @keyframes barup{from{transform:scaleY(0)}to{transform:scaleY(1)}}
 .chart .tl{stroke:var(--fg);stroke-width:1.2;stroke-dasharray:4 4;opacity:.6}
 .tip{position:absolute;top:0;pointer-events:none;background:var(--fg);color:var(--bg);font-size:12.5px;font-weight:600;line-height:1.3;
@@ -1949,7 +1949,7 @@ function vSleep() {
     <div id="sl-save">${h0 == null ? `<button class="btn" data-act="logsleep" style="margin-top:14px;--c:var(--core)">Save this night</button>` : ""}</div></section>`;
   // last 14 nights chart
   const nights = [];
-  for (let i = 13; i >= 0; i--) { const d = addD(t, -i), x = dayDoc(d); nights.push({ date: d, h: sleepH(x && x.sleep), q: x && x.sleep && x.sleep.q }); }
+  for (let i = 13; i >= 0; i--) { const d = addD(t, -i), x = dayDoc(d); nights.push({ date: d, h: sleepH(x && x.sleep), q: x && x.sleep && x.sleep.q, bed: x && x.sleep && x.sleep.bed, wake: x && x.sleep && x.sleep.wake }); }
   const logged = nights.filter(x => x.h != null);
   const last7 = nights.slice(7).filter(x => x.h != null);
   const avg7 = last7.length ? last7.reduce((a, b) => a + b.h, 0) / last7.length : null;
@@ -1994,7 +1994,7 @@ function barChart(nights) {
       const y = Y(Math.min(max, n.h));
       g += `<rect class="bar ${n.h < 7.5 ? "lo" : ""}" data-i="${i}" x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${(VH - B - y).toFixed(1)}" rx="3" data-y="${y.toFixed(1)}" data-b="${VH - B}"/>`;
     }
-    pts.push({ date: n.date, y: n.h, px: cx, py: n.h != null ? Y(Math.min(max, n.h)) : Y(0), bar: true, q: n.q });
+    pts.push({ date: n.date, y: n.h, px: cx, py: n.h != null ? Y(Math.min(max, n.h)) : Y(0), bar: true, q: n.q, bed: n.bed, wake: n.wake });
     if (i % 2 === 1 || i === nights.length - 1) if (i === nights.length - 1 || i % 4 === 1) g += `<text class="ax" x="${cx}" y="${VH - 8}" text-anchor="middle">${parse(n.date).getDate()}</text>`;
   });
   g += `<line class="tl" x1="${L}" x2="${VW - R}" y1="${Y(7.5)}" y2="${Y(7.5)}"/>`;
@@ -2011,8 +2011,8 @@ function chartAt(el, clientX) {
   el.classList.add("on");
   const tip = el.querySelector(".tip"), sc = r.width / c.VW;
   if (best.bar) {
-    el.querySelectorAll(".bar").forEach(b => b.classList.toggle("sel", +b.dataset.i === c.pts.indexOf(best)));
-    tip.innerHTML = `${fH(best.y)}<small>${fShort(best.date)}${best.q ? " · rested " + best.q + "/5" : ""}</small>`;
+    el.querySelectorAll(".bar").forEach(b => b.classList.toggle("pick", +b.dataset.i === c.pts.indexOf(best)));
+    tip.innerHTML = `${fH(best.y)}<small>${best.bed ? best.bed + " → " + best.wake : ""}${best.q ? " · rested " + best.q + "/5" : ""}</small><small>Night to ${fShort(best.date)}</small>`;
   } else {
     const xh = el.querySelector(".xh"), fd = el.querySelector(".fd");
     xh.setAttribute("x1", best.px); xh.setAttribute("x2", best.px); fd.setAttribute("cx", best.px); fd.setAttribute("cy", best.py);
@@ -2024,8 +2024,8 @@ function chartAt(el, clientX) {
         `${S.metric === "e" ? kg(best.y) + " kg est. max" : kg(best.y) + " kg"}<small>${s ? `best ${kg(s.top.w)} × ${s.top.r} · ` : ""}${fShort(best.date)}</small>`;
     }
   }
-  const tx = Math.max(60, Math.min(r.width - 60, best.px * sc));
-  tip.style.left = tx + "px"; tip.style.top = Math.max(-8, best.py * sc - 52) + "px";
+  const half = Math.min(r.width / 2, (tip.offsetWidth || 120) / 2 + 2), tx = Math.max(half, Math.min(r.width - half, best.px * sc));
+  tip.style.left = tx + "px"; tip.style.top = Math.max(-8, best.py * sc - (tip.offsetHeight || 44) - 8) + "px";
 }
 document.addEventListener("pointerdown", e => {
   const el = e.target.closest(".chart");
