@@ -1,7 +1,7 @@
 // Offline support. The app opens from the saved copy if the network is slow (gyms!),
 // and quietly refreshes that copy in the background when the network answers.
-const CACHE = "upper-body-v2";
-const SHELL = ["./", "index.html", "manifest.webmanifest", "icon-180.png", "icon-192.png", "icon-512.png"];
+const CACHE = "upper-body-v3";
+const SHELL = ["./", "index.html", "manifest.webmanifest", "icon2-180.png", "icon2-192.png", "icon2-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL))); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))); self.clients.claim(); });
 const save = (req, r) => { if (r && r.ok) { const cp = r.clone(); caches.open(CACHE).then(c => c.put(req, cp)); } return r; };
