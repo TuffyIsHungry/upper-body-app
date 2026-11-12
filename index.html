@@ -480,6 +480,16 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .times input::-webkit-date-and-time-value{text-align:center}
 #calcwake{min-height:44px}
 .qual{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.rate{display:flex;flex-direction:column;gap:12px}
+.rate .sec-t{margin:0}
+.rate-r{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:center}
+.rate-l{display:flex;flex-direction:column;line-height:1.2} .rate-l b{font-size:15px} .rate-l span{font-size:12.5px;color:var(--muted)}
+.rate-note{width:100%;height:44px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface-2);color:var(--fg);padding:0 12px;font:inherit;font-size:16px}
+.rate-note:focus{outline:none;border-color:var(--c)}
+.rate-q{margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic}
+.reg-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.reg-top b{font-family:var(--display);font-size:44px;line-height:1;color:var(--c)} .reg-top b small{font-size:18px;color:var(--muted);font-weight:600}
+.reg svg{width:100%;height:auto;display:block;margin-top:10px;overflow:visible}
 .qual button{height:44px;border-radius:12px;background:var(--surface-2);font-weight:700;font-family:var(--display);font-size:19px;color:var(--muted);transition:background .2s,color .2s,transform .2s}
 .qual button[aria-pressed="true"]{background:var(--c);color:var(--on-c);transform:translateY(-2px)}
 
@@ -1559,9 +1569,37 @@ function vToday() {
   if (MQ.matches && motionPref() === "system") h = `<section class="card motion-note" style="--c:var(--pull)"><p class="small">Your iPhone has <b>Reduce Motion</b> on, so the exercise animations and effects are paused.</p><button class="btn" data-act="motion" data-v="on" style="width:auto;padding:0 16px;height:42px;font-size:14px">Turn on</button></section>` + h;
   return h;
 }
+/* session rating: energy + pump from 1 to 5 and a short note, on finished lifting days */
+const escH = v => String(v == null ? "" : v).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const RATE = { e: ["Energy", ["Drained", "Low", "OK", "Good", "Great"]], p: ["Pump", ["None", "Light", "OK", "Good", "Huge"]] };
+const rateOf = d => { const x = dayDoc(d); return (x && x.rate) || {}; };
+const rateWord = (k, v) => v ? RATE[k][1][v - 1] : "Tap 1 to 5";
+function rateRows(d) {
+  const r = rateOf(d);
+  return ["e", "p"].map(k => `<div class="rate-r"><div class="rate-l"><b>${RATE[k][0]}</b><span data-rw="${k}" data-d="${d}">${rateWord(k, r[k])}</span></div>
+    <div class="qual" role="group" aria-label="${RATE[k][0]} 1 to 5">${[1, 2, 3, 4, 5].map(v => `<button data-act="rate" data-k="${k}" data-v="${v}" data-d="${d}" aria-pressed="${r[k] === v}">${v}</button>`).join("")}</div></div>`).join("");
+}
+function rateCard(d) {
+  const wk = wkOf(d); if (wk.light || !isDone(d)) return "";
+  return `<section class="card rate" style="--c:${TYPES[wk.type]};margin-bottom:12px"><h2 class="sec-t">How did it go?</h2>${rateRows(d)}
+    <input class="rate-note" data-rnote="${d}" maxlength="140" placeholder="Note (optional): slept badly, gym packed…" value="${escH(rateOf(d).note)}" aria-label="Note about this session"></section>`;
+}
+function setRate(b) {
+  const d = b.dataset.d, k = b.dataset.k, v = +b.dataset.v, doc = ensureDay(d), r = { ...(doc.rate || {}) };
+  if (r[k] === v) delete r[k]; else r[k] = v;
+  doc.rate = r; touch("d" + d);
+  // update every copy on screen (finish sheet and Today card) in place
+  document.querySelectorAll(`[data-act="rate"][data-d="${d}"][data-k="${k}"]`).forEach(x => x.setAttribute("aria-pressed", String(r[k] === +x.dataset.v)));
+  document.querySelectorAll(`[data-rw="${k}"][data-d="${d}"]`).forEach(x => x.textContent = rateWord(k, r[k]));
+}
+document.addEventListener("input", e => {
+  const el = e.target; if (!el.dataset || !el.dataset.rnote) return;
+  const d = el.dataset.rnote, doc = ensureDay(d), r = { ...(doc.rate || {}) }, v = el.value.trim();
+  if (v) r.note = v; else delete r.note; doc.rate = r; touch("d" + d);
+});
 function finBtn(d) {
   const wk = wkOf(d), col = TYPES[wk.type];
-  if (isDone(d)) return `<button class="btn ghost" data-act="fin" style="--c:${col}"><span class="done-note">${IC.ok} ${wk.light ? "Core session" : "Workout"} complete</span></button>
+  if (isDone(d)) return rateCard(d) + `<button class="btn ghost" data-act="fin" style="--c:${col}"><span class="done-note">${IC.ok} ${wk.light ? "Core session" : "Workout"} complete</span></button>
     <p class="small muted" style="text-align:center;margin-top:6px">Tap an exercise above to change its sets · tap here to reopen the workout</p>`;
   return `<button class="btn" data-act="fin" style="--c:${col}">${IC.check.replace("<svg", '<svg class="i" style="stroke:currentColor;stroke-width:2.4"')} Finish ${wk.light ? "session" : "workout"}</button>`;
 }
@@ -1798,7 +1836,8 @@ function vWeek() {
     const sh = sleepH(doc && doc.sleep);
     h += `<button class="row" data-act="open" data-d="${d}" style="--c:${col};width:100%;text-align:left">
       <span class="daybar"></span><div class="rk"><div style="font-weight:600">${WD[dow(d)]} ${parse(d).getDate()} · ${wk.name}${isExpress(d) ? ' <span class="muted" style="font-weight:500">· Express</span>' : ""}${d === t ? ' <span class="pill" style="--c:var(--fg);padding:1px 8px;margin-left:4px">today</span>' : ""}</div>
-      <div class="status" style="color:${S2[2]}">${S2[0]} ${S2[1]}</div></div>
+      <div class="status" style="color:${S2[2]}">${S2[0]} ${S2[1]}${doc && doc.rate && (doc.rate.e || doc.rate.p) ? `<span class="muted" style="font-weight:500"> · ${[doc.rate.e ? "energy " + doc.rate.e : "", doc.rate.p ? "pump " + doc.rate.p : ""].filter(Boolean).join(" · ")}</span>` : ""}</div>
+      ${doc && doc.rate && doc.rate.note ? `<div class="small muted rate-q">“${escH(doc.rate.note)}”</div>` : ""}</div>
       <div style="text-align:right" class="small muted num">${sh != null ? fH(sh) : ""}${doc && doc.bw != null ? `<br>${kg(doc.bw)} kg` : ""}</div></button>`;
   }
   h += `</div></section>`;
@@ -1957,6 +1996,31 @@ function vFood() {
 }
 
 /* ---------- SLEEP ---------- */
+/* Sleep regularity: how much the bedtime moves around its own average (last 7 logged nights of the past 14). */
+const bedMin = hm => { const [h, m] = hm.split(":").map(Number); return (h * 60 + m + 720) % 1440; }; // minutes after noon, so 23:30 and 00:30 sit next to each other
+const minHM = v => { const x = ((Math.round(v) - 720) % 1440 + 1440) % 1440; return pad(Math.floor(x / 60)) + ":" + pad(x % 60); };
+function regularity(nights) {
+  const xs = nights.filter(n => n.h != null && n.bed).slice(-7); if (xs.length < 3) return { n: xs.length };
+  const b = xs.map(n => bedMin(n.bed)), avg = b.reduce((a, c) => a + c, 0) / b.length;
+  const dev = b.reduce((a, c) => a + Math.abs(c - avg), 0) / b.length; // average distance from the usual bedtime, in minutes
+  const score = Math.max(0, Math.min(100, Math.round(100 - dev * 1.1)));
+  return { n: xs.length, xs, b, avg, dev, score };
+}
+function regCard(nights) {
+  const r = regularity(nights), open = `<section class="card reg" id="sl-reg" style="--c:var(--core)"><h2 class="sec-t">Regularity</h2>`;
+  if (r.score == null) return open + `<p class="small muted">Log ${3 - r.n} more night${3 - r.n > 1 ? "s" : ""} to see how regular your bedtime is. Going to bed at the same time every night matters almost as much as the hours.</p></section>`;
+  const word = r.score >= 85 ? "Very regular" : r.score >= 65 ? "Fairly regular" : r.score >= 40 ? "Irregular" : "All over the place";
+  const tip = r.score >= 85 ? "Keep it. A fixed bedtime makes early mornings much easier." : r.score >= 65 ? "Good. Try to keep every night within 30 min of your usual time." : "Pick one bedtime and hold it within 30 min, weekends included.";
+  // dot plot: one dot per night, height = bedtime, dashed line = your average
+  const W = 300, H = 74, lo = Math.min(...r.b, r.avg - 45), hi = Math.max(...r.b, r.avg + 45), Y = v => 10 + (v - lo) / (hi - lo) * (H - 30), X = i => 46 + (r.xs.length === 1 ? 0 : i * (W - 62) / (r.xs.length - 1));
+  const dots = r.xs.map((n, i) => `<circle cx="${X(i).toFixed(1)}" cy="${Y(r.b[i]).toFixed(1)}" r="4.5" fill="var(--core)"/><text x="${X(i).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="9.5" fill="var(--muted)">${fmt(addD(n.date, -1), { weekday: "short" }).slice(0, 2)}</text>`).join("");
+  return open + `<div class="reg-top"><b class="num">${r.score}<small> / 100</small></b><span class="pill">${word}</span></div>
+    <p class="small" style="margin-top:8px">Over your last ${r.xs.length} logged nights, lights out was around <b class="num">${minHM(r.avg)}</b>, give or take <b class="num">${Math.round(r.dev)} min</b>. ${tip}</p>
+    <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Bedtime of each night compared with your average">
+      <line x1="40" x2="${W - 4}" y1="${Y(r.avg).toFixed(1)}" y2="${Y(r.avg).toFixed(1)}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
+      <text x="0" y="${(Y(r.avg) + 3.5).toFixed(1)}" font-size="10" fill="var(--muted)">${minHM(r.avg)}</text>
+      <text x="0" y="${(Y(lo) + 3.5).toFixed(1)}" font-size="9" fill="var(--faint)">earlier</text><text x="0" y="${(Y(hi) + 3.5).toFixed(1)}" font-size="9" fill="var(--faint)">later</text>${dots}</svg></section>`;
+}
 function vSleep() {
   const t = today(), n = S.night, doc = dayDoc(n), s = (doc && doc.sleep) || null, h0 = sleepH(s);
   setHeader("Sleep", "Recovery");
@@ -1984,6 +2048,7 @@ function vSleep() {
   const onT = last7.filter(x => x.h >= 7.5).length;
   h += `<div class="tiles" id="sl-tiles"><div class="tile"><span class="lbl">7-night avg</span><b class="num">${avg7 != null ? fH(avg7) : "–"}</b><span class="muted">target 7 h 30</span></div>
     <div class="tile"><span class="lbl">On target</span><b class="num"><span data-count="${onT}">${onT}</span><small>/ ${last7.length || 7}</small></b><span class="muted">nights ≥ 7 h 30</span></div></div>`;
+  h += regCard(nights);
   h += `<section class="card" id="sl-chart" style="--c:var(--core)"><h2 class="sec-t">Last 14 nights</h2>${logged.length ? barChart(nights) : ghostChart("Log a few nights to see the pattern.", "var(--core)")}
     <div class="legend" style="margin-top:8px"><span><i style="--c:var(--core)"></i>≥ 7 h 30</span><span><i style="--c:color-mix(in srgb, var(--core) 35%, var(--surface-2))"></i>below target</span><span class="muted">dashed = 7 h 30</span></div></section>`;
   h += `<section class="card" style="--c:var(--pull)"><h2 class="sec-t">Bedtime calculator</h2>
@@ -2353,6 +2418,7 @@ document.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
   const a = b.dataset.act;
   if (a === "sheet") { S.guide = false; return openSheet(); }
+  if (a === "rate") return setRate(b);
   if (a === "guide") { S.setY = null; S.guideFrom = $("#sheet").scrollTop; S.guide = true; return openSheet(); }
   if (a === "guideback") { S.guide = false; S.setY = S.guideFrom || 0; return openSheet(); }
   if (a === "close") return closeSheet();
@@ -2587,6 +2653,7 @@ function summary(d) {
       <div class="tile"><span class="lbl">Sets</span><b class="num"><span data-count="${c.ok}">${c.ok}</span><small>/ ${c.tot}</small></b></div>
       <div class="tile"><span class="lbl">Volume</span><b class="num">${vol ? `<span data-count="${Math.round(vol)}">${Math.round(vol)}</span><small>kg</small>` : "–"}</b><span class="muted">weight × reps</span></div>
       <div class="tile"><span class="lbl">Records</span><b class="num"><span data-count="${prs}">${prs}</span></b><span class="muted">${prs ? "new personal bests" : "next time"}</span></div></div>
+    ${wk.light ? "" : `<div class="rate" style="padding:2px 2px 4px"><h2 class="sec-t">How did it go?</h2>${rateRows(d)}</div>`}
     <div class="card" style="background:var(--surface-2);display:flex;gap:12px;align-items:center"><div class="flame" style="width:44px;height:44px;border-radius:14px">${IC.flame}</div><p class="small"><b>${st.cur}-day streak.</b> Next up: <b>${next.name}</b> (${next.focus.toLowerCase()}). Eat a proper breakfast with protein in the next 1–2 hours.</p></div>
     <button class="btn" data-act="close">Nice</button>`;
   showSheet();
@@ -2640,7 +2707,7 @@ function patchSleep() {
   if (S.tab !== "sleep") return;
   const tpl = document.createElement("template"); for (const k in CH) delete CH[k]; tpl.innerHTML = vSleep();
   const nScroll = ($("#sl-nights") || {}).scrollLeft || 0;
-  ["sl-nights", "sl-big", "sl-msg", "sl-save", "sl-tiles", "sl-chart"].forEach(id => { const a = document.getElementById(id), b = tpl.content.getElementById(id); if (a && b) a.replaceWith(b); });
+  ["sl-nights", "sl-big", "sl-msg", "sl-save", "sl-tiles", "sl-reg", "sl-chart"].forEach(id => { const a = document.getElementById(id), b = tpl.content.getElementById(id); if (a && b) a.replaceWith(b); });
   const n = $("#sl-nights"); if (n) n.scrollLeft = nScroll;
   view.querySelectorAll("#sl-tiles [data-count]").forEach(e => e.textContent = e.dataset.count);
 }
