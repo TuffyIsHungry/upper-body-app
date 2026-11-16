@@ -1883,10 +1883,10 @@ function vHome() {
   const tap = (tab, extra = "") => TABS.includes(tab) ? `data-act="gotab" data-v="${tab}" ${extra}` : "";
   const T2 = (tab, col, inner) => TABS.includes(tab) ? `<button class="tile tap" ${tap(tab)} style="--c:${col}">${inner}</button>` : `<div class="tile" style="--c:${col}">${inner}</div>`;
   let h = `<section class="banner" style="--c:${col}"><div class="bt">
-      <div class="lbl">${WD[dow(t)]} · ${ph.w >= 1 ? "Week " + ph.w : "Before week 1"} · ${wk.light ? "Optional" : ph.label}</div>
+      <div class="lbl">${WD[dow(t)]} · ${ph.w >= 1 ? "Week " + ph.w + " · " + (wk.light ? "Optional" : ph.label) : "Before week 1"}</div>
       <h2>${wk.name}</h2><div class="focus">${wk.focus}</div>
       <div class="meta">${bannerMeta(t)}</div></div>${ring(c.ok, c.tot)}
-      ${TABS.includes("today") ? `<button class="btn home-btn ${done ? "ghost" : ""}" ${tap("today")}>${done ? `<span class="done-note">${IC.ok} ${wk.light ? "Session" : "Workout"} complete</span>` : c.ok ? `Continue · ${c.ok} of ${c.tot} sets done` : wk.light ? "Start the core session" : "Start workout"}</button>` : ""}</section>`;
+      ${TABS.includes("today") ? `<button class="btn home-btn ${done ? "ghost" : ""}" ${tap("today")}>${done ? `<span class="done-note">${IC.ok} ${wk.light ? "Session" : "Workout"} complete</span>` : c.ok >= c.tot ? "All sets done · finish the workout" : c.ok ? `Continue · ${c.ok} of ${c.tot} sets done` : wk.light ? "Start the core session" : "Start workout"}</button>` : ""}</section>`;
   // protein + sleep
   const e = eatenToday(), left = Math.max(0, PROT - e.p), sl = sleepH(doc && doc.sleep);
   h += `<div class="tiles">${T2("food", "var(--pull)", `<span class="lbl">Protein</span><b class="num">${left ? `<span data-count="${left}">${left}</span><small>g to go</small>` : "Done"}</b>
@@ -2232,7 +2232,7 @@ function allExercises() {
   const seen = new Set(), out = [];
   for (const k of ["pushA", "pullA", "legsA", "pushB", "pullB", "legsB"]) for (const ex of PROGRAM[k].ex) if (!seen.has(ex.id)) { seen.add(ex.id); out.push({ ...ex, wk: k }); }
   // alternatives (Swap) that have been logged at least once
-  for (const k of ["pushA", "pullA", "legsA", "pushB", "pullB", "legsB"]) for (const ex of PROGRAM[k].ex) { const a = altOf(ex); if (a && !seen.has(a.id) && exHistory(a.id).length) { seen.add(a.id); out.push({ ...a, wk: "alt" }); } }
+  for (const k of ["pushA", "pullA", "legsA", "pushB", "pullB", "legsB"]) for (const ex of PROGRAM[k].ex) { const a = altOf(ex); if (a && !seen.has(a.id) && exHistory(a.id).length) { seen.add(a.id); out.push({ ...a, wk: k, swapped: true }); } }
   return out;
 }
 /* Consistency: planned lifting days (Mon–Sat) that were finished, per month. Today counts once it is done. */
@@ -2287,7 +2287,7 @@ function vProgress() {
     PROGRAM[k].ex.forEach(e => { if (exs.find(x => x.id === e.id).wk === k) opts += `<option value="${e.id}" ${e.id === ex.id ? "selected" : ""}>${e.n}${exHistory(e.id).length ? "" : " (no data yet)"}</option>`; });
     opts += `</optgroup>`;
   }
-  if (exs.some(x => x.wk === "alt")) opts += `<optgroup label="Swapped in">${exs.filter(x => x.wk === "alt").map(e => `<option value="${e.id}" ${e.id === ex.id ? "selected" : ""}>${e.n}</option>`).join("")}</optgroup>`;
+  if (exs.some(x => x.swapped)) opts += `<optgroup label="Swapped in">${exs.filter(x => x.swapped).map(e => `<option value="${e.id}" ${e.id === ex.id ? "selected" : ""}>${e.n}</option>`).join("")}</optgroup>`;
   const metric = ex.bw ? "r" : S.metric;
   const pts = hist.map(x => ({ date: x.date, y: metric === "w" ? x.top.w : metric === "e" ? Math.round(x.e1 * 10) / 10 : x.br, s: x }));
   const unit = metric === "r" ? "reps" : "kg";
@@ -3132,7 +3132,7 @@ document.addEventListener("click", e => {
     try { navigator.clipboard.writeText(txt).then(done, () => toast("Copy isn't allowed here")); } catch (e) { toast("Copy isn't allowed here"); }
     return;
   }
-  if (a === "resetset") { const keep = S.docs.settings || {}; S.docs.settings = { start: keep.start, wake: keep.wake, expressWeeks: keep.expressWeeks }; touch("settings"); applySettings(); openSheet(); render(false); toast("Settings reset"); return; }
+  if (a === "resetset") { const keep = S.docs.settings || {}; S.docs.settings = { start: keep.start, wake: keep.wake, expressWeeks: keep.expressWeeks, swaps: keep.swaps }; touch("settings"); applySettings(); openSheet(); render(false); toast("Settings reset"); return; }
   if (a === "motion") {
     S.docs.settings = { ...(S.docs.settings || {}), motion: b.dataset.v }; touch("settings"); applyMotion();
     if ($("#sheet").classList.contains("show") && $("#sheet [data-act=motion]") && !view.contains(b)) openSheet();
