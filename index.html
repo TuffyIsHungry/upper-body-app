@@ -572,6 +572,10 @@ button.row{color:inherit}
 .fw-b i.ok{background:var(--c)}
 .fw-c b{font-size:13.5px;color:var(--fg)} .fw-c.now span{color:var(--fg);font-weight:700}
 .fw-goal{position:absolute;left:0;right:0;border-top:1.5px dashed var(--muted);opacity:.6;pointer-events:none}
+.gar-line{display:flex;align-items:center;gap:7px;margin-top:12px}
+.gar-line svg{width:16px;height:16px;flex-shrink:0;color:var(--c)}
+.gar-line span{flex:1;min-width:0}
+.gar-line .linkb{padding:2px 4px;flex-shrink:0}
 .rate{display:flex;flex-direction:column;gap:12px}
 .rate .sec-t{margin:0}
 .rate-r{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:center}
@@ -1760,6 +1764,7 @@ function renderView(anim = true, dir = 0) {
   for (const k in CH) delete CH[k];
   view.innerHTML = fn();
   view.querySelectorAll(".note-pill").forEach(b => { b.querySelector("span").textContent = notes()[b.dataset.v] || ""; });
+  if (S.tab === "sleep" || S.tab === "home") setTimeout(garAuto, 400);
   figScan(view);
   view.className = "view";
   if (anim && !REDUCED) {
@@ -2485,6 +2490,90 @@ function vFood() {
 }
 
 /* ---------- SLEEP ---------- */
+/* ---------- Garmin watch → Sleep tab (Garmin Connect Personal API) ----------
+   The key lives ONLY in this phone's storage ("aub.garmin"): it is not part of the app's data, backups, cloud copy or
+   the website, so anyone else who uses the app has no key and sees none of this. Requests go straight from this phone
+   to Garmin. Nights you typed yourself are never overwritten. */
+const GAR = { base: "https://personal.connectapi.garmin.com", token: "/personalapitoken-service/personal-api/personal-api-key/token", every: 30 * 60e3 };
+const garGet = () => { try { return JSON.parse(localStorage.getItem("aub.garmin") || "{}"); } catch (e) { return {}; } };
+const garSet = o => { try { localStorage.setItem("aub.garmin", JSON.stringify({ ...garGet(), ...o })); } catch (e) {} };
+let garBusy = false;
+function garUrl(path) { const g = garGet(); return (g.relay ? g.relay.replace(/\/+$/, "") : GAR.base) + path; }
+async function garToken(force) {
+  const g = garGet(); if (!g.key) throw { kind: "nokey" };
+  if (!force && g.tok && g.exp - Date.now() / 1000 > 3600) return g.tok;
+  let r; try { r = await fetch(garUrl(GAR.token), { method: "POST", headers: { Accept: "*/*", Authorization: "ApiKey " + g.key } }); } catch (e) { throw { kind: "blocked" }; }
+  if (!r.ok) throw { kind: r.status === 401 || r.status === 403 ? "key" : "http", status: r.status };
+  const tok = (await r.text()).trim(); let exp = Date.now() / 1000 + 20 * 3600;
+  try { exp = JSON.parse(atob(tok.split(".")[1].replace(/-/g, "+").replace(/_/g, "/"))).exp || exp; } catch (e) {}
+  garSet({ tok, exp }); return tok;
+}
+// Garmin's field names aren't documented, so look for any object that carries a sleep start and end.
+function garNights(json) {
+  const out = [], seen = new Set();
+  const pick = (o, re) => { const k = Object.keys(o).find(k => re.test(k) && o[k] != null && typeof o[k] !== "object"); return k ? [k, o[k]] : null; };
+  const hm = (k, v) => { // → { hm: "23:10", date: "2026-11-16" } in local time
+    let d; if (typeof v === "number") { if (v < 1e11) v *= 1000; d = new Date(v); if (/local/i.test(k)) return { hm: pad(d.getUTCHours()) + ":" + pad(d.getUTCMinutes()), date: d.toISOString().slice(0, 10) }; }
+    else d = new Date(/z$|[+-]\d\d:?\d\d$/i.test(v) || /gmt|utc/i.test(k) && !/z$/i.test(v) ? (/z$|[+-]\d\d:?\d\d$/i.test(v) ? v : v + "Z") : v);
+    if (isNaN(d)) return null; return { hm: pad(d.getHours()) + ":" + pad(d.getMinutes()), date: ymd(d) };
+  };
+  (function walk(o, depth) {
+    if (!o || typeof o !== "object" || depth > 6) return;
+    if (Array.isArray(o)) return o.forEach(x => walk(x, depth + 1));
+    const st = pick(o, /sleep.*start.*local/i) || pick(o, /sleep.*start/i) || pick(o, /^(start|bed).*(time|timestamp)/i), en = pick(o, /sleep.*end.*local/i) || pick(o, /sleep.*end/i) || pick(o, /^(end|wake).*(time|timestamp)/i);
+    if (st && en) { const a = hm(st[0], st[1]), b = hm(en[0], en[1]), cd = pick(o, /calendarDate/i); if (a && b) { const date = cd && /^\d{4}-\d\d-\d\d/.test(cd[1]) ? String(cd[1]).slice(0, 10) : b.date; if (!seen.has(date)) { seen.add(date); out.push({ date, bed: a.hm, wake: b.hm }); } } }
+    for (const k in o) walk(o[k], depth + 1);
+  })(json, 0);
+  return out;
+}
+// what the answer looked like (names and types only, no values), for fixing the reader if Garmin's format differs
+const garShape = (o, d = 0) => o === null ? "null" : Array.isArray(o) ? `[${o.length ? garShape(o[0], d + 1) : ""}] ×${o.length}` : typeof o === "object" ? (d > 3 ? "{…}" : "{" + Object.keys(o).slice(0, 40).map(k => k + ":" + garShape(o[k], d + 1)).join(", ") + "}") : typeof o;
+async function garSync(manual) {
+  const g = garGet(); if (!g.key || garBusy) return; garBusy = true; garStatus();
+  try {
+    const t = today(), from = addD(t, -6);
+    const get = async tok => fetch(garUrl(`/sleep-service/sleep/dailySleepSummariesByDate?startDate=${from}&endDate=${t}`), { headers: { Accept: "application/json", Authorization: "Bearer " + tok } });
+    let r; try { r = await get(await garToken()); if (r.status === 401) r = await get(await garToken(true)); } catch (e) { if (e && e.kind) throw e; throw { kind: "blocked" }; }
+    if (!r.ok) throw { kind: r.status === 401 || r.status === 403 ? "key" : "http", status: r.status };
+    const json = await r.json(), nights = garNights(json).filter(n => n.date >= from && n.date <= t);
+    let added = 0;
+    for (const n of nights) {
+      const doc = ensureDay(n.date), old = doc.sleep;
+      if (old && old.bed && old.src !== "garmin") continue;               // you typed this night yourself: keep it
+      if (old && old.bed === n.bed && old.wake === n.wake) continue;
+      doc.sleep = { ...(old || {}), bed: n.bed, wake: n.wake, src: "garmin" }; touch("d" + n.date); added++;
+    }
+    garSet({ last: Date.now(), state: nights.length ? "ok" : "empty", n: nights.length, shape: nights.length ? "" : garShape(json).slice(0, 1500), err: "" });
+    if (added && (S.tab === "sleep" || S.tab === "home")) { const y = scrollY; render(false); scrollTo(0, y); }
+    if (manual) toast(nights.length ? (added ? `${added} night${added > 1 ? "s" : ""} updated from your watch` : "Already up to date") : "Garmin answered, but no sleep was found");
+  } catch (e) {
+    garSet({ last: Date.now(), state: e.kind || "http", err: e.status ? "HTTP " + e.status : "" });
+    if (manual) toast(garMsg(garGet()));
+  }
+  garBusy = false; garStatus();
+}
+function garMsg(g) {
+  if (!g.key) return "Not connected.";
+  if (garBusy) return "Syncing…";
+  const when = g.last ? new Date(g.last).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" }) : "";
+  return g.state === "ok" ? `Synced at ${when} · ${g.n} night${g.n === 1 ? "" : "s"} from your watch`
+    : g.state === "empty" ? "Connected, but the app couldn't read the sleep data Garmin sent. Tap “Copy details” and send them to Claude."
+    : g.state === "blocked" ? "This phone couldn't reach Garmin. Either you're offline, or Garmin doesn't accept requests from web apps. If your internet works, tell Claude: a small relay is needed."
+    : g.state === "key" ? "Garmin refused the key. It may be mistyped or expired. Create a new one and connect again."
+    : g.state === "http" ? `Garmin answered with an error (${g.err || "unknown"}). Try again later.`
+    : "Connected. Not synced yet.";
+}
+function garStatus() { document.querySelectorAll("[data-garmsg]").forEach(e => e.textContent = garMsg(garGet())); document.querySelectorAll("[data-garbtn]").forEach(b => b.disabled = garBusy); }
+function garAuto() { const g = garGet(); if (g.key && !garBusy && navigator.onLine !== false && Date.now() - (g.last || 0) > GAR.every) garSync(false); }
+function garSettings() {
+  const g = garGet();
+  return `<div class="sgroup"><div class="lbl">Garmin watch</div><div class="sbox" style="--c:var(--core)">
+      <div class="srow stack"><span>Sleep from your watch<small data-garmsg>${escH(garMsg(g))}</small></span>
+        ${g.key ? `<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn sm" data-act="garsync" data-garbtn style="--c:var(--core)">Sync now</button>${g.state === "empty" ? `<button class="btn sm ghost" data-act="garcopy">Copy details</button>` : ""}<button class="btn sm ghost" data-act="garoff">Disconnect</button></div>`
+          : `<input class="fl-in" id="garkey" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Paste your Garmin personal API key" aria-label="Garmin personal API key"><button class="btn sm" data-act="garon" style="--c:var(--core);flex:0 0 auto;align-self:flex-start;padding:0 22px">Connect</button>`}</div>
+      ${g.key && (g.state === "blocked" || g.relay) ? `<div class="srow stack"><span>Relay address<small>Only if Claude gave you one. Leave empty otherwise.</small></span><input class="fl-in" id="garrelay" type="url" autocapitalize="off" spellcheck="false" placeholder="https://…" value="${escH(g.relay || "")}" aria-label="Relay address"><button class="btn sm ghost" data-act="garrelay" style="flex:0 0 auto;align-self:flex-start">Save</button></div>` : ""}
+    </div><p class="small muted" style="margin:8px 4px 0">${g.key ? "The key is stored on this phone only. It is not in your backups and not on the website, so nobody else using the app can see your sleep. Nights you typed yourself are never replaced." : "Get the key in Garmin Connect on the web: Settings → Personal API token. It stays on this phone only, so nobody else using the app can see your sleep."}</p></div>`;
+}
 /* Sleep debt: hours behind 7 h 30 a night over the last 7 nights (good nights pay some of it back). */
 function debtCard(nights) {
   const xs = nights.slice(-7).filter(n => n.h != null), open = `<section class="card reg" id="sl-debt" style="--c:var(--warn)"><h2 class="sec-t">Sleep debt</h2>`;
@@ -2547,6 +2636,7 @@ function vSleep() {
     <div class="times"><label for="bed">Lights out<input type="time" id="bed" data-f="bed" value="${bed}"></label><label for="wake">Woke up<input type="time" id="wake" data-f="wake" value="${wake}"></label></div>
     <div class="lbl" style="margin:14px 0 8px">How rested do you feel?</div>
     <div class="qual" role="group" aria-label="Sleep quality 1 to 5">${[1, 2, 3, 4, 5].map(v => `<button data-act="q" data-v="${v}" aria-pressed="${q === v}">${v}</button>`).join("")}</div>
+    ${garGet().key ? `<p class="small muted gar-line"><svg class="i" viewBox="0 0 24 24"><rect x="7" y="6.5" width="10" height="11" rx="3"/><path d="M9.5 6.5l.6-3h3.8l.6 3M9.5 17.5l.6 3h3.8l.6-3"/></svg><span data-garmsg>${escH(garMsg(garGet()))}</span><button class="linkb" data-act="garsync" data-garbtn>Sync</button></p>` : ""}
     <div id="sl-save">${h0 == null ? `<button class="btn" data-act="logsleep" style="margin-top:14px;--c:var(--core)">Save this night</button>` : ""}</div></section>`;
   h += windCard();
   // last 14 nights chart
@@ -2758,6 +2848,7 @@ function openSheet() {
       ${SWI("ui.scroll", "Scroll to the next exercise")}
       ${SWI("ui.swipe", "Swipe to change day")}
     </div></div>
+    ${garSettings()}
     <div class="sgroup"><div class="lbl">Tabs</div><div class="sbox">
       ${(() => { const o = tabOrder(), hid = new Set(tabHidden()); return o.map((t, i) => `<div class="srow tabrow${hid.has(t) ? " off" : ""}"><span class="tabname"><svg class="i" viewBox="0 0 24 24">${TAB_DEF[t][1]}</svg>${TAB_DEF[t][0]}${i === o.findIndex(x => !hid.has(x)) ? "<small>opens first</small>" : ""}</span>
         <span class="tabctl"><button class="tmv" data-act="tabmv" data-v="${t}" data-dir="-1" ${i === 0 ? "disabled" : ""} aria-label="Move ${TAB_DEF[t][0]} left"><svg class="i" viewBox="0 0 24 24"><path d="M6 14.5l6-6 6 6"/></svg></button><button class="tmv" data-act="tabmv" data-v="${t}" data-dir="1" ${i === o.length - 1 ? "disabled" : ""} aria-label="Move ${TAB_DEF[t][0]} right"><svg class="i" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></svg></button>
@@ -2958,6 +3049,11 @@ document.addEventListener("click", e => {
   const a = b.dataset.act;
   if (a === "sheet") { S.guide = false; return openSheet(); }
   if (a === "rate") return setRate(b);
+  if (a === "garon") { const k = ($("#garkey") || {}).value || ""; if (k.trim().length < 8) return toast("Paste the key first"); garSet({ key: k.trim(), tok: "", exp: 0, last: 0, state: "" }); openSheet(); return garSync(true).then(() => { if ($("#sheet").classList.contains("show") && !S.guide) openSheet(); }); }
+  if (a === "garsync") return garSync(true).then(() => { if ($("#sheet").classList.contains("show") && !S.guide && $("[data-act=garoff]")) openSheet(); });
+  if (a === "garoff") { try { localStorage.removeItem("aub.garmin"); } catch (e) {} toast("Disconnected. The key was deleted from this phone."); return openSheet(); }
+  if (a === "garrelay") { garSet({ relay: (($("#garrelay") || {}).value || "").trim(), tok: "", exp: 0 }); openSheet(); return garSync(true).then(() => openSheet()); }
+  if (a === "garcopy") { const txt = "Garmin sleep answer (field names only): " + (garGet().shape || "none"); try { navigator.clipboard.writeText(txt).then(() => toast("Copied. Paste it in the chat with Claude."), () => toast("Couldn't copy")); } catch (e) { toast("Couldn't copy"); } return; }
   if (a === "pain") { S.painEdit = b.dataset.v; replaceCard(b.dataset.v) || flipList(); return; }
   if (a === "paincancel") { const k = S.painEdit; S.painEdit = null; replaceCard(k) || flipList(); return; }
   if (a === "painset") { const d = S.sel, doc = ensureDay(d), k = b.dataset.v; doc.pain = { ...(doc.pain || {}), [k]: b.dataset.a }; S.painEdit = null; touch("d" + d); replaceCard(k) || flipList(); toast("Flagged. You'll see a reminder here next time."); return; }
@@ -3282,7 +3378,7 @@ function sleepTime(el) {
   const v = { bed: bed.value, wake: wake.value }; if (!v.bed || !v.wake) return; // half-cleared field: wait for a real time
   const doc = ensureDay(S.night), old = doc.sleep || {};
   if (old.bed === v.bed && old.wake === v.wake) return;
-  doc.sleep = { ...old, ...v }; touch("d" + S.night); patchSleep();
+  doc.sleep = { ...old, ...v, src: "me" }; touch("d" + S.night); patchSleep();
 }
 function patchSleep() {
   if (S.tab !== "sleep") return;
