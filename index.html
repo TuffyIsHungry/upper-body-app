@@ -588,6 +588,43 @@ button.row{color:inherit}
 .gar-line svg{width:16px;height:16px;flex-shrink:0;color:var(--c)}
 .gar-line span{flex:1;min-width:0}
 .gar-line .linkb{padding:2px 4px;flex-shrink:0}
+.coach{display:flex;gap:12px;align-items:flex-start;padding:13px 14px;border-radius:18px;background:color-mix(in srgb, var(--c) 11%, var(--surface));box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 22%, transparent)}
+.coach .ci{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;background:color-mix(in srgb, var(--c) 20%, transparent);color:var(--c)}
+.coach .ci svg{width:18px;height:18px}
+.coach p{margin:0;font-size:14.5px;line-height:1.4} .coach .lbl{display:block;color:var(--c);margin-bottom:1px}
+.ringcard{display:grid;grid-template-columns:auto 1fr;gap:12px 16px;align-items:center}
+.ringcard .lvl-row{grid-column:1 / -1}
+.rc-t{display:flex;flex-direction:column;gap:2px;min-width:0} .rc-t b{font-family:var(--display);font-size:24px;line-height:1.1}
+.wring{position:relative;width:86px;height:86px}
+.wring svg{width:86px;height:86px;transform:rotate(-90deg);overflow:visible}
+.wr-s{fill:none;stroke-width:9;stroke-linecap:round;stroke:color-mix(in srgb, var(--fg) 9%, transparent)}
+.wr-s.on{stroke:var(--c)} .wr-s.now{stroke:color-mix(in srgb, var(--c) 32%, transparent)}
+.wr-s.miss{stroke:color-mix(in srgb, var(--warn) 30%, transparent)} .wr-s.fz{stroke:color-mix(in srgb, var(--pull) 45%, transparent)}
+.wr-t{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1}
+.wr-t b{font-family:var(--display);font-size:28px;display:block} .wr-t small{font-size:11px;color:var(--muted)}
+.wr-t svg{width:30px;height:30px;color:var(--warn);fill:color-mix(in srgb, var(--warn) 35%, transparent)}
+.ringcard.perfect{background:radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--warn) 16%, transparent), transparent 60%), var(--face);box-shadow:var(--elev),inset 0 0 0 1.5px color-mix(in srgb, var(--warn) 40%, transparent)}
+.wring.perfect svg{filter:drop-shadow(0 0 6px color-mix(in srgb, var(--warn) 55%, transparent))}
+.lvl-row{display:flex;align-items:center;gap:12px;padding-top:12px;border-top:1px solid var(--line)}
+.lvl-b{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;flex-shrink:0;font-family:var(--display);font-weight:700;font-size:19px;color:var(--on-c);background:linear-gradient(150deg, color-mix(in srgb, var(--core) 80%, #fff), var(--core));box-shadow:0 8px 18px -10px var(--core)}
+.lvl-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.lvl-t>div:first-child{display:flex;justify-content:space-between;align-items:baseline;gap:8px} .lvl-t b{font-size:15px;white-space:nowrap}
+.lvl-bar{height:8px;border-radius:5px;background:var(--surface-2);overflow:hidden;box-shadow:inset 0 1px 2px rgba(0,0,0,.18)}
+.lvl-bar i{display:block;height:100%;border-radius:5px;background:linear-gradient(90deg, color-mix(in srgb, var(--core) 60%, var(--surface-2)), var(--core))}
+#sheet .lvl-row{margin:2px 0 4px;border-top:0;padding-top:0}
+.fz-l{display:flex;align-items:center;gap:4px;margin-top:2px;color:var(--pull);font-weight:600;font-size:12.5px}
+.fz-l svg{width:13px;height:13px}
+.bmap{--bm0:color-mix(in srgb, var(--fg) 13%, var(--surface));display:flex;flex-direction:column;align-items:center;gap:6px}
+.bmap svg{width:100%;max-width:330px;height:auto;display:block}
+.bm-base{fill:color-mix(in srgb, var(--fg) 7.5%, var(--surface))}
+.bm-glute{fill:color-mix(in srgb, var(--fg) 10%, var(--surface))}
+.bm-m{stroke:var(--surface);stroke-width:1.1;cursor:pointer;transition:filter .2s}
+.bm-m.full{filter:drop-shadow(0 0 3px color-mix(in srgb, var(--c) 60%, transparent))}
+.bm-m.sel{stroke:var(--fg);stroke-width:1.4}
+.bm-l{font-size:8px;fill:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.bm-cap{text-align:center;min-height:1.4em;margin:0}
+.bm-key{display:flex;gap:14px;justify-content:center;font-size:12.5px;color:var(--muted)}
+.bm-key span{display:flex;align-items:center;gap:5px} .bm-key i{width:11px;height:11px;border-radius:4px;display:block}
 .rate{display:flex;flex-direction:column;gap:12px}
 .rate .sec-t{margin:0}
 .rate-r{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:center}
@@ -1038,7 +1075,7 @@ async function connect() {
 /* ================= settings ================= */
 const DEFSET = { theme: "auto", palette: "classic", custom: "#FF6A2B", motion: "system",
   snd: { on: true, timer: true, tone: "chime", count: true, tick: true, done: true, vol: .7 },
-  rest: { auto: true, adj: 0, hist: true }, ui: { figs: true, confetti: true, scroll: true, swipe: true, tabs: null, hide: [] } };
+  rest: { auto: true, adj: 0, hist: true }, ui: { figs: true, confetti: true, scroll: true, swipe: true, tabs: null, hide: [], freeze: true } };
 function SET() {
   const s = S.docs.settings || {};
   return { ...DEFSET, ...s, snd: { ...DEFSET.snd, ...(s.snd || {}) }, rest: { ...DEFSET.rest, ...(s.rest || {}) }, ui: { ...DEFSET.ui, ...(s.ui || {}) } };
@@ -1257,15 +1294,28 @@ function weightAdvice(delta) {
   return { t: "Gaining too fast", a: "Remove about 150 kcal a day to limit fat gain.", c: "var(--warn)", row: 2 };
 }
 function streaks() { return memo("streaks|" + today(), streaksCalc); }
+// is there a finished workout just before d (Sundays skipped)? Keeps a freeze from bridging into nothing.
+function hasDoneBefore(d, start) { let x = addD(d, -1), g = 0; while (x >= start && g++ < 14) { if (isDone(x)) return true; if (dow(x) !== 0) return false; x = addD(x, -1); } return false; }
 function streaksCalc() {
   const t = today();
   const dates = Object.values(S.docs).filter(x => x && x.date && x.done).map(x => x.date).sort();
   const start = [getStart(), dates[0] || t].sort()[0];
+  // Streak freeze: one missed training day (Mon–Sat) per week is forgiven automatically. Sundays never break a streak.
+  const fz = SET().ui.freeze !== false, used = new Set(), frozen = [];
   let d = isDone(t) ? t : addD(t, -1), cur = 0, guard = 0;
-  while (d >= start && guard++ < 1500) { if (isDone(d)) cur++; else if (dow(d) !== 0) break; d = addD(d, -1); }
-  let best = 0, run = 0; d = start; guard = 0;
-  while (d <= t && guard++ < 1500) { if (isDone(d)) { run++; best = Math.max(best, run); } else if (dow(d) !== 0 && d !== t) run = 0; d = addD(d, 1); }
-  return { cur, best, total: dates.length };
+  while (d >= start && guard++ < 1500) {
+    if (isDone(d)) cur++;
+    else if (dow(d) !== 0) { const w = mondayOf(d); if (!fz || used.has(w) || !hasDoneBefore(d, start)) break; /* only spend it if the chain really continues behind this day */ used.add(w); frozen.push(d); }
+    d = addD(d, -1);
+  }
+  let best = 0, run = 0, used2 = new Set(); d = start; guard = 0;
+  while (d <= t && guard++ < 1500) {
+    if (isDone(d)) { run++; best = Math.max(best, run); }
+    else if (dow(d) !== 0 && d !== t) { const w = mondayOf(d); if (fz && run && !used2.has(w)) used2.add(w); else run = 0; }
+    d = addD(d, 1);
+  }
+  const wk = mondayOf(t), left = fz && !frozen.some(x => mondayOf(x) === wk);
+  return { cur, best: Math.max(best, cur), total: dates.length, frozen, freezeLeft: left, freezeOn: fz };
 }
 
 /* ================= exercise figures (v3) =================
@@ -1899,6 +1949,8 @@ function vHome() {
       <h2>${wk.name}</h2><div class="focus">${wk.focus}</div>
       <div class="meta">${bannerMeta(t)}</div></div>${ring(c.ok, c.tot)}
       ${TABS.includes("today") ? `<button class="btn home-btn ${done ? "ghost" : ""}" ${tap("today")}>${done ? `<span class="done-note">${IC.ok} ${wk.light ? "Session" : "Workout"} complete</span>` : c.ok >= c.tot ? "All sets done · finish the workout" : c.ok ? `Continue · ${c.ok} of ${c.tot} sets done` : wk.light ? "Start the core session" : "Start workout"}</button>` : ""}</section>`;
+  h += coachCard();
+  h += ringCard();
   // protein + sleep
   const e = eatenToday(), left = Math.max(0, PROT - e.p), sl = sleepH(doc && doc.sleep);
   h += `<div class="tiles">${T2("food", "var(--pull)", `<span class="lbl">Protein</span><b class="num">${left ? `<span data-count="${left}">${left}</span><small>g to go</small>` : "Done"}</b>
@@ -1908,14 +1960,140 @@ function vHome() {
   // streak + morning weight
   const st = streaks(), wake = (S.docs.settings && S.docs.settings.wake) || "05:30", wd = (doc && doc.wind) || {}, wn = WIND.filter(([k]) => wd[k]).length;
   const bwAvg = weekAvgBW(mondayOf(t));
-  h += `<div class="tiles">${T2("progress", "var(--push)", `<span class="lbl">Streak</span><b class="num"><span data-count="${st.cur}">${st.cur}</span><small>${st.cur === 1 ? "day" : "days"}</small></b><span class="muted">${st.cur ? `Best: ${st.best}` : done ? "" : "Finish today to start one"}</span>`)}
+  h += `<div class="tiles">${T2("progress", "var(--push)", `<span class="lbl">Streak</span><b class="num"><span data-count="${st.cur}">${st.cur}</span><small>${st.cur === 1 ? "day" : "days"}</small></b><span class="muted">${st.cur ? `Best ${st.best}` : done ? "" : "Finish today to start one"}${st.freezeOn ? `<span class="fz-l"><svg class="i" viewBox="0 0 24 24">${IC_SNOW}</svg>${st.freezeLeft ? "Freeze ready" : "Freeze used " + fmt(st.frozen.find(x => mondayOf(x) === mondayOf(t)), { weekday: "short" })}</span>` : ""}</span>`)}
     ${T2("today", "var(--legs)", `<span class="lbl">Morning weight</span><b class="num">${doc && doc.bw != null ? `${kg(doc.bw)}<small>kg</small>` : "–"}</b><span class="muted">${doc && doc.bw != null ? (bwAvg != null ? `Week average ${bwAvg.toFixed(1)} kg` : "Logged today") : "Tap to log it"}</span>`)}</div>`;
   const TB = TABS.includes("sleep");
   h += `<${TB ? "button" : "div"} class="card tonight" ${tap("sleep")} style="--c:var(--core)"><span class="tn-i"><svg class="i" viewBox="0 0 24 24">${TAB_DEF.sleep[1]}</svg></span>
     <span class="tn-t"><b>Lights out by ${bedFor(wake)}</b><span class="small muted">for ${SLEEP_L} before your ${wake} alarm</span></span><span class="pill">${wn}/${WIND.length} wind-down</span></${TB ? "button" : "div"}>`;
   // the week (was its own tab)
   h += `<div id="weeksec">${weekSection()}</div>`;
+  setTimeout(() => { const up = checkLevel(), pw = checkPerfect(); if (S.tab !== "home") return;
+    if (up) { toast(`Level up! Level ${up.L} · ${up.name}`); SND.pr(); if (SET().ui.confetti) confetti(); }
+    else if (pw) { toast("Perfect week: 6 of 6"); if (SET().ui.confetti) confetti(); } }, 600);
   return h;
+}
+/* ---------- Coach note: one line a day, picked from your data (first rule that applies wins) ---------- */
+function coachNote() {
+  const t = today(), doc = dayDoc(t), wk = wkOf(t), ph = phase(t), st = streaks(), y = addD(t, -1), yd = dayDoc(y);
+  const W = (c, i, txt) => ({ c, i, txt });
+  if (isDone(t) && weekDone() >= 6) return W("var(--good)", "star", "Perfect week: 6 of 6. That's exactly how the plan is meant to run.");
+  if (isDone(t)) return W("var(--good)", "ok", wk.light ? "Core session done. Rest well, tomorrow starts a new week." : "Done for today. A protein-rich meal in the next 1–2 hours locks it in.");
+  const sl = sleepH(doc && doc.sleep);
+  if (sl != null && sl < SLEEP_T - 1) return W("var(--warn)", "moon", `Short night (${fH(sl)}). Keep today's sets 1–2 reps short of failure, and get to bed early.`);
+  // pain flagged in the last 2 weeks on something you do today
+  const ids = new Set(wk.light ? [] : plan(t).map(x => x.ex.id));
+  for (let i = 1; i <= 14; i++) { const d = addD(t, -i), x = dayDoc(d); if (!x || !x.pain) continue;
+    for (const k in x.pain) { const id = k.split("@")[0]; if (ids.has(id)) return W("var(--warn)", "warn", `You flagged ${painName(x.pain[k]).toLowerCase()} on ${(EXBY[id] || { n: "an exercise" }).n.split(" (")[0].toLowerCase()} on ${fDM(d)}. If it comes back today, tap Swap.`); } }
+  if (ph.key === "deload") return W("var(--core)", "info", "Deload week: half the sets, same weights. Your body catches up and comes back stronger.");
+  if (ph.key === "re") return W("var(--pull)", "info", "Re-entry weeks: about 70% of your old weights. Easy now means no injuries later.");
+  const M = [3, 5, 7, 10, 14, 21, 30, 40, 50, 75, 100];
+  if (M.includes(st.cur) || (st.cur > 100 && st.cur % 25 === 0)) return W("var(--push)", "flame", `${st.cur} days in a row. Keep the chain going today.`);
+  // records in the last finished workout
+  for (let i = 1; i <= 7; i++) { const d = addD(t, -i), x = dayDoc(d); if (!x || !x.done || wkOf(d).light) continue;
+    let n = 0; for (const k in x.ex || {}) for (const q of x.ex[k] || []) if (q && q.ok && q.pr) n++;
+    if (n) return W("var(--push)", "star", `${n} new record${n > 1 ? "s" : ""} last session. Go for one more today.`); break; }
+  // weight trend over the last two full weeks
+  const mon = mondayOf(t), a = weekAvgBW(addD(mon, -14)), b = weekAvgBW(addD(mon, -7));
+  if (a != null && b != null) { const dl = b - a; if (dl < 0.1) return W("var(--warn)", "info", "Weight is below lean-bulk pace. Add a snack, like a glass of milk and a banana."); if (dl > 0.5) return W("var(--warn)", "info", "Weight is going up fast. Skip one snack a day to keep the bulk lean."); }
+  const ye = foodEntries(yd); if (ye.length >= 2) { const r = ye.filter(e => (e.g || []).includes("p")).length; if (r < 3) return W("var(--pull)", "info", `${r} protein-rich meal${r === 1 ? "" : "s"} yesterday. Aim for ${PGOAL} today.`); }
+  if (wk.light) return W("var(--core)", "moon", "Rest day. The core session is optional, and a walk counts too.");
+  const wake = (S.docs.settings && S.docs.settings.wake) || "05:30", n = Math.floor(parse(t) / 864e5);
+  const tips = [`Priority today: ${wk.focus.toLowerCase()}.`, "Control the lowering: 2 seconds down on every rep.", "Beat last time by one rep. That's the whole plan.", `Lights out by ${bedFor(wake)} tonight for ${SLEEP_L} of sleep.`, "Log every set. What gets written down gets beaten."];
+  return W("var(--pull)", "info", tips[n % tips.length]);
+}
+const IC_SNOW = '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5M4 10.5l3.3-.9-.9-3.3M20 13.5l-3.3.9.9 3.3M4 13.5l3.3.9-.9 3.3M20 10.5l-3.3-.9.9-3.3"/>';
+const COACH_IC = {
+  ok: '<path d="M5 12.5l4.5 4.5L19 7.5"/>', star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
+  warn: '<path d="M12 4.5l8.5 14.5h-17z"/><path d="M12 10v4M12 16.8v.2"/>', moon: '<path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1z"/>',
+  info: '<path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/>',
+  flame: '<path d="M12 21c-3.9 0-6.5-2.6-6.5-6 0-3.4 2.6-5.3 3.6-8.5 2 1.4 2.7 3.3 2.6 5 1-.6 1.8-1.8 2-3.4 2 1.8 2.8 4.4 2.8 6.9 0 3.4-2.6 6-4.5 6z"/>',
+};
+function coachCard() { const c = coachNote(); return `<div class="coach" style="--c:${c.c}"><span class="ci"><svg class="i" viewBox="0 0 24 24">${COACH_IC[c.i]}</svg></span><p><span class="lbl">Coach</span>${c.txt}</p></div>`; }
+
+/* ---------- Week ring: 6 segments Mon–Sat, filled with each finished workout ---------- */
+function weekRing(t = today()) {
+  const mon = mondayOf(t), st = streaks(), fr = new Set(st.frozen), r = 34, C = 2 * Math.PI * r, gap = 7, seg = C / 6 - gap;
+  let arcs = "", n = 0;
+  for (let i = 0; i < 6; i++) {
+    const d = addD(mon, i), wk = wkOf(d), done = isDone(d); if (done) n++;
+    const cls = done ? "on" : fr.has(d) ? "fz" : d === t ? "now" : d < t ? "miss" : "";
+    arcs += `<circle class="wr-s ${cls}" cx="43" cy="43" r="${r}" style="--c:${TYPES[wk.type]}" stroke-dasharray="${seg.toFixed(2)} ${(C - seg).toFixed(2)}" stroke-dashoffset="${(-(i * C / 6) - gap / 2).toFixed(2)}"/>`;
+  }
+  const perfect = n >= 6;
+  return { n, perfect, html: `<div class="wring${perfect ? " perfect" : ""}"><svg viewBox="0 0 86 86">${arcs}</svg><div class="wr-t">${perfect ? `<svg class="i" viewBox="0 0 24 24">${COACH_IC.star}</svg>` : `<b class="num">${n}</b><small>of 6</small>`}</div></div>` };
+}
+function ringCard() {
+  const t = today(), w = weekRing(t), left = 6 - w.n, mon = mondayOf(t), daysLeft = [0, 1, 2, 3, 4, 5].map(i => addD(mon, i)).filter(d => d >= t && !isDone(d)).length;
+  const sub = w.perfect ? "Every training day done. Enjoy Sunday." : left > daysLeft ? `${left} to go · ${daysLeft} training day${daysLeft === 1 ? "" : "s"} left` : `${left} to go for a perfect week`;
+  return `<section class="card ringcard${w.perfect ? " perfect" : ""}" style="--c:var(--push)">${w.html}<div class="rc-t"><span class="lbl">This week</span><b>${w.perfect ? "Perfect week" : `${w.n} of 6 workouts`}</b><span class="small muted">${sub}</span></div>${levelRow()}</section>`;
+}
+
+/* ---------- Body map: front and back, each muscle filled by sets done vs planned ---------- */
+function bodyMap(vol) {
+  const pct = m => { const v = vol[m]; return v && v.p ? Math.min(1, v.d / v.p) : null; };
+  const fillOf = m => { const q = pct(m); if (q == null || q === 0) return "var(--bm0)"; return q >= 1 ? "var(--c)" : `color-mix(in srgb, var(--c) ${Math.round(28 + q * 52)}%, var(--bm0))`; };
+  const lab = m => { const L = MUSCLES.find(x => x[0] === m); return L ? L[1] : m; };
+  const cap = (a, r1, b, r2) => capsule(a, r1, b, r2);
+  const base = `<circle cx="50" cy="15" r="10"/><path d="${cap([50, 24], 5.5, [50, 31], 6.5)}"/>`;
+  const halfBase = `<path d="M50 30C44 30 36 31 31 33C26 35 24 39 25 44C27 52 32 56 33 60C34 72 37 86 38 98C38 104 37 109 36 113L50 113Z"/>
+    <path d="${cap([26, 42], 6.2, [23, 70], 5)}"/><path d="${cap([23, 71], 4.8, [20, 96], 3.6)}"/><circle cx="19.5" cy="101" r="4"/>
+    <path d="${cap([42, 112], 9, [42, 150], 6)}"/><path d="${cap([42, 152], 5.8, [42, 184], 3.8)}"/><ellipse cx="40" cy="189" rx="6" ry="3"/>`;
+  const R = (m, d) => `<path class="bm-m${pct(m) >= 1 ? " full" : ""}" data-act="bm" data-m="${m}" d="${d}" style="fill:${fillOf(m)}"><title>${lab(m)}</title></path>`;
+  const E = (cx, cy, rx, ry, rot = 0) => { const k = .5523, a = rot * Math.PI / 180, c = Math.cos(a), s2 = Math.sin(a), P = (x, y) => `${f1(cx + x * c - y * s2)},${f1(cy + x * s2 + y * c)}`;
+    return `M${P(rx, 0)}C${P(rx, ry * k)} ${P(rx * k, ry)} ${P(0, ry)}C${P(-rx * k, ry)} ${P(-rx, ry * k)} ${P(-rx, 0)}C${P(-rx, -ry * k)} ${P(-rx * k, -ry)} ${P(0, -ry)}C${P(rx * k, -ry)} ${P(rx, -ry * k)} ${P(rx, 0)}Z`; };
+  const absD = [61, 73, 85].map(y => `M43.6 ${y + 2.5}Q43.6 ${y} 46 ${y}H49.2V${y + 10}H46Q43.6 ${y + 10} 43.6 ${y + 7.5}Z`).join("");
+  const front = R("Side delts", E(27.4, 43.5, 5, 8.4, 16)) + R("Front delts", E(33.6, 40.2, 5.4, 5.4)) + R("Chest", "M49.2 39C43 37 37 39 35 44C34 50 37 56 42 57.5C45.5 58.5 48 57.5 49.2 55.5Z")
+    + R("Biceps", cap([25.2, 51], 4.2, [23.6, 66], 3.4)) + R("Abs", absD) + R("Quads", E(41.6, 130, 7.2, 17.5));
+  const back = R("Side delts", E(27.4, 43.5, 5, 8.4, 16)) + R("Rear delts", E(33.6, 40.5, 5.4, 5)) + R("Lats", "M46.5 60C44.5 54 38.5 50.5 32.6 51.5C32.4 62 35.2 76 40.6 89.5C42.8 92 45.6 91.6 46.2 88.5C45.4 79 45.6 68.5 46.5 60Z")
+    + R("Triceps", cap([26.6, 49.5], 4.2, [24.8, 66], 3.4)) + R("Hamstrings", E(42, 133, 6.6, 15)) + R("Calves", E(42, 164, 5, 9.5));
+  const fig = (x, mus, label) => `<g transform="translate(${x} 0)"><g class="bm-base">${base}${halfBase}<g transform="translate(100 0) scale(-1 1)">${halfBase}</g></g>
+      ${back === mus ? `<ellipse class="bm-glute" cx="43" cy="106" rx="7.4" ry="7"/><ellipse class="bm-glute" cx="57" cy="106" rx="7.4" ry="7"/>
+        <path class="bm-glute" d="M50 31.5C45 32.5 40.5 34.5 38.4 37.5L44.5 49.5L50 62L55.5 49.5L61.6 37.5C59.5 34.5 55 32.5 50 31.5Z"/>
+        <path class="bm-glute" d="M48.6 64L48.6 92.5Q48.6 95 50 95Q51.4 95 51.4 92.5L51.4 64Q50 61.5 48.6 64Z"/>` : ""}
+      <g>${mus}</g><g transform="translate(100 0) scale(-1 1)">${mus}</g><text class="bm-l" x="50" y="203" text-anchor="middle">${label}</text></g>`;
+  return `<div class="bmap"><svg viewBox="-2 0 218 208" role="img" aria-label="Body map of this week's training">${fig(0, front, "Front")}${fig(114, back, "Back")}</svg>
+    <p class="small muted bm-cap" id="bm-cap">Tap a muscle to see its sets.</p>
+    <div class="bm-key"><span><i style="background:var(--bm0)"></i>Not yet</span><span><i style="background:color-mix(in srgb, var(--c) 55%, var(--bm0))"></i>Some</span><span><i style="background:var(--c)"></i>Done</span></div></div>`;
+}
+/* ---------- Levels: points for training, named levels ----------
+   1 point per finished working set, +4 per personal record, +15 per finished workout (+8 for the Sunday core session).
+   Level L → L+1 costs 100 + 40·(L−1) points, so early levels come fast and later ones take weeks. */
+const LV_NAMES = [[1, "Rookie"], [2, "Beginner"], [4, "Regular"], [6, "Iron"], [9, "Bronze"], [12, "Silver"], [15, "Steel"], [19, "Gold"], [24, "Titan"], [30, "Legend"]];
+function xpTotal() {
+  return memo("xp", () => {
+    let xp = 0;
+    for (const id in S.docs) { const x = S.docs[id]; if (!x || !x.date) continue;
+      for (const k in x.ex || {}) for (const q of x.ex[k] || []) if (q && q.ok) xp += 1 + (q.pr ? 4 : 0);
+      if (x.done) xp += wkOf(x.date).light ? 8 : 15; }
+    return xp;
+  });
+}
+function levelOf(xp) {
+  let L = 1, need = 100, base = 0;
+  while (xp >= base + need && L < 99) { base += need; L++; need = 100 + 40 * (L - 1); }
+  const name = LV_NAMES.filter(([n]) => L >= n).pop()[1];
+  return { L, name, into: xp - base, need, xp };
+}
+const levelNow = () => levelOf(xpTotal());
+function levelRow() {
+  const v = levelNow();
+  return `<div class="lvl-row"><span class="lvl-b num">${v.L}</span><div class="lvl-t"><div><b>Level ${v.L} · ${v.name}</b><span class="small muted num">${v.need - v.into} pts to level ${v.L + 1}</span></div>
+    <div class="lvl-bar"><i style="width:${(v.into / v.need * 100).toFixed(1)}%"></i></div></div></div>`;
+}
+// celebrate a new level once per phone (the first time, just remember the current level)
+function checkLevel() {
+  const v = levelNow(); let seen = null; try { const x = localStorage.getItem("aub.lvl"); seen = x ? +x : null; } catch (e) {}
+  if (seen == null || v.L < seen) { try { localStorage.setItem("aub.lvl", v.L); } catch (e) {} return null; }
+  if (v.L === seen) return null;
+  try { localStorage.setItem("aub.lvl", v.L); } catch (e) {}
+  return v;
+}
+// perfect week = the 6 training days Mon–Sat all finished
+const weekDone = (t = today()) => { const mon = mondayOf(t); let n = 0; for (let i = 0; i < 6; i++) if (isDone(addD(mon, i))) n++; return n; };
+function checkPerfect() {
+  const mon = mondayOf(today()); if (weekDone() < 6) return false;
+  let seen = ""; try { seen = localStorage.getItem("aub.pw") || ""; } catch (e) {}
+  if (seen === mon) return false; try { localStorage.setItem("aub.pw", mon); } catch (e) {} return true;
 }
 function finBtn(d) {
   const wk = wkOf(d), col = TYPES[wk.type];
@@ -2173,7 +2351,7 @@ function weekSection() {
   let tilesH = `<div class="tiles">
     <div class="tile" style="--c:var(--push)"><span class="lbl">Workouts</span><b class="num"><span data-count="${done}">${done}</span><small>/ 6</small></b><span class="muted">${isDone(sun) ? "plus Sunday core" : "Sunday core is optional"}</span></div>
     <div class="tile" style="--c:var(--pull)"><span class="lbl">Hard sets</span><b class="num"><span data-count="${setsOk}">${setsOk}</span><small>/ ${setsTot}</small></b><span class="muted">planned this week</span></div>
-    <div class="tile" style="--c:var(--core)"><span class="lbl">Avg sleep</span><b class="num">${avgS != null ? fH(avgS) : "–"}</b><span class="muted">${sl.length ? `${sl.length} nights logged · target ${SLEEP_L}` : "Log nights in the Sleep tab"}</span></div>
+    <div class="tile" style="--c:var(--core)"><span class="lbl">Avg sleep</span><b class="num">${avgS != null ? fH(avgS) : "–"}</b><span class="muted">${sl.length ? `${sl.length} night${sl.length === 1 ? "" : "s"} logged · target ${SLEEP_L}` : "Log nights in the Sleep tab"}</span></div>
     <div class="tile" style="--c:var(--legs)"><span class="lbl">Avg weight</span><b class="num">${bw != null ? `<span data-count="${bw.toFixed(1)}">${bw.toFixed(1)}</span><small>kg</small>` : "–"}</b>
       <span class="muted">${delta != null ? `<span class="${delta >= 0 ? "delta-up" : "delta-dn"}">${delta >= 0 ? "+" : "−"}${Math.abs(delta).toFixed(2)} kg</span> vs the week before` : "Weigh in every morning"}</span></div></div>`;
   const adv = weightAdvice(delta);
@@ -2191,7 +2369,9 @@ function weekSection() {
       <div style="text-align:right" class="small muted num">${sh != null ? fH(sh) : ""}${doc && doc.bw != null ? `<br>${kg(doc.bw)} kg` : ""}</div></button>`;
   }
   h += `</div></section>` + tilesH;
-  h += `<section class="card"><h2 class="sec-t">Sets per muscle</h2><p class="small muted" style="margin-bottom:8px">Done vs planned ${S.weekOff === 0 ? "this week" : "that week"}. Bold = your priority muscles.</p>`;
+  S.bmVol = vol;
+  h += `<section class="card" style="--c:var(--push)"><h2 class="sec-t">Muscles ${S.weekOff === 0 ? "this week" : "that week"}</h2><p class="small muted" style="margin-bottom:6px">Each muscle fills up as you do its planned sets.</p>${bodyMap(vol)}
+    <p class="small muted" style="margin:14px 0 8px">Sets done vs planned. Bold = your priority muscles.</p>`;
   MUSCLES.forEach(([m, label, pr]) => {
     const v = vol[m]; if (!v.p) return;
     const pct = Math.min(100, v.d / v.p * 100);
@@ -2866,6 +3046,7 @@ function openSheet() {
     <div class="sgroup"><div class="lbl">Workout screen</div><div class="sbox">
       ${SWI("ui.figs", "Exercise pictures on cards", "Tap a picture to see it move")}
       ${SWI("ui.confetti", "Confetti when you finish")}
+      ${SWI("ui.freeze", "Streak freeze", "One missed training day a week doesn't break your streak")}
       ${SWI("ui.scroll", "Scroll to the next exercise")}
       ${SWI("ui.swipe", "Swipe to change day")}
     </div></div>
@@ -3070,6 +3251,9 @@ document.addEventListener("click", e => {
   const a = b.dataset.act;
   if (a === "sheet") { S.guide = false; return openSheet(); }
   if (a === "rate") return setRate(b);
+  if (a === "bm") { const m = b.dataset.m, v = (S.bmVol || {})[m], L = (MUSCLES.find(x => x[0] === m) || [m, m])[1], cap = $("#bm-cap");
+    document.querySelectorAll(".bm-m.sel").forEach(x => x.classList.remove("sel")); document.querySelectorAll(`.bm-m[data-m="${m}"]`).forEach(x => x.classList.add("sel"));
+    if (cap && v) cap.innerHTML = `<b>${L}</b>: ${v.d} of ${v.p} sets${v.d >= v.p ? " · done" : v.d ? "" : " · not started"}`; return; }
   if (a === "garon") { const k = ($("#garkey") || {}).value || ""; if (k.trim().length < 8) return toast("Paste the key first"); garSet({ key: k.trim(), tok: "", exp: 0, last: 0, state: "" }); openSheet(); return garSync(true).then(() => { if ($("#sheet").classList.contains("show") && !S.guide) openSheet(); }); }
   if (a === "garsync") return garSync(true).then(() => { if ($("#sheet").classList.contains("show") && !S.guide && $("[data-act=garoff]")) openSheet(); });
   if (a === "garoff") { try { localStorage.removeItem("aub.garmin"); } catch (e) {} toast("Disconnected. The key was deleted from this phone."); return openSheet(); }
@@ -3348,6 +3532,7 @@ function summary(d) {
       <div class="tile"><span class="lbl">Records</span><b class="num"><span data-count="${prs}">${prs}</span></b><span class="muted">${prs ? "new personal bests" : "next time"}</span></div></div>
     ${wk.light ? "" : `<div class="rate" style="padding:2px 2px 4px"><h2 class="sec-t">How did it go?</h2>${rateRows(d)}</div>`}
     <div class="card" style="background:var(--surface-2);display:flex;gap:12px;align-items:center"><div class="flame" style="width:44px;height:44px;border-radius:14px">${IC.flame}</div><p class="small"><b>${st.cur}-day streak.</b> Next up: <b>${next.name}</b> (${next.focus.toLowerCase()}). Eat a proper breakfast with protein in the next 1–2 hours.</p></div>
+    ${levelRow()}
     <button class="btn" data-act="close">Nice</button>`;
   showSheet();
   if (!REDUCED) sh.querySelectorAll("[data-count]").forEach(el => { const end = +el.dataset.count, t0 = performance.now(); const stp = t => { const q = Math.min(1, (t - t0) / 900); el.textContent = Math.round(end * (1 - Math.pow(1 - q, 3))); if (q < 1) requestAnimationFrame(stp); }; requestAnimationFrame(stp); });
@@ -3356,8 +3541,9 @@ function celebrate() {
   const dd = ensureDay(S.sel); if (!dd.end && dd.start) { dd.end = sessionEnd({ ...dd, done: false }); touch("d" + S.sel); }
   const sd = S.sel; setTimeout(() => { if (S.tab === "today" && S.sel === sd && isDone(sd) && !$("#sheet").classList.contains("show")) summary(sd); }, REDUCED ? 0 : 1100);
   T = null; clearInterval(tIv); $("#timer").classList.remove("show", "over");
-  if (SET().ui.confetti) confetti(); SND.done(); const s = streaks();
-  toast(s.cur > 1 ? `Workout done. ${s.cur}-day streak` : "Workout done. Streak started");
+  if (SET().ui.confetti) confetti(); SND.done(); const s = streaks(), up = checkLevel(), pw = checkPerfect();
+  if (up) setTimeout(() => SND.pr(), 500);
+  toast(up ? `Level up! Level ${up.L} · ${up.name}` : pw ? "Perfect week: 6 of 6" : s.cur > 1 ? `Workout done. ${s.cur}-day streak` : "Workout done. Streak started");
 }
 function toggleFinish() {
   const d = S.sel, doc = ensureDay(d);
