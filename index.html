@@ -186,6 +186,8 @@ input,select{font:inherit;color:inherit}
 .wt-v b{font-size:16px}
 .wt-v .tmr-c{font-size:12.5px}
 /* level up */
+.lv-replay{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin:2px 0 8px;color:var(--c);font-weight:600}
+.lv-replay svg{width:16px;height:16px}
 .lvfx{position:fixed;inset:0;z-index:400;display:grid;place-items:center;overflow:hidden;cursor:pointer;color:#fff;animation:lvIn .35s ease both;-webkit-tap-highlight-color:transparent}
 .lvfx.out{animation:lvOut .32s ease both}
 .lvfx-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--t) 55%, #05070B) 0%, color-mix(in srgb, var(--t) 18%, #05070B) 42%, #04060A 78%);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
@@ -2367,9 +2369,9 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* Level up: full-screen moment (badge, number rolling to the new level, rays, sparks). Any tap closes it. */
-function lvlFX(up) {
-  let best = 0; try { best = +(localStorage.getItem("aub.lvx") || 0); } catch (e) {}
-  if (up.L <= best) return; try { localStorage.setItem("aub.lvx", up.L); } catch (e) {}
+function lvlFX(up, replay) {
+  if (!replay) { let best = 0; try { best = +(localStorage.getItem("aub.lvx") || 0); } catch (e) {}
+    if (up.L <= best) return; try { localStorage.setItem("aub.lvx", up.L); } catch (e) {} }
   const old = $("#lvfx"); if (old) old.remove();
   const v = levelNow(), tierNow = TIERS.filter(([n]) => up.L >= n).length - 1, newTier = tierNow > up.tierIx;
   const parts = REDUCED ? "" : Array.from({ length: 28 }, (_, i) => `<i style="--a:${(i * 360 / 28 + Math.random() * 8).toFixed(0)}deg;--d:${(110 + Math.random() * 130).toFixed(0)}px;--s:${(.3 + Math.random() * .25).toFixed(2)}s;--z:${(4 + Math.random() * 6).toFixed(0)}px"></i>`).join("");
@@ -2415,6 +2417,7 @@ function openLevel(upFrom) {
       ${row("s", "Finished sets", p.sets, 1)}${row("p", "Personal records", p.prs, 4)}${row("w", "Finished workouts", p.wk, 15)}${row("c", "Sunday core sessions", p.core, 8)}
       <div class="lp-r tot"><span>Total</span><span></span><b class="num">${v.xp}</b></div></div>
     <div class="lp-sec"><span class="lbl">Titles</span><div class="ladder">${ladder}</div></div>
+    <button class="linkb lv-replay" data-act="lvreplay" style="--c:${v.col}"><svg class="i" viewBox="0 0 24 24"><path d="M8 5.5l10 6.5-10 6.5z"/></svg>Replay the level-up animation</button>
     <button class="btn" data-act="close" style="--c:${v.col}">${upFrom ? "Let's go" : "Close"}</button>`;
   showSheet();
   if (upFrom && !REDUCED) { const b = sh.querySelector(".lp-hero .lvl-svg"); if (b && b.animate) b.animate([{ transform: "scale(.3) rotate(-25deg)", opacity: 0 }, { transform: "scale(1.12) rotate(4deg)", opacity: 1, offset: .7 }, { transform: "none", opacity: 1 }], { duration: 750, easing: "cubic-bezier(.2,.9,.3,1.2)" }); }
@@ -3668,6 +3671,7 @@ document.addEventListener("click", e => {
   const a = b.dataset.act;
   if (a === "sheet") { S.guide = false; return openSheet(); }
   if (/^stw(pause|go|reset)?$/.test(a)) return stwAct(a);
+  if (a === "lvreplay") { closeSheet(); const v = levelNow(); setTimeout(() => lvlFX({ L: v.L, L0: Math.max(1, v.L - 1), tierIx: TIERS.filter(([n]) => v.L - 1 >= n).length - 1 }, true), 380); return; }
   if (a === "rate") return setRate(b);
   if (a === "lvl") return openLevel();
   if (a === "bm") { const m = b.dataset.m, v = (S.bmVol || {})[m], L = (MUSCLES.find(x => x[0] === m) || [m, m])[1], cap = $("#bm-cap");
