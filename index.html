@@ -682,6 +682,20 @@ button.row{color:inherit}
 .reg-top b{font-family:var(--display);font-size:44px;line-height:1;color:var(--c)}
 .reg-top b small{font-size:18px} .reg-top b small{font-size:18px;color:var(--muted);font-weight:600}
 .reg svg{width:100%;height:auto;display:block;margin-top:10px;overflow:visible}
+.ss-g{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.ss-c{display:flex;flex-direction:column;gap:1px;min-width:0;padding:11px 12px 10px;border-radius:14px;background:var(--surface-2);text-align:left;color:var(--fg);font:inherit}
+.ss-c .lbl{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.ss-c .lbl svg{width:16px;height:16px;color:var(--muted);transition:transform .2s}
+.ss-c.on{box-shadow:inset 0 0 0 1.5px var(--c)}
+.ss-c.on .lbl svg{transform:rotate(180deg)}
+.ss-c b{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1}
+.ss-c b small{font-size:15px;font-weight:600;color:var(--muted);margin:0 2px}
+.ss-v{font-size:13px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ss-c.tap:active{transform:scale(.97)}
+.ss-x{margin-top:10px;padding:12px 13px;border-radius:14px;background:color-mix(in srgb, var(--c) 9%, var(--surface-2));animation:ssIn .22s ease both}
+.ss-x>b{display:block;font-size:14px;margin-bottom:4px}
+@keyframes ssIn{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.ss-x{animation:none}.ss-c .lbl svg{transition:none}}
 .qual button{height:44px;border-radius:12px;background:var(--surface-2);font-weight:700;font-family:var(--display);font-size:19px;color:var(--muted);transition:background .2s,color .2s,transform .2s}
 .qual button[aria-pressed="true"]{background:var(--c);color:var(--on-c);transform:translateY(-2px)}
 
@@ -2882,16 +2896,16 @@ function garSettings() {
 /* Sleep target: 8 h 15 a night. Every sleep number, message, chart line and bedtime uses these two. */
 const SLEEP_T = 8.25, SLEEP_L = "8 h 15";
 /* Sleep debt: hours behind the target a night over the last 7 nights (good nights pay some of it back). */
-function debtCard(nights) {
-  const xs = nights.slice(-7).filter(n => n.h != null), open = `<section class="card reg" id="sl-debt" style="--c:var(--warn)"><h2 class="sec-t">Sleep debt</h2>`;
-  if (!xs.length) return open + `<p class="small muted">Log a few nights and this shows how many hours you are behind ${SLEEP_L} a night.</p></section>`;
+function debtInfo(nights) {
+  const xs = nights.slice(-7).filter(n => n.h != null);
+  if (!xs.length) return { num: "–", word: "No data", col: "var(--muted)", detail: `<p class="small muted">Log a few nights and this shows how many hours you are behind ${SLEEP_L} a night.</p>` };
   const debt = Math.max(0, xs.reduce((a, n) => a + (SLEEP_T - n.h), 0)), min = Math.round(debt * 60);
   const lvl = min < 30 ? ["None", "var(--good)"] : min < 120 ? ["Low", "var(--good)"] : min < 240 ? ["Building", "var(--warn)"] : ["High", "var(--warn)"];
   const k = Math.min(7, Math.ceil(min / 40));
   const txt = min < 30 ? `You are on track over your last ${xs.length} logged night${xs.length > 1 ? "s" : ""}. Nothing to catch up.`
     : `Over your last ${xs.length} logged night${xs.length > 1 ? "s" : ""} you are <b class="num">${fH(debt)}</b> behind ${SLEEP_L} a night. To catch up, go to bed 30–45 min earlier for the next ${k >= 7 ? "week" : k + (k > 1 ? " nights" : " night")}. Keep your wake-up time, and don't sleep in more than 1 hour on days off, or your rhythm shifts.`;
-  return open.replace("var(--warn)", lvl[1]) + `<div class="reg-top"><b class="num">${Math.floor(min / 60)}<small> h </small>${pad(min % 60)}<small> min</small></b><span class="pill">${lvl[0]}</span></div>
-    <p class="small" style="margin-top:8px">${txt}</p>${xs.length < 7 ? `<p class="small muted" style="margin-top:6px">${xs.length} of the last 7 nights logged. Unlogged nights are left out.</p>` : ""}</section>`;
+  return { num: `${Math.floor(min / 60)}<small>h</small>${pad(min % 60)}`, word: lvl[0], col: lvl[1],
+    detail: `<p class="small">${txt}</p>${xs.length < 7 ? `<p class="small muted" style="margin-top:6px">${xs.length} of the last 7 nights logged. Unlogged nights are left out.</p>` : ""}` };
 }
 /* Wind-down: three habits to tick before bed tonight. */
 const WIND = [["screens", "Screens off", "30 min before bed"], ["alarm", "Alarm set", "and phone out of reach"], ["room", "Room cool and dark", "window open for a few minutes"]];
@@ -2911,26 +2925,40 @@ function regularity(nights) {
   const score = Math.max(0, Math.min(100, Math.round(100 - dev * 1.1)));
   return { n: xs.length, xs, b, avg, dev, score };
 }
-function regCard(nights) {
-  const r = regularity(nights), open = `<section class="card reg" id="sl-reg" style="--c:var(--core)"><h2 class="sec-t">Regularity</h2>`;
-  if (r.score == null) return open + `<p class="small muted">Log ${3 - r.n} more night${3 - r.n > 1 ? "s" : ""} to see how regular your bedtime is. Going to bed at the same time every night matters almost as much as the hours.</p></section>`;
+function regInfo(nights) {
+  const r = regularity(nights);
+  if (r.score == null) return { num: "–", word: `After ${3 - r.n} more night${3 - r.n > 1 ? "s" : ""}`, detail: `<p class="small muted">Log ${3 - r.n} more night${3 - r.n > 1 ? "s" : ""} to see how regular your bedtime is. Going to bed at the same time every night matters almost as much as the hours.</p>` };
   const word = r.score >= 85 ? "Very regular" : r.score >= 65 ? "Fairly regular" : r.score >= 40 ? "Irregular" : "All over the place";
   const tip = r.score >= 85 ? "Keep it. A fixed bedtime makes early mornings much easier." : r.score >= 65 ? "Good. Try to keep every night within 30 min of your usual time." : "Pick one bedtime and hold it within 30 min, weekends included.";
   // dot plot: one dot per night, height = bedtime, dashed line = your average
   const W = 300, H = 74, lo = Math.min(...r.b, r.avg - 45), hi = Math.max(...r.b, r.avg + 45), Y = v => 10 + (v - lo) / (hi - lo) * (H - 30), X = i => 46 + (r.xs.length === 1 ? 0 : i * (W - 62) / (r.xs.length - 1));
   const dots = r.xs.map((n, i) => `<circle cx="${X(i).toFixed(1)}" cy="${Y(r.b[i]).toFixed(1)}" r="4.5" fill="var(--core)"/><text x="${X(i).toFixed(1)}" y="${H - 2}" text-anchor="middle" font-size="9.5" fill="var(--muted)">${fmt(addD(n.date, -1), { weekday: "short" }).slice(0, 2)}</text>`).join("");
-  return open + `<div class="reg-top"><b class="num">${r.score}<small> / 100</small></b><span class="pill">${word}</span></div>
-    <p class="small" style="margin-top:8px">Over your last ${r.xs.length} logged nights, lights out was around <b class="num">${minHM(r.avg)}</b>, give or take <b class="num">${Math.round(r.dev)} min</b>. ${tip}</p>
+  return { num: `${r.score}<small>/100</small>`, word, detail: `<p class="small">Over your last ${r.xs.length} logged nights, lights out was around <b class="num">${minHM(r.avg)}</b>, give or take <b class="num">${Math.round(r.dev)} min</b>. ${tip}</p>
     <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Bedtime of each night compared with your average">
       <line x1="40" x2="${W - 4}" y1="${Y(r.avg).toFixed(1)}" y2="${Y(r.avg).toFixed(1)}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="3 4"/>
       <text x="0" y="${(Y(r.avg) + 3.5).toFixed(1)}" font-size="10" fill="var(--muted)">${minHM(r.avg)}</text>
-      <text x="0" y="${(Y(lo) + 3.5).toFixed(1)}" font-size="9" fill="var(--faint)">earlier</text><text x="0" y="${(Y(hi) + 3.5).toFixed(1)}" font-size="9" fill="var(--faint)">later</text>${dots}</svg></section>`;
+      <text x="0" y="${(Y(lo) + 3.5).toFixed(1)}" font-size="9" fill="var(--faint)">earlier</text><text x="0" y="${(Y(hi) + 3.5).toFixed(1)}" font-size="9" fill="var(--faint)">later</text>${dots}</svg>` };
 }
 // times of a night: watch nights are read-only until you tap Edit; nights you typed stay editable
 function sleepTimesHTML(s, n, bed, wake) {
   const watch = s && (s.src === "garmin" || s.fw) && sleepH(s) != null;
   if (watch && S.sleepEdit !== n) return `<div class="sl-ro" id="sl-times" data-m="ro"><span><small>Lights out</small><b class="num">${bed}</b></span><span><small>Woke up</small><b class="num">${wake}</b></span><button class="linkb" data-act="sledit" aria-label="Edit this night's times">Edit</button></div>`;
   return `<div id="sl-times" data-m="ed"><div class="times"><label for="bed">Lights out<input type="time" id="bed" data-f="bed" value="${bed}"></label><label for="wake">Woke up<input type="time" id="wake" data-f="wake" value="${wake}"></label></div>${watch ? `<div class="sl-done"><button class="linkb" data-act="sldone">Done</button></div>` : ""}</div>`;
+}
+// last 7 nights in one card: four numbers, one verdict each; sleep debt and regularity open their explanation on tap
+function sleepSum(nights, avg7, onT, n7) {
+  const dI = debtInfo(nights), rI = regInfo(nights), open = S.slX;
+  const hm = v => { const m = Math.round(v * 60); return `${Math.floor(m / 60)}<small>h</small>${pad(m % 60)}`; };
+  const cell = (lbl, num, sub, col, key) => key
+    ? `<button class="ss-c tap ${open === key ? "on" : ""}" data-act="slx" data-v="${key}" aria-expanded="${open === key}"><span class="lbl">${lbl}<svg class="i" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></svg></span><b class="num">${num}</b><span class="ss-v" style="color:${col}">${sub}</span></button>`
+    : `<div class="ss-c"><span class="lbl">${lbl}</span><b class="num">${num}</b><span class="ss-v">${sub}</span></div>`;
+  const rCol = rI.word === "Very regular" || rI.word === "Fairly regular" ? "var(--good)" : rI.num === "–" ? "var(--muted)" : "var(--warn)";
+  return `<section class="card slsum" id="sl-sum" style="--c:var(--core)"><h2 class="sec-t">Last 7 nights</h2>
+    <div class="ss-g">${cell("Average", avg7 != null ? hm(avg7) : "–", `target ${SLEEP_L}`)}
+      ${cell("On target", `${onT}<small>/${n7 || 7}</small>`, `nights ≥ ${SLEEP_L}`)}
+      ${cell("Sleep debt", dI.num, dI.word, dI.col, "debt")}
+      ${cell("Regularity", rI.num, rI.word, rCol, "reg")}</div>
+    ${open === "debt" ? `<div class="ss-x reg"><b>Sleep debt</b>${dI.detail}</div>` : open === "reg" ? `<div class="ss-x reg"><b>Regularity</b>${rI.detail}</div>` : ""}</section>`;
 }
 function vSleep() {
   const t = today(), n = S.night, doc = dayDoc(n), s = (doc && doc.sleep) || null, h0 = sleepH(s);
@@ -2958,10 +2986,7 @@ function vSleep() {
   const last7 = nights.slice(7).filter(x => x.h != null);
   const avg7 = last7.length ? last7.reduce((a, b) => a + b.h, 0) / last7.length : null;
   const onT = last7.filter(x => x.h >= SLEEP_T).length;
-  h += `<div class="tiles" id="sl-tiles" style="--c:var(--core)"><div class="tile"><span class="lbl">7-night avg</span><b class="num">${avg7 != null ? fH(avg7) : "–"}</b><span class="muted">target ${SLEEP_L}</span></div>
-    <div class="tile"><span class="lbl">On target</span><b class="num"><span data-count="${onT}">${onT}</span><small>/ ${last7.length || 7}</small></b><span class="muted">nights ≥ ${SLEEP_L}</span></div></div>`;
-  h += debtCard(nights);
-  h += regCard(nights);
+  h += sleepSum(nights, avg7, onT, last7.length);
   h += `<section class="card" id="sl-chart" style="--c:var(--core)"><h2 class="sec-t">Last 14 nights</h2>${logged.length ? barChart(nights) : ghostChart("Log a few nights to see the pattern.", "var(--core)")}
     <div class="legend" style="margin-top:8px"><span><i style="--c:var(--core)"></i>≥ ${SLEEP_L}</span><span><i style="--c:color-mix(in srgb, var(--core) 35%, var(--surface-2))"></i>below target</span><span class="muted">dashed = ${SLEEP_L}</span></div></section>`;
   h += windCard();
@@ -3484,6 +3509,7 @@ document.addEventListener("click", e => {
   if (/^f(add|again|edit|done|size|tag|del)$/.test(a)) return foodAct(a, b);
   if (a === "night") { S.night = b.dataset.v; render(false); return; }
   if (a === "q") { const doc = ensureDay(S.night); doc.sleep = { ...(doc.sleep || { bed: ($("#bed") || {}).value || "22:00", wake: ($("#wake") || {}).value || "05:30" }), q: +b.dataset.v }; touch("d" + S.night); render(false); return; }
+  if (a === "slx") { S.slX = S.slX === b.dataset.v ? null : b.dataset.v; const t = $("#sl-sum"), tpl = document.createElement("template"); tpl.innerHTML = vSleep(); const nw = tpl.content.getElementById("sl-sum"); if (t && nw) t.replaceWith(nw); return; }
   if (a === "sledit") { S.sleepEdit = S.night; const t = $("#sl-times"), tpl = document.createElement("template"); tpl.innerHTML = vSleep(); const nw = tpl.content.getElementById("sl-times"); if (t && nw) t.replaceWith(nw); return; }
   if (a === "sldone") { S.sleepEdit = null; const t = $("#sl-times"), tpl = document.createElement("template"); tpl.innerHTML = vSleep(); const nw = tpl.content.getElementById("sl-times"); if (t && nw) t.replaceWith(nw); return; }
   if (a === "logsleep") { const doc = ensureDay(S.night); doc.sleep = { src: "me", bed: $("#bed").value || bedPlus15("05:30"), wake: $("#wake").value || "05:30", ...(doc.sleep && doc.sleep.q ? { q: doc.sleep.q } : {}) }; touch("d" + S.night); toast("Night saved"); render(false); return; }
@@ -3711,10 +3737,9 @@ function patchSleep() {
   if (S.tab !== "sleep") return;
   const tpl = document.createElement("template"); for (const k in CH) delete CH[k]; tpl.innerHTML = vSleep();
   const nScroll = ($("#sl-nights") || {}).scrollLeft || 0;
-  ["sl-nights", "sl-big", "sl-src", "sl-msg", "sl-save", "sl-tiles", "sl-debt", "sl-reg", "sl-chart"].forEach(id => { const a = document.getElementById(id), b = tpl.content.getElementById(id); if (a && b) a.replaceWith(b); });
+  ["sl-nights", "sl-big", "sl-src", "sl-msg", "sl-save", "sl-sum", "sl-chart"].forEach(id => { const a = document.getElementById(id), b = tpl.content.getElementById(id); if (a && b) a.replaceWith(b); });
   { const a = $("#sl-times"), b = tpl.content.getElementById("sl-times"); if (a && b && (a.dataset.m === "ro" || b.dataset.m === "ro")) a.replaceWith(b); }
   const n = $("#sl-nights"); if (n) n.scrollLeft = nScroll;
-  view.querySelectorAll("#sl-tiles [data-count]").forEach(e => e.textContent = e.dataset.count);
 }
 view.addEventListener("change", e => {
   const el = e.target;
