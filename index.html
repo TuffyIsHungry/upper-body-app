@@ -124,7 +124,7 @@ input,select{font:inherit;color:inherit}
 .top .eyebrow{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .top h1{margin:0;font-family:var(--display);font-weight:700;font-size:32px;line-height:1;letter-spacing:.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .top-r{display:flex;align-items:center;gap:8px;flex-shrink:0}
-/* workout timer pill + its panel */
+/* workout timer: header pill (jumps to the timer row on Today) */
 .stw{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 11px 0 10px;border-radius:14px;background:var(--surface);box-shadow:var(--elev),var(--hair);color:var(--fg);font-size:16px;transition:transform .15s}
 .stw:active{transform:scale(.94)}
 .stw b{font-weight:700;font-size:15px;text-align:left;font-variant-numeric:tabular-nums}
@@ -138,21 +138,88 @@ input,select{font:inherit;color:inherit}
 .top:has(.stw:not([hidden])) h1{font-size:28px}
 @media (max-width:380px){.top:has(.stw:not([hidden])) h1{font-size:25px}}
 @keyframes stwP{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb, var(--good) 55%, transparent)}50%{box-shadow:0 0 0 5px transparent}}
-.stwx{position:absolute;top:calc(100% + 8px);right:16px;z-index:12;width:min(290px, calc(100vw - 32px));padding:12px 14px 14px;border-radius:20px;background:var(--surface-2);box-shadow:0 18px 40px -14px rgba(0,0,0,.6),inset 0 0 0 1px var(--line);animation:stwIn .2s cubic-bezier(.3,1.3,.5,1) both;transform-origin:top right}
-@keyframes stwIn{from{opacity:0;transform:scale(.92) translateY(-6px)}to{opacity:1;transform:none}}
-.stwx-h{display:flex;align-items:center;justify-content:space-between;margin:-2px -6px 0 0}
-.stwx-h .lbl{display:inline-flex;align-items:center;gap:7px}
-.stwx-h .stw-d{animation:none}
-.stwx-c{width:36px;height:36px;display:grid;place-items:center;border-radius:12px;color:var(--muted)}
-.stwx-c svg{width:18px;height:18px}
-.stwx[data-s="pause"] .stw-d,.stwx[data-s="idle"] .stw-d{background:var(--warn)}
-.stwx[data-s="fin"] .stw-d{background:var(--good)}
-.stwx-t{display:block;font-family:var(--display);font-size:48px;font-weight:700;line-height:1.05;margin:4px 0 2px;letter-spacing:.01em}
-.stwx-b{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
-.stwx-b .btn{height:44px;margin:0;display:inline-flex;align-items:center;justify-content:center;gap:7px;font-size:15px}
-.stwx-b .btn svg{width:18px;height:18px}
-.stwx-b .btn.warn{background:color-mix(in srgb, var(--bad, #FF5F57) 18%, var(--surface));color:var(--bad, #FF5F57)}
-@media (prefers-reduced-motion: reduce){.stw[data-s="run"] .stw-d,.stwx{animation:none}}
+.stw-i{display:grid;place-items:center;width:18px;height:18px;color:var(--good)}
+.stw-i svg{width:18px;height:18px;stroke-width:2.2}
+.stw[data-s="pause"] .stw-i,.stw[data-s="idle"] .stw-i{color:var(--warn)}
+.stw[data-s="run"] .stw-i svg{animation:stwT 2s ease-in-out infinite;transform-origin:50% 55%}
+@keyframes stwT{0%,100%{transform:rotate(0)}10%{transform:rotate(-12deg)}20%{transform:rotate(9deg)}30%{transform:rotate(0)}}
+.stw{transition:transform .15s,opacity .25s}
+.stw.dim{opacity:0;pointer-events:none}
+/* timer row in the Today banner */
+.tmr{flex-basis:100%;min-width:0;max-width:100%;display:flex;align-items:center;gap:12px;padding:11px 10px 11px 12px;border-radius:16px;background:color-mix(in srgb, var(--bg) 42%, transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 22%, transparent);position:relative;z-index:1}
+.tmr-i{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;flex-shrink:0;background:color-mix(in srgb, var(--good) 18%, transparent);color:var(--good)}
+.tmr-i svg{width:22px;height:22px;stroke-width:2.2}
+.tmr[data-s="none"] .tmr-i,.tmr[data-s="hint"] .tmr-i{background:color-mix(in srgb, var(--fg) 8%, transparent);color:var(--muted)}
+.tmr[data-s="pause"] .tmr-i,.tmr[data-s="idle"] .tmr-i{background:color-mix(in srgb, var(--warn) 18%, transparent);color:var(--warn)}
+.tmr[data-s="run"] .tmr-i svg{animation:stwT 2s ease-in-out infinite;transform-origin:50% 55%}
+.tmr-m{flex:1;min-width:0}
+.tmr-top{display:flex;align-items:baseline;gap:9px;min-width:0}
+.tmr-top b{font-family:var(--display);font-size:30px;font-weight:700;line-height:1;letter-spacing:.01em}
+.tmr[data-s="none"] .tmr-top b,.tmr[data-s="pause"] .tmr-top b,.tmr[data-s="idle"] .tmr-top b{color:var(--muted)}
+.tmr-l{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tmr[data-s="pause"] .tmr-l,.tmr[data-s="idle"] .tmr-l{color:var(--warn)}
+.tmr-sub{font-size:13px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tmr-sub b{color:var(--fg);font-weight:600}
+.tmr-bar{height:5px;border-radius:3px;background:color-mix(in srgb, var(--fg) 10%, transparent);margin-top:7px;overflow:hidden}
+.tmr-bar i{display:block;height:100%;border-radius:3px;background:var(--good);transition:width .9s linear}
+.tmr-bar.over i{background:var(--warn)}
+.tmr-c{font-weight:600}
+.tmr-c.good{color:var(--good)} .tmr-c.slow{color:var(--warn)}
+.tile .tmr-c{font-size:12.5px}
+.tmr-b{display:flex;gap:6px;flex-shrink:0}
+.tmr-btn{min-width:44px;height:44px;padding:0 10px;border-radius:13px;display:grid;place-items:center;background:var(--surface);color:var(--fg);box-shadow:var(--elev);font-weight:700;font-size:14px;transition:transform .15s}
+.tmr-btn:active{transform:scale(.92)}
+.tmr-btn svg{width:20px;height:20px}
+.tmr-btn.go{background:var(--good);color:#fff}
+.tmr-btn.warn{background:color-mix(in srgb, var(--bad, #FF5F57) 20%, var(--surface));color:var(--bad, #FF5F57)}
+.tmr.flash{animation:tmrF 1s ease}
+@keyframes tmrF{0%,100%{box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 22%, transparent)}30%{box-shadow:inset 0 0 0 2px var(--good),0 0 0 6px color-mix(in srgb, var(--good) 25%, transparent)}}
+/* Progress: workout times */
+.wt-r{display:grid;grid-template-columns:minmax(0,1fr) 58px auto;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+.wt-r:first-of-type{border-top:0}
+.wt-n{display:flex;flex-direction:column;min-width:0}
+.wt-n b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wt-bars{display:flex;align-items:flex-end;gap:3px;height:28px}
+.wt-bars i{flex:1;border-radius:2px;background:color-mix(in srgb, var(--c) 35%, transparent)}
+.wt-bars i.on{background:var(--c)}
+.wt-v{display:flex;flex-direction:column;align-items:flex-end;min-width:66px}
+.wt-v b{font-size:16px}
+.wt-v .tmr-c{font-size:12.5px}
+/* level up */
+.lvfx{position:fixed;inset:0;z-index:400;display:grid;place-items:center;overflow:hidden;cursor:pointer;color:#fff;animation:lvIn .35s ease both;-webkit-tap-highlight-color:transparent}
+.lvfx.out{animation:lvOut .32s ease both}
+.lvfx-bg{position:absolute;inset:0;background:radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--t) 55%, #05070B) 0%, color-mix(in srgb, var(--t) 18%, #05070B) 42%, #04060A 78%);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.lvfx-rays{position:absolute;left:50%;top:40%;width:240vmax;height:240vmax;margin:-120vmax 0 0 -120vmax;
+  background:repeating-conic-gradient(from 0deg, color-mix(in srgb, var(--t) 40%, transparent) 0deg 5deg, transparent 5deg 15deg);
+  -webkit-mask:radial-gradient(circle, #000 0, rgba(0,0,0,.6) 8%, transparent 26%);mask:radial-gradient(circle, #000 0, rgba(0,0,0,.6) 8%, transparent 26%);
+  animation:lvRays .9s ease .15s both, lvSpin 30s linear infinite}
+.lvfx-ring{position:absolute;left:50%;top:40%;width:170px;height:170px;margin:-85px 0 0 -85px;border-radius:50%;border:3px solid var(--t);opacity:0;animation:lvWave 1.2s cubic-bezier(.2,.6,.3,1) .45s both}
+.lvfx-ring.r2{animation-delay:.7s;border-width:2px}
+.lvfx-parts i{position:absolute;left:50%;top:40%;width:var(--z);height:var(--z);margin:calc(var(--z) / -2) 0 0 calc(var(--z) / -2);border-radius:50%;background:color-mix(in srgb, var(--t) 50%, #fff);box-shadow:0 0 10px var(--t);opacity:0;animation:lvPart 1.3s cubic-bezier(.15,.7,.3,1) var(--s) both}
+.lvfx-c{position:absolute;left:0;right:0;top:40%;transform:translateY(-120px);text-align:center;padding:0 24px}
+.lvfx-eb{font:700 15px var(--body);letter-spacing:.32em;text-transform:uppercase;color:color-mix(in srgb, var(--t) 45%, #fff);margin-bottom:6px;animation:lvRise .5s ease .25s both}
+.lvfx-badge{display:grid;place-items:center;height:170px;filter:drop-shadow(0 0 26px color-mix(in srgb, var(--t) 80%, transparent));animation:lvPop .9s cubic-bezier(.3,1.45,.5,1) .3s both}
+.lvfx-badge svg{width:156px;height:156px}
+.lvfx-n{font-family:var(--display);font-weight:700;font-size:54px;line-height:1;letter-spacing:.02em;margin-top:14px;text-transform:uppercase;animation:lvRise .5s ease .55s both}
+.lvfx-n .roll{display:inline-block;height:1em;overflow:hidden;vertical-align:top}
+.lvfx-n .roll>span{display:flex;flex-direction:column;animation:lvRoll .55s cubic-bezier(.5,1.6,.4,1) 1.05s both}
+.lvfx-n .roll i{font-style:normal;height:1em;line-height:1;color:color-mix(in srgb, var(--t) 40%, #fff)}
+.lvfx-name{font-size:18px;font-weight:600;margin-top:10px;color:rgba(255,255,255,.88);animation:lvRise .5s ease 1.25s both}
+.lvfx-name b{color:color-mix(in srgb, var(--t) 45%, #fff)}
+.lvfx-pts{font-size:14px;color:rgba(255,255,255,.6);margin-top:6px;animation:lvRise .5s ease 1.4s both}
+.lvfx-hint{position:absolute;left:0;right:0;text-align:center;bottom:calc(env(safe-area-inset-bottom, 0px) + 44px);font-size:14px;color:rgba(255,255,255,.55);animation:lvFade .6s ease 2s both, lvBreath 2.4s ease-in-out 2.6s infinite}
+@keyframes lvIn{from{opacity:0}to{opacity:1}}
+@keyframes lvOut{to{opacity:0;transform:scale(1.04)}}
+@keyframes lvRays{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+@keyframes lvSpin{to{rotate:360deg}}
+@keyframes lvWave{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(3.2)}}
+@keyframes lvPart{0%{opacity:1;transform:rotate(var(--a)) translateX(0)}70%{opacity:1}100%{opacity:0;transform:rotate(var(--a)) translateX(var(--d)) scale(.3)}}
+@keyframes lvPop{0%{opacity:0;transform:scale(.15) rotate(-220deg)}60%{opacity:1;transform:scale(1.14) rotate(8deg)}100%{opacity:1;transform:none}}
+@keyframes lvRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes lvRoll{from{transform:translateY(0)}to{transform:translateY(-1em)}}
+@keyframes lvFade{from{opacity:0}to{opacity:1}}
+@keyframes lvBreath{0%,100%{opacity:.55}50%{opacity:.25}}
+@media (prefers-reduced-motion: reduce){.lvfx,.lvfx *{animation:none!important}.lvfx-n .roll>span{transform:translateY(-1em)}.lvfx-rays{opacity:.6}.stw-i svg,.tmr-i svg{animation:none!important}}
 .icon-btn.sync{position:relative}
 .today-btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 13px 0 10px;border-radius:14px;background:color-mix(in srgb, var(--glow) 18%, var(--surface));color:var(--fg);font-weight:600;font-size:14px;box-shadow:var(--elev);transition:transform .15s}
 .today-btn:active{transform:scale(.94)}
@@ -952,13 +1019,12 @@ button.row{transition:opacity .15s} button.row:active{opacity:.6}
 <div id="glow" aria-hidden="true"></div>
 <div class="app">
   <header class="top">
-    <div class="stwx" id="stwx" hidden role="dialog" aria-label="Workout timer"></div>
     <div style="min-width:0">
       <div class="eyebrow" id="eyebrow">Today</div>
       <h1 id="title">Today</h1>
     </div>
     <div class="top-r">
-      <button class="stw" id="stw" data-act="stw" hidden aria-expanded="false" aria-controls="stwx"><i class="stw-d"></i><b class="num" id="stw-t">0:00</b></button>
+      <button class="stw" id="stw" data-act="stw" hidden><span class="stw-i"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.8M9.8 2.8h4.4M12 2.8V6M18.2 6.6l1.4-1.4"/></svg></span><b class="num" id="stw-t">0:00</b></button>
       <button class="today-btn" id="gotoday" data-act="gotoday" hidden aria-label="Back to today"><svg class="i" viewBox="0 0 24 24"><path d="M9.5 7.5L5 12l4.5 4.5"/><path d="M5.5 12H14a5 5 0 0 1 0 10h-1.5"/></svg><span>Today</span></button>
       <button class="lvl-btn" id="lvlbtn" data-act="lvl" aria-label="Your level"></button>
       <button class="icon-btn gear sync" id="sync" data-s="loading" data-act="sheet" aria-label="Settings"><i></i><span class="vh">Loading</span>
@@ -1995,6 +2061,7 @@ function vToday() {
       <div class="lbl">${WD[dow(d)]} · ${ph.w >= 1 ? "Week " + ph.w : "Before week 1"} · ${wk.light ? "Optional" : ph.label}</div>
       <h2>${wk.name}</h2><div class="focus">${wk.focus}</div>
       <div class="meta" id="bmeta">${bannerMeta(d)}</div></div>${ring(c.ok, c.tot)}
+      ${tmrHTML(d)}
       <p class="bnote">${wk.light ? wk.tip : ph.note}</p></section>`;
   const sl = sleepH(doc && doc.sleep);
   if (d === t && sl != null && sl < 6.5 && !wk.light) h += `<section class="card ready" style="--c:var(--warn)"><span class="pill">Short night · ${fH(sl)}</span><p class="small" style="margin-top:8px">Keep every set at the easy end of today's RIR and skip the to-failure sets. Recovery beats one hard session.</p></section>`;
@@ -2079,7 +2146,7 @@ function vHome() {
   // the week (was its own tab)
   h += `<div id="weeksec">${weekSection()}</div>`;
   setTimeout(() => { if (S.tab !== "home" || $("#sheet").classList.contains("show")) return; const up = checkLevel(), pw = checkPerfect();
-    if (up) { openLevel(up); SND.pr(); if (SET().ui.confetti) confetti(); }
+    if (up) lvlFX(up);
     else if (pw) { toast("Perfect week: 6 of 6"); if (SET().ui.confetti) confetti(); } }, 600);
   return h;
 }
@@ -2200,57 +2267,127 @@ function levelRow(up) {
 // header badge: redrawn only when the level or its bar changes
 let LVK = "";
 /* Workout timer: starts with the first tick, stops when every exercise is done. Tap it for pause / reset. */
-let STWK = "", STWR = 0;
+let STWR = 0;
 const fmtDur = ms => { const t = Math.floor(ms / 1000), h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, sec = t % 60; return h ? `${h}:${pad(m)}:${pad(sec)}` : `${m}:${pad(sec)}`; };
 const hhmm = ts => { const d = new Date(ts); return pad(d.getHours()) + ":" + pad(d.getMinutes()); };
 function stwState(doc) { if (!doc || !doc.start) return null; if (doc.done) return "fin"; if (doc.pz) return "pause"; if (doc.last && Date.now() - doc.last > IDLE) return "idle"; return "run"; }
+// how long each workout took, to compare with the last time you did the same one (full and Express kept apart)
+const wtKey = d => SCHEDULE[dow(d)] + (isExpress(d) ? "x" : "");
+function workoutTimes() {
+  return memo("wtimes", () => {
+    const out = [];
+    for (const k in S.docs) {
+      if (!/^d\d{4}-\d\d-\d\d$/.test(k)) continue; const doc = S.docs[k], d = k.slice(1);
+      if (!doc || !doc.done || !doc.start || !doc.end) continue;
+      const ms = sessionMs(doc); if (ms < 3 * 60000 || ms > 4 * 3600000) continue;
+      out.push({ d, key: wtKey(d), ms });
+    }
+    return out.sort((x, y) => x.d < y.d ? -1 : 1);
+  });
+}
+function prevTime(d) { const k = wtKey(d); let pv = null; for (const x of workoutTimes()) { if (x.d >= d) break; if (x.key === k) pv = x; } return pv; }
+const fMin = ms => { const m = Math.round(ms / 60000); return m >= 60 ? `${Math.floor(m / 60)} h ${pad(m % 60)}` : `${m} min`; };
+function cmpTime(ms, pv) {
+  if (!pv) return { t: "First timed one. Next time you'll see the difference.", c: "" };
+  const df = ms - pv.ms, m = Math.round(Math.abs(df) / 60000);
+  if (m < 1) return { t: "Same time as last time", c: "" };
+  return df < 0 ? { t: `${m} min faster than last time`, c: "good", s: `−${m} min` } : { t: `${m} min longer than last time`, c: "slow", s: `+${m} min` };
+}
+// the timer row in the Today banner: big time, pause / reset, and last time to beat
+function tmrState(d) {
+  const t = today(), doc = dayDoc(d);
+  if (d === t) { const st = stwState(doc); if (st) return st; return isDone(d) ? null : "none"; }
+  return doc && doc.done && doc.start && doc.end ? "past" : null;
+}
+function tmrHTML(d) {
+  const st = tmrState(d), pv = prevTime(d), wk = wkOf(d);
+  if (!st) return pv && d > today() ? `<div class="tmr" id="tmr" data-s="hint" data-k="hint"><span class="tmr-i">${SW_IC}</span><div class="tmr-m"><div class="tmr-sub">Last ${wk.name}: <b class="num">${fMin(pv.ms)}</b></div></div></div>` : `<div id="tmr" hidden data-k="-"></div>`;
+  const doc = dayDoc(d), ms = sessionMs(doc) || 0, live = st === "run" || st === "pause" || st === "idle";
+  const k = st + "|" + STWR + "|" + ((doc && doc.pms) || 0) + "|" + (pv ? pv.ms : 0);
+  const lab = { none: "Ready", run: "", pause: "Paused", idle: "Paused · no set for 30 min", fin: "Workout time", past: "Workout time" }[st];
+  let sub = "", bar = "";
+  if (st === "none") sub = "Starts on your first tick" + (pv ? ` · last time <b class="num">${fmtDur(pv.ms)}</b>` : "");
+  else if (live) {
+    if (pv) { const q = Math.min(1, ms / pv.ms); bar = `<div class="tmr-bar ${ms > pv.ms ? "over" : ""}" id="tmr-bar"><i id="tmr-f" style="width:${(q * 100).toFixed(1)}%"></i></div>`; sub = `Last time <b class="num">${fmtDur(pv.ms)}</b>`; }
+    else sub = "First timed " + wk.name;
+  } else { const c = cmpTime(ms, pv); sub = `<span class="tmr-c ${c.c}">${c.t}</span>${pv ? ` <span class="muted">(${fmtDur(pv.ms)})</span>` : ""}`; }
+  const btns = live ? `<div class="tmr-b">${st === "run" ? `<button class="tmr-btn" data-act="stwpause" aria-label="Pause the timer"><svg class="i" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg></button>` : `<button class="tmr-btn go" data-act="stwgo" aria-label="Resume the timer"><svg class="i" viewBox="0 0 24 24"><path d="M8 5.5l10 6.5-10 6.5z"/></svg></button>`}
+      <button class="tmr-btn ${STWR ? "warn" : ""}" data-act="stwreset" aria-label="${STWR ? "Tap again to reset to 0:00" : "Reset the timer"}">${STWR ? "Reset?" : `<svg class="i" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></svg>`}</button></div>` : "";
+  return `<div class="tmr" id="tmr" data-s="${st}" data-k="${k}"><span class="tmr-i">${st === "fin" || st === "past" ? CK_IC : SW_IC}</span>
+    <div class="tmr-m"><div class="tmr-top"><b class="num" id="tmr-t">${fmtDur(st === "none" ? 0 : ms)}</b>${lab ? `<span class="tmr-l">${lab}</span>` : ""}</div>${bar}${sub ? `<div class="tmr-sub">${sub}</div>` : ""}</div>${btns}</div>`;
+}
+function patchTmr() {
+  if (S.tab !== "today") return; const el = $("#tmr"); if (!el) return; const d = S.sel;
+  const fresh = tmrHTML(d), k = (fresh.match(/data-k="([^"]*)"/) || [])[1];
+  if (el.dataset.k !== k) { el.outerHTML = fresh; return; }
+  const doc = dayDoc(d), st = el.dataset.s; if (!doc || !(st === "run" || st === "pause" || st === "idle")) return;
+  const ms = sessionMs(doc) || 0, t = $("#tmr-t"); if (t) t.textContent = fmtDur(ms);
+  const pv = prevTime(d), f = $("#tmr-f"); if (pv && f) { f.style.width = (Math.min(1, ms / pv.ms) * 100).toFixed(1) + "%"; $("#tmr-bar").classList.toggle("over", ms > pv.ms); }
+}
 function syncStw() {
   const b = $("#stw"); if (!b) return; const doc = dayDoc(today()), st = stwState(doc);
   const show = st && (st !== "fin" || (S.tab === "today" && S.sel === today()));
-  if (!show) { if (!b.hidden) { b.hidden = true; stwOpen(false); } STWK = ""; return; }
+  patchTmr();
+  if (!show) { b.hidden = true; return; }
   const wasHidden = b.hidden; b.hidden = false; b.dataset.s = st;
-  const ms = sessionMs(doc); $("#stw-t").textContent = (st === "fin" ? "✓ " : "") + fmtDur(ms);
-  b.setAttribute("aria-label", `Workout time ${fmtDur(ms)}${st === "run" ? "" : st === "fin" ? ", finished" : ", paused"}. Tap for pause and reset`);
+  // on Today, while the banner's timer row is on screen, the header copy steps back
+  const row = S.tab === "today" && S.sel === today() && $("#tmr"); let onScreen = false;
+  if (row && !row.hidden) { const r = row.getBoundingClientRect(); onScreen = r.bottom > 70 && r.top < innerHeight; }
+  b.classList.toggle("dim", onScreen);
+  const ms = sessionMs(doc); $("#stw-t").textContent = fmtDur(ms);
+  b.querySelector(".stw-i").innerHTML = st === "fin" ? CK_IC : st === "run" ? SW_IC : '<svg class="i" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg>';
+  b.setAttribute("aria-label", `Workout time ${fmtDur(ms)}${st === "run" ? "" : st === "fin" ? ", finished" : ", paused"}. Tap to open the timer`);
   if (wasHidden && !REDUCED && b.animate) b.animate([{ transform: "scale(.6)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { duration: 420, easing: "cubic-bezier(.3,1.5,.5,1)" });
-  const x = $("#stwx"); if (!x.hidden) {
-    x.dataset.s = st; const k = st + "|" + (doc.pms || 0) + "|" + STWR + "|" + Math.floor(Date.now() / 60000); if (k !== STWK) { STWK = k; x.innerHTML = stwPanel(doc, st); }
-    const t = $("#stwx-t"); if (t) t.textContent = fmtDur(ms);
-  }
-}
-function stwPanel(doc, st) {
-  const lab = { run: "Running", pause: "Paused", idle: "Paused · no set for 30 min", fin: "Finished" }[st];
-  const pm = Math.round((doc.pms || 0) + (st === "pause" ? Date.now() - doc.pz : st === "idle" ? Date.now() - doc.last : 0)) / 60000;
-  const info = `Started ${hhmm(doc.start)}${st === "fin" && doc.end ? ` · finished ${hhmm(doc.end)}` : ""}${pm >= 1 ? ` · ${Math.round(pm)} min paused` : ""}`;
-  return `<div class="stwx-h"><span class="lbl"><i class="stw-d"></i>${lab}</span><button class="stwx-c" data-act="stw" aria-label="Close"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-    <b class="num stwx-t" id="stwx-t">${fmtDur(sessionMs(doc))}</b><p class="small muted">${info}</p>
-    ${st === "fin" ? `<p class="small muted">It stopped when you finished your last exercise.</p>` : `<div class="stwx-b">
-      ${st === "run" ? `<button class="btn ghost" data-act="stwpause"><svg class="i" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg>Pause</button>` : `<button class="btn" data-act="stwgo"><svg class="i" viewBox="0 0 24 24"><path d="M8 5.5l10 6.5-10 6.5z"/></svg>Resume</button>`}
-      <button class="btn ghost ${STWR ? "warn" : ""}" data-act="stwreset"><svg class="i" viewBox="0 0 24 24"><path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3"/><path d="M4.5 4.5v4h4"/></svg>${STWR ? "Tap to confirm" : "Reset"}</button></div>`}`;
-}
-function stwOpen(on) {
-  const x = $("#stwx"), b = $("#stw"); if (!x) return; STWR = 0; STWK = "";
-  x.hidden = !on; b.setAttribute("aria-expanded", String(on)); if (on) syncStw();
 }
 function stwAct(a) {
   const d = today(), doc = ensureDay(d), now = Date.now();
-  if (a === "stw") return stwOpen($("#stwx").hidden);
+  if (a === "stw") { // header pill: jump to the timer row on Today
+    if (S.tab !== "today") go("today"); if (S.sel !== d) goToday(); scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
+    setTimeout(() => { const r = $("#tmr"); if (r) { r.classList.remove("flash"); void r.offsetWidth; r.classList.add("flash"); } }, 350); return;
+  }
   if (!doc.start || doc.done) return;
   if (a === "stwpause") { if (doc.last && now - doc.last > IDLE) doc.pz = doc.last; else doc.pz = now; }
   if (a === "stwgo") { stwWake(doc, now); doc.last = now; }
   if (a === "stwreset") {
     if (!STWR) { STWR = 1; clearTimeout(stwAct.t); stwAct.t = setTimeout(() => { STWR = 0; syncStw(); }, 3000); syncStw(); return; }
-    STWR = 0; const paused = !!doc.pz; doc.start = now; doc.pms = 0; doc.last = now; if (paused) doc.pz = now; else delete doc.pz; toast("Timer reset to 0:00");
+    STWR = 0; clearTimeout(stwAct.t); const paused = !!doc.pz; doc.start = now; doc.pms = 0; doc.last = now; if (paused) doc.pz = now; else delete doc.pz; toast("Timer reset to 0:00");
   }
   touch("d" + d); syncStw();
   if (S.tab === "today" && S.sel === d) { const bm = $("#bmeta"); if (bm) bm.textContent = bannerMeta(d); }
 }
-document.addEventListener("click", e => { const x = $("#stwx"); if (x && !x.hidden && !e.target.closest("#stwx,#stw")) stwOpen(false); }, true);
+const SW_IC = '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.8M9.8 2.8h4.4M12 2.8V6M18.2 6.6l1.4-1.4"/></svg>';
+const CK_IC = '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 setInterval(() => { if (!document.hidden) syncStw(); }, 1000);
+addEventListener("scroll", () => { if (S.tab === "today") { const b = $("#stw"); if (b && !b.hidden) { const row = $("#tmr"); let on = false; if (row && !row.hidden && S.sel === today()) { const r = row.getBoundingClientRect(); on = r.bottom > 70 && r.top < innerHeight; } b.classList.toggle("dim", on); } } }, { passive: true });
 function syncLevelBadge() {
   const b = $("#lvlbtn"); if (!b) return; const v = levelNow(), k = v.L + ":" + v.into;
   if (k === LVK) return; const grew = LVK && +LVK.split(":")[0] < v.L; LVK = k;
+  if (grew) { const up = checkLevel(); if (up) lvlFX(up); }
   b.innerHTML = lvlBadge(v, 40); b.setAttribute("aria-label", `Level ${v.L}, ${v.name}. ${v.need - v.into} points to the next level`);
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
+}
+/* Level up: full-screen moment (badge, number rolling to the new level, rays, sparks). Any tap closes it. */
+function lvlFX(up) {
+  let best = 0; try { best = +(localStorage.getItem("aub.lvx") || 0); } catch (e) {}
+  if (up.L <= best) return; try { localStorage.setItem("aub.lvx", up.L); } catch (e) {}
+  const old = $("#lvfx"); if (old) old.remove();
+  const v = levelNow(), tierNow = TIERS.filter(([n]) => up.L >= n).length - 1, newTier = tierNow > up.tierIx;
+  const parts = REDUCED ? "" : Array.from({ length: 28 }, (_, i) => `<i style="--a:${(i * 360 / 28 + Math.random() * 8).toFixed(0)}deg;--d:${(110 + Math.random() * 130).toFixed(0)}px;--s:${(.3 + Math.random() * .25).toFixed(2)}s;--z:${(4 + Math.random() * 6).toFixed(0)}px"></i>`).join("");
+  const el = document.createElement("div"); el.className = "lvfx"; el.id = "lvfx"; el.style.setProperty("--t", v.col);
+  el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", `Level up. Level ${up.L}, ${v.name}. Tap to close`);
+  el.innerHTML = `<div class="lvfx-bg"></div><div class="lvfx-rays"></div><div class="lvfx-ring"></div><div class="lvfx-ring r2"></div><div class="lvfx-parts">${parts}</div>
+    <div class="lvfx-c"><div class="lvfx-eb">Level up</div><div class="lvfx-badge">${lvlBadge(v, 156, false)}</div>
+      <div class="lvfx-n">Level <span class="roll"><span><i>${up.L0 || up.L - 1}</i><i>${up.L}</i></span></span></div>
+      <div class="lvfx-name">${newTier ? `New title · <b>${v.name}</b>` : v.name}</div>
+      <div class="lvfx-pts num">${v.need - v.into} points to level ${up.L + 1}</div>
+</div><div class="lvfx-hint">Tap anywhere to continue</div>`;
+  document.body.appendChild(el);
+  const t0 = Date.now(); let gone = false;
+  const close = e => { if (e) { e.preventDefault(); e.stopPropagation(); } if (gone || Date.now() - t0 < 450) return; gone = true; el.classList.add("out"); setTimeout(() => el.remove(), REDUCED ? 0 : 320); document.removeEventListener("keydown", key); };
+  const key = e => { if (e.key === "Escape" || e.key === "Enter" || e.key === " ") close(e); };
+  el.addEventListener("click", close); document.addEventListener("keydown", key);
+  setTimeout(() => SND.pr(), REDUCED ? 0 : 420);
+  if (SET().ui.confetti) setTimeout(confetti, REDUCED ? 0 : 650);
 }
 /* the level panel (tap the badge): level, freeze status, how points work, the titles still to come */
 function openLevel(upFrom) {
@@ -2367,7 +2504,7 @@ function stwWake(doc, now) {
   else if (doc.last && now - doc.last > IDLE) doc.pms = (doc.pms || 0) + (now - doc.last);
 }
 function bannerMeta(d) {
-  const doc = dayDoc(d), m = sessionMin(doc);
+  const doc = dayDoc(d), m = tmrState(d) ? null : sessionMin(doc); // the timer row in the banner already shows the time
   if (m != null && d === today() && !(doc && doc.done)) return doc.pz || (doc.last && Date.now() - doc.last > IDLE) ? `Paused · ${m} min so far` : `In progress · ${m} min`;
   if (m != null && doc && doc.done && doc.end) return `Finished in ${m} min`;
   const p = plan(d), live = p.filter(x => !x.skip).length, sk = p.length - live, wk = wkOf(d);
@@ -2675,6 +2812,23 @@ function consCard() {
     <p class="small" style="margin:8px 0 10px">${mn(cur)}: <b class="num">${cur.done} of ${cur.plan}</b> planned workouts done. Sundays don't count, and today counts once you finish it.</p>
     ${ms.length > 1 ? `<div class="cons">${bars}</div>` : ""}</section>`;
 }
+// Progress: how long each workout took, last time vs the time before, and the trend of the last 6
+function timesCard() {
+  const all = workoutTimes(), t = today();
+  if (!all.length) return `<section class="card"><h2 class="sec-t">Workout times</h2><p class="small muted">Your times appear here after your first timed workout. The timer starts by itself when you tick your first set.</p></section>`;
+  const keys = [...new Set(["pushA", "pullA", "legsA", "pushB", "pullB", "legsB", "core"].flatMap(k => [k, k + "x"]))].filter(k => all.some(x => x.key === k));
+  const recent = all.filter(x => x.d > addD(t, -28) && !x.key.endsWith("x") && x.key !== "core");
+  const avg = recent.length ? recent.reduce((a, x) => a + x.ms, 0) / recent.length : null;
+  const rows = keys.map(k => {
+    const xs = all.filter(x => x.key === k), last = xs[xs.length - 1], before = xs[xs.length - 2], pk = k.replace(/x$/, ""), col = TYPES[PROGRAM[pk].type];
+    const c = before ? cmpTime(last.ms, before) : null, six = xs.slice(-6), mx = Math.max(...six.map(x => x.ms));
+    const bars = six.map((x, i) => `<i style="height:${Math.max(18, x.ms / mx * 100).toFixed(0)}%" class="${i === six.length - 1 ? "on" : ""}" title="${fShort(x.d)}: ${fMin(x.ms)}"></i>`).join("");
+    return `<div class="wt-r" style="--c:${col}"><span class="wt-n"><b>${PROGRAM[pk].name}${k.endsWith("x") ? " · Express" : ""}</b><span class="small muted">${fShort(last.d)}</span></span>
+      <span class="wt-bars" aria-hidden="true">${bars}</span>
+      <span class="wt-v"><b class="num">${fMin(last.ms)}</b>${c && c.s ? `<span class="tmr-c ${c.c}">${c.s}</span>` : `<span class="small muted">${before ? "same" : "first"}</span>`}</span></div>`;
+  }).join("");
+  return `<section class="card wt"><h2 class="sec-t">Workout times</h2>${avg ? `<p class="small muted" style="margin:-4px 0 6px">Average <b class="num" style="color:var(--fg)">${fMin(avg)}</b> over your last ${recent.length} full workout${recent.length > 1 ? "s" : ""} (4 weeks). Each line: last time and the change from the time before.</p>` : ""}${rows}</section>`;
+}
 function vProgress() {
   setHeader("Since " + fDM(getStart()), "Progress");
   const st = streaks(), t = today();
@@ -2698,6 +2852,7 @@ function vProgress() {
   h += `<section class="card"><h2 class="sec-t">Last 16 weeks</h2><div class="heat" aria-label="Training calendar, one square per day, Monday at the top">${cells}</div>
     <div class="legend" style="margin-top:10px"><span><i style="--c:var(--push)"></i>Push</span><span><i style="--c:var(--pull)"></i>Pull</span><span><i style="--c:var(--legs)"></i>Legs</span><span><i style="--c:var(--core)"></i>Core</span><span class="muted">faded = partly done</span></div></section>`;
   h += consCard();
+  h += timesCard();
   // exercise chart
   let opts = "";
   for (const k of ["pushA", "pullA", "legsA", "pushB", "pullB", "legsB"]) {
@@ -3794,7 +3949,7 @@ function summary(d) {
   sh.innerHTML = `<div class="grab"></div>
     <div class="sum-h"><span class="lbl" style="color:var(--c)">${wk.name} · ${fShort(d)}</span><h2>${wk.light ? "Session" : "Workout"} complete</h2></div>
     <div class="tiles">
-      <div class="tile"><span class="lbl">Time</span><b class="num">${m != null ? `<span data-count="${m}">${m}</span><small>min</small>` : "–"}</b></div>
+      <div class="tile"><span class="lbl">Time</span><b class="num">${m != null ? `<span data-count="${m}">${m}</span><small>min</small>` : "–"}</b>${m != null && doc.end ? (() => { const c = cmpTime(sessionMs(doc), prevTime(d)); return c.s ? `<span class="tmr-c ${c.c}">${c.s} vs last time</span>` : ""; })() : ""}</div>
       <div class="tile"><span class="lbl">Sets</span><b class="num"><span data-count="${c.ok}">${c.ok}</span><small>/ ${c.tot}</small></b></div>
       <div class="tile"><span class="lbl">Volume</span><b class="num">${vol ? `<span data-count="${Math.round(vol)}">${Math.round(vol)}</span><small>kg</small>` : "–"}</b><span class="muted">weight × reps</span></div>
       <div class="tile"><span class="lbl">Records</span><b class="num"><span data-count="${prs}">${prs}</span></b><span class="muted">${prs ? "new personal bests" : "next time"}</span></div></div>
@@ -3811,8 +3966,8 @@ function celebrate() {
   const sd = S.sel; setTimeout(() => { if (S.tab === "today" && S.sel === sd && isDone(sd) && !$("#sheet").classList.contains("show")) summary(sd); }, REDUCED ? 0 : 1100);
   T = null; clearInterval(tIv); $("#timer").classList.remove("show", "over");
   if (SET().ui.confetti) confetti(); SND.done(); const s = streaks(), up = checkLevel(), pw = checkPerfect();
-  S.lvUp = !!up; if (up) setTimeout(() => SND.pr(), 500);
-  toast(up ? `Level up! Level ${up.L} · ${up.name}` : pw ? "Perfect week: 6 of 6" : s.cur > 1 ? `Workout done. ${s.cur}-day streak` : "Workout done. Streak started");
+  S.lvUp = !!up; if (up) lvlFX(up);
+  else toast(pw ? "Perfect week: 6 of 6" : s.cur > 1 ? `Workout done. ${s.cur}-day streak` : "Workout done. Streak started");
 }
 function toggleFinish() {
   const d = S.sel, doc = ensureDay(d);
