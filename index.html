@@ -335,6 +335,18 @@ details.more .mb{padding-top:8px;display:flex;flex-direction:column;gap:6px;colo
 .acts{display:flex;gap:2px;margin-left:auto}
 .acts{flex-wrap:wrap;justify-content:flex-end}
 .acts .linkb{color:var(--muted);font-size:13.5px;white-space:nowrap;padding:8px 8px}
+.acts{align-items:center}
+.xm{position:relative;display:inline-flex}
+.acts .xm-b{width:40px;height:34px;padding:0;display:grid;place-items:center;border-radius:10px}
+.xm-b svg{width:22px;height:22px;stroke-width:2.6}
+.xm.open .xm-b{background:var(--surface-2);color:var(--fg)}
+.xm-p{position:absolute;right:0;bottom:calc(100% + 6px);z-index:6;display:flex;flex-direction:column;min-width:178px;padding:5px;border-radius:14px;background:var(--surface-2);box-shadow:0 14px 34px -12px rgba(0,0,0,.55),inset 0 0 0 1px var(--line);
+  opacity:0;transform:translateY(6px) scale(.97);transform-origin:bottom right;pointer-events:none;visibility:hidden;transition:opacity .16s,transform .16s,visibility 0s .16s}
+.xm.open .xm-p{opacity:1;transform:none;pointer-events:auto;visibility:visible;transition:opacity .16s,transform .16s}
+.xm-i{display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border-radius:10px;font-size:14.5px;font-weight:600;color:var(--fg);text-align:left;white-space:nowrap}
+.xm-i svg{width:18px;height:18px;color:var(--muted);flex-shrink:0}
+.xm-i:active{background:color-mix(in srgb, var(--fg) 8%, transparent)}
+.xm-i[data-act="skip"]{color:var(--muted)}
 .ex.skipped{padding:10px 14px;background:transparent;box-shadow:inset 0 0 0 1.5px var(--line)}
 .ex.skipped .ex-n{background:var(--surface-2);color:var(--faint)}
 .ex.skipped h3{color:var(--muted);text-decoration:line-through;text-decoration-thickness:1.5px}
@@ -479,6 +491,13 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .sl-now #sl-msg{margin:2px 0 10px}
 .sl-now .times input{height:42px;font-size:18px}
 .sl-now .gar-line{margin-top:10px}
+.sl-ro{display:flex;align-items:center;gap:22px;padding:9px 6px 9px 14px;border-radius:12px;background:var(--surface-2)}
+.sl-ro span{display:flex;flex-direction:column;gap:1px}
+.sl-ro small{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.sl-ro b{font-size:19px;font-weight:600}
+.sl-ro .linkb{margin-left:auto;--c:var(--core)}
+.sl-done{display:flex;justify-content:flex-end;margin:4px -6px -6px 0}
+.sl-done .linkb{--c:var(--core)}
 .sl-src{flex-shrink:0;margin-top:2px}
 .big-h small{font-size:26px;color:var(--muted);font-weight:600;margin:0 4px}
 .times{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -2346,9 +2365,25 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
     ${painHTML}
     ${swapHTML}
     <div class="ex-a">${ex.cue ? `<details class="more"><summary>Form tip</summary><div class="mb"><p>${ex.cue}</p></div></details>` : ""}
-      <span class="acts">${ALT[ex.orig || ex.id] && S.swapEdit !== d + ":" + it.i ? `<button class="linkb swapb" data-act="swapui" data-v="${it.i}"><svg class="i" viewBox="0 0 24 24"><path d="M4 8.5h13.5M14 5l3.5 3.5L14 12"/><path d="M20 15.5H6.5M10 12l-3.5 3.5L10 19"/></svg>${ex.alt ? "Swap back" : "Swap"}</button>` : ""}${!note && S.noteEdit !== ex.id ? `<button class="linkb" data-act="note" data-v="${ex.id}">Note</button>` : ""}${!ex.chk && !pn && S.painEdit !== k ? `<button class="linkb" data-act="pain" data-v="${k}">Pain</button>` : ""}${ok < n && pos < p.length - 1 ?`<button class="linkb" data-act="later" data-v="${it.i}">Do later</button>` : ""}${ok === 0 ? `<button class="linkb" data-act="skip" data-v="${it.i}">Skip</button>` : ""}</span></div>
+      <span class="acts">${ALT[ex.orig || ex.id] && S.swapEdit !== d + ":" + it.i ? `<button class="linkb swapb" data-act="swapui" data-v="${it.i}"><svg class="i" viewBox="0 0 24 24"><path d="M4 8.5h13.5M14 5l3.5 3.5L14 12"/><path d="M20 15.5H6.5M10 12l-3.5 3.5L10 19"/></svg>${ex.alt ? "Swap back" : "Swap"}</button>` : ""}${xmenu([
+        !note && S.noteEdit !== ex.id && ["note", ex.id, "Add a note", XI.note],
+        !ex.chk && !pn && S.painEdit !== k && ["pain", k, "Flag pain", XI.pain],
+        ok < n && pos < p.length - 1 && ["later", it.i, "Do it later", XI.later],
+        ok === 0 && ["skip", it.i, "Skip today", XI.skip]])}</span></div>
   </article>`;
 }
+// the "⋯" menu under an exercise: opens upward inside the card, closes on any other tap
+const XI = {
+  note: '<svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
+  pain: '<svg class="i" viewBox="0 0 24 24"><path d="M12 3.5l9 16H3z"/><path d="M12 10v4.5M12 17.2v.1"/></svg>',
+  later: '<svg class="i" viewBox="0 0 24 24"><path d="M5 7h11M5 12h11M5 17h6"/><path d="M15.5 14.5l3 3-3 3"/><path d="M18.5 17.5h-5"/></svg>',
+  skip: '<svg class="i" viewBox="0 0 24 24"><path d="M6 6l8 6-8 6z"/><path d="M18 6v12"/></svg>' };
+function xmenu(items) {
+  items = items.filter(Boolean); if (!items.length) return "";
+  return `<span class="xm"><button class="linkb xm-b" data-act="xmore" aria-haspopup="menu" aria-expanded="false" aria-label="More: ${items.map(x => x[2].toLowerCase()).join(", ")}"><svg class="i" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.3"/><circle cx="12" cy="12" r="1.3"/><circle cx="18" cy="12" r="1.3"/></svg></button><span class="xm-p" role="menu">${items.map(([act, v, l, ic]) => `<button class="xm-i" role="menuitem" data-act="${act}" data-v="${v}">${ic}${l}</button>`).join("")}</span></span>`;
+}
+function xmClose(except) { document.querySelectorAll(".xm.open").forEach(m => { if (m !== except) { m.classList.remove("open"); const b = m.querySelector(".xm-b"); if (b) b.setAttribute("aria-expanded", "false"); } }); }
+document.addEventListener("click", e => { const m = e.target.closest(".xm"); xmClose(m && !e.target.closest(".xm-i") ? m : null); }, true);
 function refreshToday() {
   const d = S.sel, wk = wkOf(d), c = counts(d), doc = dayDoc(d);
   const r = $("#rval"); if (r) { const C = 2 * Math.PI * 36; r.style.strokeDashoffset = (C * (1 - (c.tot ? c.ok / c.tot : 0))).toFixed(1); }
@@ -2891,6 +2926,12 @@ function regCard(nights) {
       <text x="0" y="${(Y(r.avg) + 3.5).toFixed(1)}" font-size="10" fill="var(--muted)">${minHM(r.avg)}</text>
       <text x="0" y="${(Y(lo) + 3.5).toFixed(1)}" font-size="9" fill="var(--faint)">earlier</text><text x="0" y="${(Y(hi) + 3.5).toFixed(1)}" font-size="9" fill="var(--faint)">later</text>${dots}</svg></section>`;
 }
+// times of a night: watch nights are read-only until you tap Edit; nights you typed stay editable
+function sleepTimesHTML(s, n, bed, wake) {
+  const watch = s && (s.src === "garmin" || s.fw) && sleepH(s) != null;
+  if (watch && S.sleepEdit !== n) return `<div class="sl-ro" id="sl-times" data-m="ro"><span><small>Lights out</small><b class="num">${bed}</b></span><span><small>Woke up</small><b class="num">${wake}</b></span><button class="linkb" data-act="sledit" aria-label="Edit this night's times">Edit</button></div>`;
+  return `<div id="sl-times" data-m="ed"><div class="times"><label for="bed">Lights out<input type="time" id="bed" data-f="bed" value="${bed}"></label><label for="wake">Woke up<input type="time" id="wake" data-f="wake" value="${wake}"></label></div>${watch ? `<div class="sl-done"><button class="linkb" data-act="sldone">Done</button></div>` : ""}</div>`;
+}
 function vSleep() {
   const t = today(), n = S.night, doc = dayDoc(n), s = (doc && doc.sleep) || null, h0 = sleepH(s);
   setHeader("Sleep", "Recovery");
@@ -2905,9 +2946,9 @@ function vSleep() {
   h += `<section class="card sl-now" style="--c:var(--core)">
     <div class="sl-top"><div><div class="lbl">${n === t ? "Last night" : "Night ending " + fShort(n)}</div>
       <div class="big-h num" id="sl-big" style="${h0 == null ? "color:var(--faint)" : ""}">${Math.floor(Math.round(shown * 60) / 60)}<small>h</small>${pad(Math.round(shown * 60) % 60)}<small>min</small></div></div>
-      <span id="sl-src" class="sl-src">${s && s.src === "garmin" ? `<span class="pill">From watch</span>` : ""}</span></div>
+      <span id="sl-src" class="sl-src">${s && s.src === "garmin" ? `<span class="pill">From watch</span>` : s && s.fw ? `<span class="pill">Watch · edited</span>` : ""}</span></div>
     <p id="sl-msg" class="small ${h0 == null ? "muted" : ""}">${sleepMsg(h0, shown)}</p>
-    <div class="times"><label for="bed">Lights out<input type="time" id="bed" data-f="bed" value="${bed}"></label><label for="wake">Woke up<input type="time" id="wake" data-f="wake" value="${wake}"></label></div>
+    ${sleepTimesHTML(s, n, bed, wake)}
     ${garGet().key ? `<p class="small muted gar-line"><svg class="i" viewBox="0 0 24 24"><rect x="7" y="6.5" width="10" height="11" rx="3"/><path d="M9.5 6.5l.6-3h3.8l.6 3M9.5 17.5l.6 3h3.8l.6-3"/></svg><span data-garmsg>${escH(garMsg(garGet()))}</span><button class="linkb" data-act="garsync" data-garbtn>Sync</button></p>` : ""}
     <div id="sl-save">${h0 == null ? `<button class="btn" data-act="logsleep" style="margin-top:12px;--c:var(--core)">Save this night</button>` : ""}</div></section>`;
   // last 14 nights chart
@@ -3334,6 +3375,7 @@ document.addEventListener("click", e => {
   if (a === "garoff") { try { localStorage.removeItem("aub.garmin"); } catch (e) {} toast("Disconnected. The key was deleted from this phone."); return openSheet(); }
   if (a === "garrelay") { garSet({ relay: (($("#garrelay") || {}).value || "").trim(), tok: "", exp: 0 }); openSheet(); return garSync(true).then(() => openSheet()); }
   if (a === "garcopy") { const txt = "Garmin sleep answer (field names only): " + (garGet().shape || "none"); try { navigator.clipboard.writeText(txt).then(() => toast("Copied. Paste it in the chat with Claude."), () => toast("Couldn't copy")); } catch (e) { toast("Couldn't copy"); } return; }
+  if (a === "xmore") { const m = b.closest(".xm"), on = !m.classList.contains("open"); m.classList.toggle("open", on); b.setAttribute("aria-expanded", String(on)); return; }
   if (a === "pain") { S.painEdit = b.dataset.v; replaceCard(b.dataset.v) || flipList(); return; }
   if (a === "paincancel") { const k = S.painEdit; S.painEdit = null; replaceCard(k) || flipList(); return; }
   if (a === "painset") { const d = S.sel, doc = ensureDay(d), k = b.dataset.v; doc.pain = { ...(doc.pain || {}), [k]: b.dataset.a }; S.painEdit = null; touch("d" + d); replaceCard(k) || flipList(); toast("Flagged. You'll see a reminder here next time."); return; }
@@ -3442,6 +3484,8 @@ document.addEventListener("click", e => {
   if (/^f(add|again|edit|done|size|tag|del)$/.test(a)) return foodAct(a, b);
   if (a === "night") { S.night = b.dataset.v; render(false); return; }
   if (a === "q") { const doc = ensureDay(S.night); doc.sleep = { ...(doc.sleep || { bed: ($("#bed") || {}).value || "22:00", wake: ($("#wake") || {}).value || "05:30" }), q: +b.dataset.v }; touch("d" + S.night); render(false); return; }
+  if (a === "sledit") { S.sleepEdit = S.night; const t = $("#sl-times"), tpl = document.createElement("template"); tpl.innerHTML = vSleep(); const nw = tpl.content.getElementById("sl-times"); if (t && nw) t.replaceWith(nw); return; }
+  if (a === "sldone") { S.sleepEdit = null; const t = $("#sl-times"), tpl = document.createElement("template"); tpl.innerHTML = vSleep(); const nw = tpl.content.getElementById("sl-times"); if (t && nw) t.replaceWith(nw); return; }
   if (a === "logsleep") { const doc = ensureDay(S.night); doc.sleep = { src: "me", bed: $("#bed").value || bedPlus15("05:30"), wake: $("#wake").value || "05:30", ...(doc.sleep && doc.sleep.q ? { q: doc.sleep.q } : {}) }; touch("d" + S.night); toast("Night saved"); render(false); return; }
 });
 function softRenderAnim() {
@@ -3661,13 +3705,14 @@ function sleepTime(el) {
   const v = { bed: bed.value, wake: wake.value }; if (!v.bed || !v.wake) return; // half-cleared field: wait for a real time
   const doc = ensureDay(S.night), old = doc.sleep || {};
   if (old.bed === v.bed && old.wake === v.wake) return;
-  doc.sleep = { ...old, ...v, src: "me" }; touch("d" + S.night); patchSleep();
+  doc.sleep = { ...old, ...v, src: "me", ...(old.src === "garmin" || old.fw ? { fw: 1 } : {}) }; touch("d" + S.night); patchSleep();
 }
 function patchSleep() {
   if (S.tab !== "sleep") return;
   const tpl = document.createElement("template"); for (const k in CH) delete CH[k]; tpl.innerHTML = vSleep();
   const nScroll = ($("#sl-nights") || {}).scrollLeft || 0;
   ["sl-nights", "sl-big", "sl-src", "sl-msg", "sl-save", "sl-tiles", "sl-debt", "sl-reg", "sl-chart"].forEach(id => { const a = document.getElementById(id), b = tpl.content.getElementById(id); if (a && b) a.replaceWith(b); });
+  { const a = $("#sl-times"), b = tpl.content.getElementById("sl-times"); if (a && b && (a.dataset.m === "ro" || b.dataset.m === "ro")) a.replaceWith(b); }
   const n = $("#sl-nights"); if (n) n.scrollLeft = nScroll;
   view.querySelectorAll("#sl-tiles [data-count]").forEach(e => e.textContent = e.dataset.count);
 }
