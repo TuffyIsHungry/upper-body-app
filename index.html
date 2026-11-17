@@ -3753,8 +3753,21 @@ document.addEventListener("freeze", () => { if (saveT) saveNow(); saveUI(); });
 })();
 </script>
 
+<div id="upd" class="upd" hidden role="status"><span>New version ready</span><button type="button" id="updgo">Reload</button><button type="button" id="updx" aria-label="Later">✕</button></div>
+<style>.upd{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 92px);z-index:60;display:flex;align-items:center;gap:6px;padding:6px 6px 6px 16px;border-radius:999px;background:var(--fg,#EEF1F6);color:var(--bg,#0C0F14);font:600 14px var(--body,system-ui);box-shadow:0 12px 30px -10px rgba(0,0,0,.5);white-space:nowrap}
+.upd button{height:34px;padding:0 14px;border-radius:999px;border:0;font:700 14px var(--body,system-ui);background:var(--push,#FF6A2B);color:#fff}
+.upd #updx{background:transparent;color:inherit;padding:0 10px;opacity:.6}</style>
 <script>
-if ("serviceWorker" in navigator) addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+if ("serviceWorker" in navigator) {
+  addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+  // a newer version was downloaded in the background: offer a one-tap reload (saves first)
+  navigator.serviceWorker.addEventListener("message", e => {
+    if (!e.data || e.data.type !== "update-ready") return;
+    const u = document.getElementById("upd"); if (!u) return; u.hidden = false;
+    document.getElementById("updgo").onclick = () => { try { dispatchEvent(new Event("pagehide")); } catch (x) {} setTimeout(() => location.reload(), 150); };
+    document.getElementById("updx").onclick = () => { u.hidden = true; };
+  });
+}
 </script>
 </body>
 </html>
