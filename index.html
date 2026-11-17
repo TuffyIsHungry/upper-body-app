@@ -687,6 +687,14 @@ button.row{color:inherit}
 .ss-c .lbl{display:flex;align-items:center;justify-content:space-between;gap:6px}
 .ss-c .lbl svg{width:16px;height:16px;color:var(--muted);transition:transform .2s}
 .ss-c.on{box-shadow:inset 0 0 0 1.5px var(--c)}
+/* sleep debt stands out in its verdict colour (orange when you're behind, green when on track) */
+.ss-c.tint{background:radial-gradient(120% 100% at 100% 0%, color-mix(in srgb, var(--dc) 26%, transparent), transparent 70%), color-mix(in srgb, var(--dc) 13%, var(--surface-2));box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--dc) 32%, transparent)}
+.ss-c.tint b{color:color-mix(in srgb, var(--dc) 55%, var(--fg))}
+.ss-c.tint .lbl,.ss-c.tint .lbl svg{color:color-mix(in srgb, var(--dc) 60%, var(--muted))}
+.ss-c.tint.on{box-shadow:inset 0 0 0 1.5px var(--dc)}
+/* last night: tinted in the sleep colour */
+.card.sl-now{background:radial-gradient(130% 90% at 100% 0%, color-mix(in srgb, var(--core) 30%, transparent), transparent 62%), linear-gradient(180deg, color-mix(in srgb, var(--core) 12%, var(--surface)), color-mix(in srgb, var(--core) 5%, var(--surface)));box-shadow:var(--elev),inset 0 0 0 1px color-mix(in srgb, var(--core) 30%, transparent)}
+.card.sl-now .sl-ro,.card.sl-now .times input{background:color-mix(in srgb, var(--core) 12%, var(--surface-2))}
 .ss-c.on .lbl svg{transform:rotate(180deg)}
 .ss-c b{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1}
 .ss-c b small{font-size:15px;font-weight:600;color:var(--muted);margin:0 2px}
@@ -2950,7 +2958,7 @@ function sleepSum(nights, avg7, onT, n7) {
   const dI = debtInfo(nights), rI = regInfo(nights), open = S.slX;
   const hm = v => { const m = Math.round(v * 60); return `${Math.floor(m / 60)}<small>h</small>${pad(m % 60)}`; };
   const cell = (lbl, num, sub, col, key) => key
-    ? `<button class="ss-c tap ${open === key ? "on" : ""}" data-act="slx" data-v="${key}" aria-expanded="${open === key}"><span class="lbl">${lbl}<svg class="i" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></svg></span><b class="num">${num}</b><span class="ss-v" style="color:${col}">${sub}</span></button>`
+    ? `<button class="ss-c tap ${key === "debt" && col !== "var(--muted)" ? "tint" : ""} ${open === key ? "on" : ""}" data-act="slx" data-v="${key}" aria-expanded="${open === key}" style="--dc:${col}"><span class="lbl">${lbl}<svg class="i" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></svg></span><b class="num">${num}</b><span class="ss-v" style="color:${col}">${sub}</span></button>`
     : `<div class="ss-c"><span class="lbl">${lbl}</span><b class="num">${num}</b><span class="ss-v">${sub}</span></div>`;
   const rCol = rI.word === "Very regular" || rI.word === "Fairly regular" ? "var(--good)" : rI.num === "–" ? "var(--muted)" : "var(--warn)";
   return `<section class="card slsum" id="sl-sum" style="--c:var(--core)"><h2 class="sec-t">Last 7 nights</h2>
