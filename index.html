@@ -537,6 +537,10 @@ button.row{color:inherit}
 .swap-btns{display:flex;gap:8px;align-items:center}
 .btn.sm{width:auto;flex:1;height:42px;padding:0 12px;font-size:14.5px;border-radius:13px}
 .swap-btns .linkb{--c:var(--muted);flex-shrink:0}
+.habits{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.habits .meal{margin:0;align-items:center;padding:13px 14px;background:var(--face);box-shadow:var(--elev),var(--hair)}
+.habits .meal.on{background:color-mix(in srgb, var(--c) 14%, var(--surface))}
+.habits .mx b{font-size:14.5px;line-height:1.25}
 .fl-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .fl-goal{display:flex;align-items:center;gap:10px;margin:10px 0 12px;white-space:nowrap}
 .fl-dots{display:flex;gap:5px}
@@ -2397,7 +2401,7 @@ function foodWeekCard() {
 function foodRefresh() {
   if (S.tab !== "food") return;
   const swap = (id, html) => { const a = document.getElementById(id); if (!a) return; if (!html) return a.remove(); const tpl = document.createElement("template"); tpl.innerHTML = html; a.replaceWith(tpl.content.firstElementChild); };
-  swap("foodlog", foodLogCard()); swap("pgap", proteinGap(dayProtein(dayDoc(today()))));
+  swap("habits", habitsCard()); swap("foodlog", foodLogCard()); swap("pgap", proteinGap(dayProtein(dayDoc(today()))));
   const w = foodWeekCard(), cur = document.getElementById("foodweek");
   if (cur) swap("foodweek", w); else if (w) { const g = document.getElementById("pgap"); if (g) g.insertAdjacentHTML("afterend", w); }
   const mp = document.getElementById("mealplan"); if (mp) swap("mealplan", mealPlanCard());
@@ -2432,13 +2436,17 @@ function foodAct(a, b) {
   foodRefresh();
 }
 function mealPlanCard() {
-  const t = today(), doc = dayDoc(t), f = (doc && doc.food) || {}, on = new Set(foodEntries(doc).map(e => e.pm).filter(Boolean));
+  const t = today(), doc = dayDoc(t), on = new Set(foodEntries(doc).map(e => e.pm).filter(Boolean));
   return `<section class="card" id="mealplan" style="--c:var(--push)"><h2 class="sec-t">Meal plan</h2>
     <p class="small muted" style="margin-bottom:10px">Your plan for a full day. Tick a meal if you ate it (or something close) and it goes into today's log.</p>
     <div>${MEALS.map(m => `<button class="meal ${on.has(m.id) ? "on" : ""}" data-act="meal" data-v="${m.id}" aria-pressed="${on.has(m.id)}">
       <span class="mt num">${m.t}</span><span class="mx"><b>${m.n}</b><span>${m.f}</span></span><span style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="tick">${IC.check}</span><span class="mk num">${m.p} g</span></span></button>`).join("")}</div>
-    <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
-      ${[["creatine", "5 g creatine"], ["water", "500 ml water on waking"]].map(([id, l]) => `<button class="meal ${f[id] ? "on" : ""}" data-act="habit" data-v="${id}" aria-pressed="${!!f[id]}" style="flex:1 1 150px;margin:0;align-items:center"><span class="tick">${IC.check}</span><span class="mx"><b>${l}</b></span></button>`).join("")}</div></section>`;
+</section>`;
+}
+// daily habits: always at the very top of the Food tab
+function habitsCard() {
+  const f = (dayDoc(today()) || {}).food || {};
+  return `<div class="habits" id="habits" style="--c:var(--push)">${[["creatine", "5 g creatine"], ["water", "500 ml water on waking"]].map(([id, l]) => `<button class="meal ${f[id] ? "on" : ""}" data-act="habit" data-v="${id}" aria-pressed="${!!f[id]}"><span class="tick">${IC.check}</span><span class="mx"><b>${l}</b></span></button>`).join("")}</div>`;
 }
 /* "What gets me to my protein?" — typical values for common Swiss supermarket foods (approximate). */
 const PFOODS = [["150 g chicken breast", 35, "ch"], ["250 g low-fat quark", 30, "qu"], ["1 can of tuna", 26, "tu"], ["1 whey shake", 24, "wh"], ["200 g cottage cheese", 24, "co"],
@@ -2467,7 +2475,7 @@ function proteinGap(p) {
 function vFood() {
   const t = today(), doc = dayDoc(t), p = dayProtein(doc);
   setHeader("Nutrition", "Lean bulk");
-  let h = foodLogCard();
+  let h = habitsCard() + foodLogCard();
   h += proteinGap(p);
   h += foodWeekCard();
   h += mealPlanCard();
