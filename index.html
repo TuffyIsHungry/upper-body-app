@@ -495,7 +495,7 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .sl-ro span{display:flex;flex-direction:column;gap:1px}
 .sl-ro small{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .sl-ro b{font-size:19px;font-weight:600}
-.sl-ro .linkb{margin-left:auto;--c:var(--core)}
+.sl-ro .linkb{margin-left:auto}
 .sl-done{display:flex;justify-content:flex-end;margin:4px -6px -6px 0}
 .sl-done .linkb{--c:var(--core)}
 .sl-src{flex-shrink:0;margin-top:2px}
@@ -693,8 +693,18 @@ button.row{color:inherit}
 .ss-c.tint .lbl,.ss-c.tint .lbl svg{color:color-mix(in srgb, var(--dc) 60%, var(--muted))}
 .ss-c.tint.on{box-shadow:inset 0 0 0 1.5px var(--dc)}
 /* last night: tinted in the sleep colour */
-.card.sl-now{background:radial-gradient(130% 90% at 100% 0%, color-mix(in srgb, var(--core) 30%, transparent), transparent 62%), linear-gradient(180deg, color-mix(in srgb, var(--core) 12%, var(--surface)), color-mix(in srgb, var(--core) 5%, var(--surface)));box-shadow:var(--elev),inset 0 0 0 1px color-mix(in srgb, var(--core) 30%, transparent)}
-.card.sl-now .sl-ro,.card.sl-now .times input{background:color-mix(in srgb, var(--core) 12%, var(--surface-2))}
+/* last night: tinted by how good the night was (purple great, green enough, orange a bit short, red not enough) */
+.card.sl-now{background:radial-gradient(130% 90% at 100% 0%, color-mix(in srgb, var(--c) 30%, transparent), transparent 62%), linear-gradient(180deg, color-mix(in srgb, var(--c) 12%, var(--surface)), color-mix(in srgb, var(--c) 5%, var(--surface)));box-shadow:var(--elev),inset 0 0 0 1px color-mix(in srgb, var(--c) 32%, transparent);transition:box-shadow .3s}
+.card.sl-now.q-none{background:var(--face);box-shadow:var(--elev),var(--hair)}
+.card.sl-now .sl-ro,.card.sl-now .times input{background:color-mix(in srgb, var(--c) 12%, var(--surface-2))}
+.card.sl-now.q-none .sl-ro,.card.sl-now.q-none .times input{background:var(--surface-2)}
+.sq-w{color:color-mix(in srgb, var(--c) 75%, var(--fg))}
+.sq-scale{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:8px;font-size:13px;color:var(--muted)}
+.sq-scale span{display:inline-flex;align-items:center;gap:6px}
+.sq-scale i{width:9px;height:9px;border-radius:50%;background:var(--c)}
+:root{--bad:#FF5F57;--orng:#FF9A3D}
+:root[data-app-theme="light"],:root[data-app-theme="soft"],:root[data-theme="light"]:not([data-app-theme]){--bad:#CC3A33;--orng:#C45F12}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]):not([data-app-theme]){--bad:#CC3A33;--orng:#C45F12}}
 .ss-c.on .lbl svg{transform:rotate(180deg)}
 .ss-c b{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1}
 .ss-c b small{font-size:15px;font-weight:600;color:var(--muted);margin:0 2px}
@@ -2979,9 +2989,10 @@ function vSleep() {
   const wake = (s && s.wake) || (S.docs.settings && S.docs.settings.wake) || "05:30", bed = (s && s.bed) || bedPlus15(wake);
   const shown = sleepH({ bed, wake });
   let h = `<div class="nights" id="sl-nights" style="--c:var(--core)">${chips}</div>`;
-  h += `<section class="card sl-now" style="--c:var(--core)">
+  const tier = h0 == null ? null : sleepTier(shown);
+  h += `<section class="card sl-now ${tier ? "q-" + tier.k : "q-none"}" id="sl-card" style="--c:${tier ? tier.c : "var(--muted)"}">
     <div class="sl-top"><div><div class="lbl">${n === t ? "Last night" : "Night ending " + fShort(n)}</div>
-      <div class="big-h num" id="sl-big" style="${h0 == null ? "color:var(--faint)" : ""}">${Math.floor(Math.round(shown * 60) / 60)}<small>h</small>${pad(Math.round(shown * 60) % 60)}<small>min</small></div></div>
+      <div class="big-h num" id="sl-big" style="${h0 == null ? "color:var(--faint)" : "color:color-mix(in srgb, var(--c) 62%, var(--fg))"}">${Math.floor(Math.round(shown * 60) / 60)}<small>h</small>${pad(Math.round(shown * 60) % 60)}<small>min</small></div></div>
       <span id="sl-src" class="sl-src">${s && s.src === "garmin" ? `<span class="pill">From watch</span>` : s && s.fw ? `<span class="pill">Watch · edited</span>` : ""}</span></div>
     <p id="sl-msg" class="small ${h0 == null ? "muted" : ""}">${sleepMsg(h0, shown)}</p>
     ${sleepTimesHTML(s, n, bed, wake)}
@@ -3004,6 +3015,7 @@ function vSleep() {
     <p class="small muted">${SLEEP_L} of sleep plus about 15 minutes to fall asleep.</p></section>`;
   h += `<section class="card"><h2 class="sec-t">Why it matters</h2><ul class="bul" style="--c:var(--core)">
     <li>Sleep is where recovery and muscle growth happen. Your target is ${SLEEP_L}; under 7 hours regularly slows both.</li>
+    <li>The last-night card is coloured by length:<div class="sq-scale">${SLEEP_TIERS.map(t => `<span style="--c:${t.c}"><i></i>${t.r}</span>`).join("")}</div></li>
     <li>Screens off 30 min before bed. Phone outside arm's reach.</li>
     <li>Same wake time on weekends, within an hour.</li>
     <li>No caffeine after about 14:00.</li></ul></section>`;
@@ -3011,7 +3023,24 @@ function vSleep() {
 }
 // the bedtime that gives exactly the target (no 15 min to fall asleep): the default shown before a night is logged
 function bedPlus15(w) { const [h, m] = w.split(":").map(Number); let t = h * 60 + m - Math.round(SLEEP_T * 60); t = ((t % 1440) + 1440) % 1440; return `${pad(Math.floor(t / 60))}:${pad(t % 60)}`; }
-const sleepMsg = (h0, shown) => h0 == null ? "Not logged yet. Change a time, or tap Save if these are right." : shown >= SLEEP_T ? "On target. This is where muscle gets built." : shown >= SLEEP_T - .5 ? "Close. Try 30 min earlier tonight." : "Short night. Keep today's sets at the easy end of the RIR range.";
+/* How good a night was, by length. Sources: National Sleep Foundation (18–25 y: 7–9 h recommended, 6 h "may be appropriate",
+   under 6 h or over 11 h "not recommended"); AASM: 7 h or more for adults; 2021 athlete consensus (BJSM): under 7 h is a sign of
+   too little sleep for athletes. The top band is your own target, 8 h 15, the upper part of the 7–9 h range. */
+const SLEEP_TIERS = [
+  { k: "great", min: SLEEP_T, c: "var(--core)", w: "Great night", r: `${SLEEP_L} or more` },
+  { k: "ok", min: 7, c: "var(--good)", w: "Enough sleep", r: `7 h to ${SLEEP_L}` },
+  { k: "short", min: 6, c: "var(--orng)", w: "A bit short", r: "6 to 7 h" },
+  { k: "low", min: 0, c: "var(--bad)", w: "Not enough sleep", r: "under 6 h" }];
+const sleepTier = h => h == null ? null : h >= 11 ? { k: "long", c: "var(--orng)", w: "Very long night" } : SLEEP_TIERS.find(t => h >= t.min - 1e-9);
+const sleepMsg = (h0, shown) => {
+  if (h0 == null) return "Not logged yet. Change a time, or tap Save if these are right.";
+  const t = sleepTier(shown), gap = Math.round((SLEEP_T - shown) * 60), w = `<b class="sq-w">${t.w}.</b> `;
+  if (t.k === "great") return w + "This is where muscle gets built.";
+  if (t.k === "ok") return w + `${gap >= 60 ? Math.floor(gap / 60) + " h " + pad(gap % 60) : gap + " min"} short of ${SLEEP_L}. Fine for training today${gap > 30 ? "; try 30 min earlier tonight" : ""}.`;
+  if (t.k === "short") return w + "Train as planned, but get to bed 30–45 min earlier tonight.";
+  if (t.k === "low") return w + "Keep today's sets at the easy end of the RIR range, and get to bed early tonight.";
+  return w + "Fine to catch up once. If it happens often, sleep more during the week instead.";
+};
 function bedFor(w) { const [h, m] = w.split(":").map(Number); let t = h * 60 + m - Math.round(SLEEP_T * 60) - 15; t = ((t % 1440) + 1440) % 1440; return `${pad(Math.floor(t / 60))}:${pad(t % 60)}`; }
 function growBars(root) {
   const bars = [...root.querySelectorAll(".chart rect.bar[data-b]")]; if (!bars.length || REDUCED) return;
@@ -3746,6 +3775,7 @@ function patchSleep() {
   const tpl = document.createElement("template"); for (const k in CH) delete CH[k]; tpl.innerHTML = vSleep();
   const nScroll = ($("#sl-nights") || {}).scrollLeft || 0;
   ["sl-nights", "sl-big", "sl-src", "sl-msg", "sl-save", "sl-sum", "sl-chart"].forEach(id => { const a = document.getElementById(id), b = tpl.content.getElementById(id); if (a && b) a.replaceWith(b); });
+  { const a = $("#sl-card"), b = tpl.content.getElementById("sl-card"); if (a && b) { a.className = b.className; a.style.cssText = b.style.cssText; } }
   { const a = $("#sl-times"), b = tpl.content.getElementById("sl-times"); if (a && b && (a.dataset.m === "ro" || b.dataset.m === "ro")) a.replaceWith(b); }
   const n = $("#sl-nights"); if (n) n.scrollLeft = nScroll;
 }
