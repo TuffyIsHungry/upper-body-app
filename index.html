@@ -441,6 +441,13 @@ details.more .mb{padding-top:8px;display:flex;flex-direction:column;gap:6px;colo
 .acts{flex-wrap:wrap;justify-content:flex-end}
 .acts .linkb{color:var(--muted);font-size:13.5px;white-space:nowrap;padding:8px 8px}
 .acts{align-items:center}
+.set.xset .sn{color:var(--c);font-weight:700}
+.set.xset .sn::before{content:"+";font-size:.8em;margin-right:1px}
+.xs-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:2px -4px -4px}
+.xs-row:empty{display:none}
+.xs-add{display:inline-flex;align-items:center;gap:6px;font-size:13.5px}
+.xs-add svg{width:16px;height:16px;stroke-width:2.4}
+.xs-del{--c:var(--muted);font-size:13px;margin-left:auto}
 .xm{position:relative;display:inline-flex}
 .acts .xm-b{width:40px;height:34px;padding:0;display:grid;place-items:center;border-radius:10px}
 .xm-b svg{width:22px;height:22px;stroke-width:2.6}
@@ -1391,7 +1398,8 @@ function phase(d) {
   if (c === 7) return P("deload", "Deload", s => Math.max(1, Math.ceil(s / 2)), "RIR 3–4", "Half the sets, same weights as last week.");
   return P("push", `Push · cycle ${Math.floor((w - 10) / 7) + 2}`, s => s, null, "Efforts as written. Double progression on every lift.");
 }
-const setsFor = (d, ex) => wkOf(d).light ? ex.s : phase(d).sets(ex.s);
+const setsFor = (d, ex, k) => (wkOf(d).light ? ex.s : phase(d).sets(ex.s)) + (k ? xsets(d, k) : 0);
+const xsets = (d, k) => { const x = S.docs["d" + d]; return (x && x.xs && x.xs[k]) || 0; };
 const effFor = (d, ex) => (wkOf(d).light ? null : phase(d).eff) || ex.e;
 const expWeeks = () => (S.docs.settings && S.docs.settings.expressWeeks) || [];
 function isExpress(d) {
@@ -1429,7 +1437,7 @@ function counts(d) {
   const doc = dayDoc(d); let tot = 0, ok = 0;
   for (const it of plan(d)) {
     if (it.skip) continue;
-    const n = setsFor(d, it.ex); tot += n;
+    const n = setsFor(d, it.ex, it.k); tot += n;
     const arr = (doc && doc.ex && doc.ex[it.k]) || [];
     for (let i = 0; i < n; i++) if (arr[i] && arr[i].ok) ok++;
   }
@@ -2598,7 +2606,7 @@ function exList(d) {
         <button class="mv" data-act="down" data-v="${it.i}" aria-label="Move ${it.ex.n} down" ${j === p.length - 1 ? "disabled" : ""}><svg class="i" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></svg></button></div>`).join("")}
       <div style="display:flex;gap:8px;margin-top:10px"><button class="btn ghost" data-act="resetorder" style="height:44px">Reset order</button><button class="btn" data-act="edit" style="height:44px">Done</button></div></section>`;
   }
-  const cur = p.find(it => !it.skip && (((doc && doc.ex && doc.ex[it.k]) || []).slice(0, setsFor(d, it.ex)).filter(x => x && x.ok).length < setsFor(d, it.ex)));
+  const cur = p.find(it => !it.skip && (((doc && doc.ex && doc.ex[it.k]) || []).slice(0, setsFor(d, it.ex, it.k)).filter(x => x && x.ok).length < setsFor(d, it.ex, it.k)));
   return p.map((it, j) => exCard(d, wk, it, j, doc, p, it === cur && d === today() && !isDone(d))).join("");
 }
 const PAIN_AREAS = ["Shoulder", "Elbow", "Wrist", "Lower back", "Knee", "Other"];
@@ -2613,7 +2621,7 @@ function painLog(exId) {
 function exCard(d, wk, it, pos, doc, p, isCur) {
   const ex = it.ex, k = it.k, i = pos, col = TYPES[wk.type];
   {
-    const n0 = setsFor(d, ex), a0 = ((doc && doc.ex && doc.ex[k]) || []).slice(0, n0);
+    const n0 = setsFor(d, ex, k), a0 = ((doc && doc.ex && doc.ex[k]) || []).slice(0, n0);
     if (!it.skip && a0.filter(x => x && x.ok).length === n0 && !S.open.has(k)) {
       const sum = ex.chk ? `${n0} × ${ex.r}${ex.per ? " " + ex.per : ""}` : a0.map(x => x.w != null || x.r != null ? `${x.w ? kg(x.w) + "×" : ""}${x.r ?? "–"}${x.pr ? " ★" : ""}` : "✓").join(" · ");
       return `<article class="ex fold" style="--c:${col}" data-card="${k}" data-act="expand" data-v="${k}" role="button" aria-label="Edit ${ex.n}"><header class="ex-h">
@@ -2624,7 +2632,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   }
   if (it.skip) return `<article class="ex skipped" style="--c:${col}" data-card="${k}"><header class="ex-h"><span class="ex-n">${pos + 1}</span>
     <div class="ex-t"><h3>${ex.n}</h3><p class="ex-m">Skipped today</p></div><button class="linkb" data-act="unskip" data-v="${it.i}">Bring back</button></header></article>`;
-  const n = setsFor(d, ex), arr = (doc && doc.ex && doc.ex[k]) || [];
+  const n = setsFor(d, ex, k), arr = (doc && doc.ex && doc.ex[k]) || [], nx = xsets(d, k);
   const ok = arr.slice(0, n).filter(s => s && s.ok).length;
   const last = ex.chk ? null : lastBefore(ex.id, d);
   const eff = effFor(d, ex);
@@ -2632,17 +2640,20 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   for (let j = 0; j < n; j++) {
     const st = arr[j] || {}, ls = last ? (last.sets[j] || last.sets[last.sets.length - 1]) : null;
     if (ex.chk) {
-      rows += `<div class="set ${st.ok ? "ok" : ""}" data-ex="${k}" data-i="${j}"><span class="sn">${j + 1}</span>
+      rows += `<div class="set ${st.ok ? "ok" : ""} ${j >= n - nx ? "xset" : ""}" data-ex="${k}" data-i="${j}"><span class="sn">${j + 1}</span>
         <span class="chk-txt">${ex.r}${ex.per ? " " + ex.per : ""}</span>
         <button class="chk" data-act="chk" aria-label="Set ${j + 1} done" aria-pressed="${!!st.ok}">${IC.check}</button></div>`;
     } else {
       const wp = ls ? kg(ls.w) : (ex.bw ? "+0" : "kg"), rp = ls ? String(ls.r) : (range(ex.r) ? range(ex.r)[0] + "+" : "reps");
-      rows += `<div class="set ${st.ok ? "ok" : ""} ${st.pr ? "pr" : ""}" data-ex="${k}" data-i="${j}"><span class="sn">${st.pr ? "PR" : j + 1}</span>
+      rows += `<div class="set ${st.ok ? "ok" : ""} ${st.pr ? "pr" : ""} ${j >= n - nx ? "xset" : ""}" data-ex="${k}" data-i="${j}"><span class="sn">${st.pr ? "PR" : j + 1}</span>
         <input class="in" id="w-${d}-${k}-${j}" data-f="w" inputmode="decimal" placeholder="${wp}" value="${st.w != null ? kg(st.w) : ""}" aria-label="Set ${j + 1} ${ex.bw ? "added weight" : "weight"} in kg">
         <input class="in" id="r-${d}-${k}-${j}" data-f="r" inputmode="numeric" placeholder="${rp}" value="${st.r != null ? st.r : ""}" aria-label="Set ${j + 1} reps">
         <button class="chk" data-act="chk" aria-label="Set ${j + 1} done" aria-pressed="${!!st.ok}">${IC.check}</button></div>`;
     }
   }
+  // extra set: one tap adds a set (it counts like the others); an untouched extra can be taken back
+  const lastX = nx ? arr[n - 1] : null, canDrop = nx && !(lastX && (lastX.ok || lastX.w != null || lastX.r != null));
+  rows += `<div class="xs-row">${nx < 3 ? `<button class="linkb xs-add" data-act="xset" data-v="${k}"><svg class="i" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Extra set</button>` : ""}${canDrop ? `<button class="linkb xs-del" data-act="xsetdel" data-v="${k}">Remove extra set</button>` : ""}</div>`;
   let foot = "";
   if (last) {
     const rr = range(ex.r);
@@ -2724,7 +2735,7 @@ function refreshToday() {
   const bm = $("#bmeta"); if (bm) bm.textContent = bannerMeta(d);
   plan(d).forEach(({ ex, k, skip }) => {
     if (skip) return;
-    const n = setsFor(d, ex), arr = (doc && doc.ex && doc.ex[k]) || [];
+    const n = setsFor(d, ex, k), arr = (doc && doc.ex && doc.ex[k]) || [];
     const ok = arr.slice(0, n).filter(s => s && s.ok).length;
     const el = view.querySelector(`[data-cnt="${k}"]`);
     if (el && el.textContent !== `${ok}/${n}`) { el.textContent = `${ok}/${n}`; bump(el); }
@@ -2772,7 +2783,7 @@ function weekVol(mon) {
   const vol = {}; MUSCLES.forEach(m => vol[m[0]] = { p: 0, d: 0 });
   for (let i = 0; i < 7; i++) {
     const d = addD(mon, i), wk = wkOf(d), doc = dayDoc(d); if (wk.light) continue;
-    plan(d).forEach(({ ex, k, skip }) => { if (skip) return; const n = setsFor(d, ex), arr = (doc && doc.ex && doc.ex[k]) || []; vol[ex.m].p += n; vol[ex.m].d += arr.slice(0, n).filter(s => s && s.ok).length; });
+    plan(d).forEach(({ ex, k, skip }) => { if (skip) return; const n = setsFor(d, ex, k), arr = (doc && doc.ex && doc.ex[k]) || []; vol[ex.m].p += n; vol[ex.m].d += arr.slice(0, n).filter(s => s && s.ok).length; });
   }
   return vol;
 }
@@ -2793,7 +2804,7 @@ function weekSection() {
     if (wk.light) continue;
     plan(d).forEach(({ ex, k, skip }) => {
       if (skip) return;
-      const n = setsFor(d, ex), arr = (doc && doc.ex && doc.ex[k]) || [];
+      const n = setsFor(d, ex, k), arr = (doc && doc.ex && doc.ex[k]) || [];
       vol[ex.m].p += n; vol[ex.m].d += arr.slice(0, n).filter(s => s && s.ok).length;
     });
   }
@@ -3467,7 +3478,7 @@ function timerHist() {
 // the next exercise that still has open sets (after the current one, else the first open one)
 function nextOpen(d, k) {
   const doc = dayDoc(d), p = plan(d).filter(x => !x.skip), i = p.findIndex(x => x.k === k);
-  const open = x => { const n = setsFor(d, x.ex), a = (doc && doc.ex && doc.ex[x.k]) || []; return a.slice(0, n).filter(q => q && q.ok).length < n; };
+  const open = x => { const n = setsFor(d, x.ex, x.k), a = (doc && doc.ex && doc.ex[x.k]) || []; return a.slice(0, n).filter(q => q && q.ok).length < n; };
   return p.slice(i + 1).find(open) || p.find(x => x.k !== k && open(x)) || null;
 }
 function tick() {
@@ -3773,6 +3784,15 @@ document.addEventListener("click", e => {
   if (a === "garrelay") { garSet({ relay: (($("#garrelay") || {}).value || "").trim(), tok: "", exp: 0 }); openSheet(); return garSync(true).then(() => openSheet()); }
   if (a === "garcopy") { const txt = "Garmin sleep answer (field names only): " + (garGet().shape || "none"); try { navigator.clipboard.writeText(txt).then(() => toast("Copied. Paste it in the chat with Claude."), () => toast("Couldn't copy")); } catch (e) { toast("Couldn't copy"); } return; }
   if (a === "xmore") { const m = b.closest(".xm"), on = !m.classList.contains("open"); m.classList.toggle("open", on); b.setAttribute("aria-expanded", String(on)); return; }
+  if (a === "xset" || a === "xsetdel") {
+    const k = b.dataset.v, d = S.sel, doc = ensureDay(d); doc.xs = { ...(doc.xs || {}) };
+    if (a === "xset") { doc.xs[k] = (doc.xs[k] || 0) + 1; if (doc.done) { doc.done = false; delete doc.end; } }
+    else { const it = plan(d).find(x => x.k === k), n = setsFor(d, it.ex, k), arr = doc.ex && doc.ex[k], lx = arr && arr[n - 1];
+      if (lx && lx.ok) return toast("Untick the extra set first"); if (arr && arr.length >= n) arr.length = n - 1; doc.xs[k] = Math.max(0, (doc.xs[k] || 0) - 1); if (!doc.xs[k]) delete doc.xs[k]; }
+    touch("d" + d); S.open.add(k); replaceCard(k) || flipList(); refreshToday();
+    if (a === "xsetdel") { const c = counts(d); if (c.tot && c.ok === c.tot && !doc.done) { doc.done = true; touch("d" + d); celebrate(); refreshToday(); } }
+    return;
+  }
   if (a === "pain") { S.painEdit = b.dataset.v; replaceCard(b.dataset.v) || flipList(); return; }
   if (a === "paincancel") { const k = S.painEdit; S.painEdit = null; replaceCard(k) || flipList(); return; }
   if (a === "painset") { const d = S.sel, doc = ensureDay(d), k = b.dataset.v; doc.pain = { ...(doc.pain || {}), [k]: b.dataset.a }; S.painEdit = null; touch("d" + d); replaceCard(k) || flipList(); toast("Flagged. You'll see a reminder here next time."); return; }
@@ -3917,7 +3937,7 @@ function toggleSet(btn) {
       }
     }
     burst(btn); SND.tick(); setTimeout(() => row.classList.remove("just"), 800);
-    const n = setsFor(d, ex), lastSet = arr.slice(0, n).filter(s => s && s.ok).length === n;
+    const n = setsFor(d, ex, k), lastSet = arr.slice(0, n).filter(s => s && s.ok).length === n;
     const c = counts(d);
     if (c.ok < c.tot) { const nx = lastSet ? nextOpen(d, k) : null; startTimer(ex.rest, lastSet ? "next exercise" : ex.n, TYPES[wk.type], { id: nx ? nx.ex.id : ex.id, d, next: !!nx }); }
     if (lastSet && c.ok < c.tot && SET().ui.scroll) {
@@ -3965,7 +3985,7 @@ function foldCard(k) {
 }
 function updateCurrent() {
   const d = S.sel, doc = dayDoc(d);
-  const cur = d === today() && !isDone(d) ? plan(d).find(it => !it.skip && (((doc && doc.ex && doc.ex[it.k]) || []).slice(0, setsFor(d, it.ex)).filter(x => x && x.ok).length < setsFor(d, it.ex))) : null;
+  const cur = d === today() && !isDone(d) ? plan(d).find(it => !it.skip && (((doc && doc.ex && doc.ex[it.k]) || []).slice(0, setsFor(d, it.ex, it.k)).filter(x => x && x.ok).length < setsFor(d, it.ex, it.k))) : null;
   view.querySelectorAll(".ex.cur").forEach(e => { if (!cur || e.dataset.card !== cur.k) { e.classList.remove("cur"); const u = e.querySelector(".upnext"); if (u) u.remove(); } });
   if (cur) { const el = view.querySelector(`.ex[data-card="${cur.k}"]:not(.fold)`); if (el && !el.classList.contains("cur")) { el.classList.add("cur"); const t = el.querySelector(".ex-t"); if (t && !t.querySelector(".upnext")) t.insertAdjacentHTML("afterbegin", '<div class="upnext">Up next</div>'); } }
 }
