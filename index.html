@@ -27,22 +27,22 @@
 <style>
 #boot{--ba:#FF6A2B;--bon:#0B0E13;--bbg:#06080C;--bs:#1A1F29;--bfg:#F3F5F9;position:fixed;inset:0;z-index:9999;overflow:hidden;background:var(--bbg);font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
   --ang:-14deg;--t1:.28s}
-#boot .h{position:absolute;inset:0;overflow:hidden;will-change:transform}
+#boot .h{position:absolute;inset:0;overflow:hidden}
 #boot .h.o{clip-path:polygon(0 0,100% 0,100% 44.5%,0 55.5%);background:linear-gradient(160deg,color-mix(in srgb,var(--ba) 62%,#fff) 0%,var(--ba) 45%,color-mix(in srgb,var(--ba) 80%,#000) 100%);color:var(--bon);animation:bTop var(--t1) cubic-bezier(.6,0,.4,1.35) both}
 #boot .h.d{clip-path:polygon(0 55.5%,100% 44.5%,100% 100%,0 100%);background:radial-gradient(120% 70% at 50% 100%,var(--bs) 0%,var(--bbg) 62%);color:var(--bfg);animation:bBot var(--t1) cubic-bezier(.6,0,.4,1.35) both}
 #boot .h.o::before{content:"";position:absolute;inset:-50%;background:repeating-linear-gradient(-14deg,rgba(255,255,255,.07) 0 2px,transparent 2px 26px);animation:bSlide 6s linear infinite}
 #boot .h.d::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--ba) 24%,transparent),transparent 45%)}
 #boot .seam{position:absolute;left:-10%;right:-10%;top:50%;height:3px;margin-top:-1.5px;transform:rotate(var(--ang));background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--ba) 25%,#fff) 30%,#fff 50%,color-mix(in srgb,var(--ba) 25%,#fff) 70%,transparent);
   box-shadow:0 0 18px 4px color-mix(in srgb,var(--ba) 80%,transparent);opacity:0;animation:bSeam .7s ease calc(var(--t1) - .02s) both}
-#boot .b-stage{position:absolute;inset:0;animation:bShake .28s ease calc(var(--t1) + .24s) both}
+#boot .b-stage{position:absolute;inset:-14px;animation:bShake .28s ease calc(var(--t1) + .24s) both}
 #boot .b-art{position:absolute;inset:0;display:block}
-#boot .b-eb{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 11vh);text-align:center;font-weight:700;font-size:3.6vw;letter-spacing:.6em;padding-left:.6em;text-transform:uppercase;opacity:.7;animation:bFade .35s ease calc(var(--t1) + .3s) both}
+#boot .b-eb{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 11vh);text-align:center;font-weight:700;font-size:3.6vw;letter-spacing:.6em;padding-left:.6em;text-transform:uppercase;opacity:.7;animation:bFade .3s ease calc(var(--t1) + .22s) both}
 #boot .b-up,#boot .b-dn{position:absolute;left:0;right:0;display:flex;justify-content:center;font-weight:900;font-size:25vw;line-height:.86;letter-spacing:-.02em}
 #boot .b-up{top:calc(env(safe-area-inset-top,0px) + 16vh)}
 #boot .b-dn{top:61vh}
-#boot .h.d .b-dn span{background:linear-gradient(180deg,var(--bfg) 20%,color-mix(in srgb,var(--ba) 55%,var(--bfg)) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
-#boot .b-up span{display:inline-block;animation:bDrop .4s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--t1) + .26s + var(--i) * 28ms)}
-#boot .b-dn span{display:inline-block;animation:bRise .4s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--t1) + .26s + var(--i) * 28ms)}
+#boot .h.d .b-dn span{color:var(--bfg);text-shadow:0 8px 34px color-mix(in srgb,var(--ba) 40%,transparent)}
+#boot .b-up span{display:inline-block;animation:bDrop .32s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--t1) + .2s + var(--i) * 22ms)}
+#boot .b-dn span{display:inline-block;animation:bRise .32s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--t1) + .2s + var(--i) * 22ms)}
 #boot .b-dbw{position:absolute;left:4vw;right:4vw;top:50%;transform:translateY(-50%) rotate(var(--ang))}
 #boot .b-db{width:100%;height:auto;display:block;overflow:visible;fill:currentColor;animation:bRep 1.2s ease-in-out calc(var(--t1) + .7s) infinite}
 #boot .b-db .bar{transform-box:fill-box;transform-origin:center;animation:bBar .2s cubic-bezier(.3,1.3,.5,1) var(--t1) both}
@@ -50,9 +50,9 @@
 #boot .b-db .pl.l{animation:bPlL .28s cubic-bezier(.5,0,.3,1.6) calc(var(--t1) + .06s) both}
 #boot .b-db .pl.r{animation:bPlR .28s cubic-bezier(.5,0,.3,1.6) calc(var(--t1) + .06s) both}
 #boot .h.o .b-db{fill:var(--bon)} #boot .h.d .b-db{fill:var(--bfg);filter:drop-shadow(0 10px 30px color-mix(in srgb,var(--ba) 45%,transparent))}
-#boot .b-tg{position:absolute;left:0;right:0;top:84vh;text-align:center;font-size:3.1vw;font-weight:700;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:color-mix(in srgb,var(--bfg) 60%,transparent);animation:bFade .35s ease calc(var(--t1) + .42s) both}
+#boot .b-tg{position:absolute;left:0;right:0;top:84vh;text-align:center;font-size:3.1vw;font-weight:700;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:color-mix(in srgb,var(--bfg) 60%,transparent);animation:bFade .3s ease calc(var(--t1) + .3s) both}
 #boot .b-tg b{color:var(--ba)}
-#boot .b-tk{position:absolute;left:0;right:0;top:calc(84vh + 7.5vw);height:1.4em;overflow:hidden;font-size:3.4vw;font-weight:600;color:color-mix(in srgb,var(--bfg) 45%,transparent);animation:bFade .35s ease calc(var(--t1) + .5s) both}
+#boot .b-tk{position:absolute;left:0;right:0;top:calc(84vh + 7.5vw);height:1.4em;overflow:hidden;font-size:3.4vw;font-weight:600;color:color-mix(in srgb,var(--bfg) 45%,transparent);animation:bFade .3s ease calc(var(--t1) + .36s) both}
 #boot .b-tk div{display:flex;flex-direction:column;align-items:center;animation:bTick 2.4s steps(1) calc(var(--t1) + .5s) infinite}
 #boot .b-tk span{height:1.4em;line-height:1.4em}
 #boot .b-tk span::after{content:"…"}
@@ -62,11 +62,17 @@
 #boot .spk i{position:absolute;width:5px;height:5px;margin:-2.5px;border-radius:50%;background:color-mix(in srgb,var(--ba) 20%,#fff);box-shadow:0 0 8px 2px var(--ba);opacity:0;animation:bSpk .55s cubic-bezier(.1,.7,.3,1) calc(var(--t1) + .26s + var(--s)) both}
 #boot .spk.l{margin-left:-39vw} #boot .spk.r{margin-left:39vw}
 #boot .spk.l{transform:translateY(9vw)} #boot .spk.r{transform:translateY(-9vw)}
-#boot .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;animation:bFlash .3s ease calc(var(--t1) + .25s) both}
-#boot.gone{pointer-events:none;visibility:hidden;background:transparent;transition:visibility 0s .47s}
+#boot .flash{position:absolute;inset:0;background:radial-gradient(60% 30% at 50% 50%,rgba(255,255,255,.95),rgba(255,255,255,0) 70%);opacity:0;pointer-events:none;animation:bFlash .3s ease calc(var(--t1) + .25s) both}
+#boot.gone{pointer-events:none;visibility:hidden;background:transparent;transition:visibility 0s .5s;animation:bGone .2s ease .28s forwards}
 #boot.gone .h.o{animation:bOutT .45s cubic-bezier(.6,0,.2,1) forwards}
 #boot.gone .h.d{animation:bOutB .45s cubic-bezier(.6,0,.2,1) forwards}
-#boot.gone .seam,#boot.gone .spk{opacity:0;transition:opacity .15s}
+#boot.gone .seam{animation:bSeamOut .14s ease forwards} #boot.gone .spk,#boot.gone .flash{display:none}
+@keyframes bGone{to{opacity:0}}
+@keyframes bSeamOut{from{opacity:.35}to{opacity:0}}
+/* the app behind: slightly zoomed out and dimmed while loading, it settles as the halves open */
+html.bootin .app{transform:scale(.94);opacity:.4}
+html.bootin .tabs{opacity:0;transform:translateY(24px)}
+html.booting .app,html.booting .tabs{transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .45s ease}
 @keyframes bTop{0%{transform:translateY(-62%)}100%{transform:none}}
 @keyframes bBot{0%{transform:translateY(62%)}100%{transform:none}}
 @keyframes bOutT{to{transform:translate(-4%,-70%) rotate(-4deg)}}
@@ -83,7 +89,7 @@
 @keyframes bSlide{to{transform:translateX(26px)}}
 @keyframes bTick{0%{transform:translateY(0)}33.3%{transform:translateY(-1.4em)}66.6%{transform:translateY(-2.8em)}}
 @keyframes bSpk{0%{opacity:1;transform:rotate(var(--a)) translateX(0)}100%{opacity:0;transform:rotate(var(--a)) translateX(var(--d))}}
-@keyframes bFlash{0%{opacity:0}12%{opacity:.38}100%{opacity:0}}
+@keyframes bFlash{0%{opacity:0}15%{opacity:.5}100%{opacity:0}}
 @media (prefers-reduced-motion: reduce){#boot *,#boot *::before{animation:none!important}#boot .seam{opacity:.35}#boot.gone{opacity:0;transition:opacity .3s}}
 </style>
 <div id="boot" role="status" aria-label="Loading Upper Body"><div class="b-stage">
@@ -113,7 +119,7 @@
   <div class="spk l"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div><div class="spk r"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div>
   <div class="flash"></div>
 </div></div>
-<script>try{var bt2=JSON.parse(localStorage.getItem("aub.boot2")||"null"),be2=document.getElementById("boot");if(bt2&&be2){for(var k in bt2)be2.style.setProperty("--"+k,bt2[k]);document.documentElement.style.background=bt2.bbg;}}catch(e){}</script>
+<script>document.documentElement.classList.add("bootin","booting");try{var bt2=JSON.parse(localStorage.getItem("aub.boot2")||"null"),be2=document.getElementById("boot");if(bt2&&be2){for(var k in bt2)be2.style.setProperty("--"+k,bt2[k]);document.documentElement.style.background=bt2.bbg;}}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
@@ -4483,12 +4489,18 @@ applySettings();
 MQ.addEventListener && MQ.addEventListener("change", () => { applyMotion(); render(false); });
 let BOOT_HTML = "";
 render(true); BOOTED = true;
-{ // loading screen: stays at least ~0.85 s so the plates can slam together, then the two halves slide apart
+{ // loading screen: stays at least ~0.95 s so the entrance can finish, then the two halves slide apart
   const bt = document.getElementById("boot");
-  if (bt) { BOOT_HTML = bt.outerHTML; setTimeout(() => bootOut(bt), Math.max(0, (REDUCED ? 250 : 850) - performance.now())); } }
+  if (bt) { BOOT_HTML = bt.outerHTML; setTimeout(() => bootOut(bt), Math.max(0, (REDUCED ? 250 : 950) - performance.now())); } }
 // coming back to the app after a while (it was in the background, not closed) plays the loading animation again,
 // except during a workout, so switching to music between sets never gets in the way
-function bootOut(bt) { requestAnimationFrame(() => { bt.classList.add("gone"); setTimeout(() => bt.remove(), 520); }); }
+function bootOut(bt) {
+  requestAnimationFrame(() => {
+    const R = document.documentElement; R.classList.add("booting"); bt.classList.add("gone"); R.classList.remove("bootin");
+    // remove it once fully transparent, then repaint the page under it once (iOS can keep a stale frame of a removed layer)
+    setTimeout(() => { bt.remove(); R.classList.remove("booting"); const v = document.getElementById("view"); if (v) { v.style.outline = "1px solid transparent"; requestAnimationFrame(() => { v.style.outline = ""; }); } }, 560);
+  });
+}
 let HIDDEN_AT = 0;
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { HIDDEN_AT = Date.now(); return; }
@@ -4496,7 +4508,7 @@ document.addEventListener("visibilitychange", () => {
   const st = stwState(dayDoc(today()));
   if (!BOOT_HTML || away < 20000 || st === "run" || st === "pause" || document.getElementById("boot")) return;
   const tpl = document.createElement("template"); tpl.innerHTML = BOOT_HTML; const bt = tpl.content.firstElementChild; bt.classList.remove("gone");
-  document.body.appendChild(bt); setTimeout(() => bootOut(bt), REDUCED ? 250 : 850);
+  document.documentElement.classList.add("bootin", "booting"); document.body.appendChild(bt); setTimeout(() => bootOut(bt), REDUCED ? 250 : 950);
 });
 if (UI0 && UI0.y && (TABS.includes(h0) ? h0 === UI0.tab : true)) requestAnimationFrame(() => scrollTo(0, UI0.y));
 if (UI0 && UI0.timer && UI0.timer.end > Date.now() + 1000) {
