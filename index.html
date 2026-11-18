@@ -764,18 +764,35 @@ button.row{color:inherit}
 .coach p{margin:0;font-size:14.5px;line-height:1.4} .coach .lbl{display:block;color:var(--c);margin-bottom:1px}
 .fz-l{display:flex;align-items:center;gap:4px;margin-top:2px;color:var(--pull);font-weight:600;font-size:12.5px}
 .fz-l svg{width:13px;height:13px}
-.bmap{--bm0:color-mix(in srgb, var(--fg) 15%, var(--surface));display:flex;flex-direction:column;align-items:center;gap:6px}
-.bmap svg{width:100%;max-width:360px;height:auto;display:block}
-.bm-base{fill:color-mix(in srgb, var(--fg) 8.5%, var(--surface))}
-.bm-det{fill:color-mix(in srgb, var(--fg) 11%, var(--surface));pointer-events:none}
-.bm-sh{pointer-events:none}
-.bm-m{stroke:var(--surface);stroke-width:1.1;cursor:pointer;transition:filter .2s}
-.bm-m.full{filter:drop-shadow(0 0 3.5px color-mix(in srgb, var(--c) 65%, transparent))}
-.bm-m.sel{stroke:var(--fg);stroke-width:1.4}
-.bm-l{font-size:8px;fill:var(--muted);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
-.bm-cap{text-align:center;min-height:1.4em;margin:0}
-.bm-key{display:flex;gap:14px;justify-content:center;font-size:12.5px;color:var(--muted)}
-.bm-key span{display:flex;align-items:center;gap:5px} .bm-key i{width:11px;height:11px;border-radius:4px;display:block}
+.bmap{--bmS:color-mix(in srgb, var(--fg) 10%, var(--surface));--bmU:color-mix(in srgb, var(--fg) 15.5%, var(--surface));--bm0:color-mix(in srgb, var(--fg) 25%, var(--surface));
+  display:flex;flex-direction:column;align-items:center;gap:8px}
+.bmap svg{width:100%;max-width:370px;height:auto;display:block;overflow:visible}
+.bm-base{fill:var(--bmS)}
+.bm-out{fill:var(--bmS);stroke:color-mix(in srgb, var(--fg) 16%, transparent);stroke-width:1.1;stroke-linejoin:round}
+.bm-u{fill:var(--bmU);pointer-events:none}
+.bm-m{fill:var(--bm0);stroke:var(--bmS);stroke-width:.7;stroke-linejoin:round;cursor:pointer;transition:fill .3s,filter .3s}
+.bm-m.l1{fill:color-mix(in srgb, var(--c) 38%, var(--bm0))}
+.bm-m.l2{fill:color-mix(in srgb, var(--c) 68%, var(--bm0))}
+.bm-m.l3{fill:var(--c);filter:drop-shadow(0 0 3px color-mix(in srgb, var(--c) 70%, transparent))}
+.bm-m.sel{stroke:var(--fg);stroke-width:1.3}
+.bm-l{font-size:8px;fill:var(--muted);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.bm-cap{text-align:center;min-height:1.4em;margin:2px 0 0}
+.bm-key{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.bm-key span{display:flex;align-items:center;gap:5px}
+.bm-key i{width:11px;height:11px;border-radius:4px;display:block;background:var(--bm0)}
+.bm-key i.l1{background:color-mix(in srgb, var(--c) 38%, var(--bm0))} .bm-key i.l2{background:color-mix(in srgb, var(--c) 68%, var(--bm0))} .bm-key i.l3{background:var(--c)}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:8px}
+.mg-c{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:baseline;gap:2px 6px;padding:9px 11px 10px;border-radius:13px;background:var(--surface-2);text-align:left;color:var(--fg);font:inherit;transition:box-shadow .2s,transform .15s}
+.mg-c:active{transform:scale(.97)}
+.mg-c.sel{box-shadow:inset 0 0 0 1.5px var(--c)}
+.mg-n{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex;align-items:center;gap:6px}
+.mg-pr{width:6px;height:6px;border-radius:50%;background:var(--c);flex-shrink:0}
+.mg-v{font-size:14px;font-weight:700}
+.mg-v small{font-size:12px;color:var(--muted);font-weight:600}
+.mg-b{grid-column:1 / -1;height:4px;border-radius:2px;background:color-mix(in srgb, var(--fg) 9%, transparent);overflow:hidden;margin-top:5px}
+.mg-b i{display:block;height:100%;width:var(--q);border-radius:2px;background:color-mix(in srgb, var(--c) 75%, var(--bm0))}
+.mg-c.l3 .mg-b i{background:var(--c)}
+.mg-c.l3 .mg-v{color:var(--c)}
 .rate{display:flex;flex-direction:column;gap:12px}
 .rate .sec-t{margin:0}
 .rate-r{display:grid;grid-template-columns:76px minmax(0,1fr);gap:10px;align-items:center}
@@ -2152,8 +2169,7 @@ function vHome() {
   const TB = TABS.includes("sleep");
   h += `<${TB ? "button" : "div"} class="card tonight" ${tap("sleep")} style="--c:var(--core)"><span class="tn-i"><svg class="i" viewBox="0 0 24 24">${TAB_DEF.sleep[1]}</svg></span>
     <span class="tn-t"><b>Lights out by ${bedFor(wake)}</b><span class="small muted">for ${SLEEP_L} before your ${wake} alarm</span></span><span class="pill">${wn}/${WIND.length} wind-down</span></${TB ? "button" : "div"}>`;
-  // the week (was its own tab)
-  h += `<div id="weeksec">${weekSection()}</div>`;
+  h += musclesCard();
   setTimeout(() => { if (S.tab !== "home" || $("#sheet").classList.contains("show")) return; const up = checkLevel(), pw = checkPerfect();
     if (up) lvlFX(up);
     else if (pw) { toast("Perfect week: 6 of 6"); if (SET().ui.confetti) confetti(); } }, 600);
@@ -2200,40 +2216,55 @@ function coachCard() { const c = coachNote(); return `<div class="coach" style="
 /* ---------- Body map: front and back, each muscle filled by sets done vs planned ---------- */
 function bodyMap(vol) {
   const pct = m => { const v = vol[m]; return v && v.p ? Math.min(1, v.d / v.p) : null; };
-  const fillOf = m => { const q = pct(m); if (q == null || q === 0) return "var(--bm0)"; return q >= 1 ? "var(--c)" : `color-mix(in srgb, var(--c) ${Math.round(30 + q * 50)}%, var(--bm0))`; };
+  const lvl = m => { const q = pct(m); return q == null ? "na" : q >= 1 ? "l3" : q >= .5 ? "l2" : q > 0 ? "l1" : "l0"; };
   const lab = m => { const L = MUSCLES.find(x => x[0] === m); return L ? L[1] : m; };
-  const cap = capsule;
-  const E = (cx, cy, rx, ry, rot = 0) => { const k = .5523, a = rot * Math.PI / 180, c = Math.cos(a), s2 = Math.sin(a), P = (x, y) => `${f1(cx + x * c - y * s2)},${f1(cy + x * s2 + y * c)}`;
-    return `M${P(rx, 0)}C${P(rx, ry * k)} ${P(rx * k, ry)} ${P(0, ry)}C${P(-rx * k, ry)} ${P(-rx, ry * k)} ${P(-rx, 0)}C${P(-rx, -ry * k)} ${P(-rx * k, -ry)} ${P(0, -ry)}C${P(rx * k, -ry)} ${P(rx, -ry * k)} ${P(rx, 0)}Z`; };
-  // silhouette, left half (mirrored for the right)
-  const half = `<path d="M50 29.5C44 29.6 36.5 30.8 31.4 33C26.2 35.2 24.2 39.4 25 44.2C26.6 51.6 31.6 55.6 33 60C34.2 72 36.8 85.6 38 98C38.2 104 37.2 109 36.2 113L50 113Z"/>
-    <path d="${cap([26.2, 42], 6.2, [23.2, 70], 5)}"/><path d="${cap([23.2, 71], 4.9, [20.2, 96], 3.5)}"/><path d="${E(19.6, 101.2, 3.6, 4.6, -8)}"/>
-    <path d="${cap([42.2, 112], 9.2, [41.8, 149], 6.2)}"/><path d="${cap([41.8, 151], 6, [41.6, 184], 3.7)}"/><path d="${E(39.8, 188.8, 6.2, 2.9)}"/>`;
-  const head = `<path d="${E(50, 14.6, 8.6, 10.4)}"/><path d="${cap([50, 23.5], 5.3, [50, 30.5], 6.6)}"/>`;
-  // non-tracked anatomy, drawn a shade lighter than the silhouette
-  const detF = `<path d="M45.4 27.6C43.4 31 38.6 33.4 32.8 35L36.6 37.2C41.2 35.6 45.8 34.4 49.4 34.4V29.8Z"/><path d="${cap([23.4, 73.5], 3.9, [20.8, 92], 2.7)}"/>
-    <path d="M34.6 61.5C35.6 70.5 37.4 80.5 39.6 91.5L42.8 92.4C42.2 82 42.2 71 42.8 61.5Z"/><path d="${E(41.9, 150.5, 4.4, 3.4)}"/>`;
-  const detB = `<path d="M50 31.2C45 32.2 40.4 34.4 38.2 37.6L44.4 49.6L50 61.5Z"/><path d="${cap([23.6, 73.5], 3.9, [21, 92], 2.7)}"/>
-    <path d="M48.7 64V92.4Q48.7 95.2 50 95.2Z"/><path d="M41.5 93.5C40 98 39 102 39.2 104.5L49.4 104.5V95.8C46.4 95.6 43.6 94.8 41.5 93.5Z"/><path d="${E(43.2, 107.6, 7.2, 6.8)}"/>`;
-  const absD = [61, 73, 85].map(y => `M43.8 ${y + 2.6}Q43.8 ${y} 46.2 ${y}H49.2V${y + 10}H46.2Q43.8 ${y + 10} 43.8 ${y + 7.4}Z`).join("");
-  const FRONT = [["Side delts", E(27.5, 43.6, 4.9, 8.4, 16)], ["Front delts", E(33.7, 40.4, 5.4, 5.5, -10)], ["Chest", "M49.2 39C43 37 37 39 35 44C34 50 37 56 42 57.5C45.5 58.5 48 57.5 49.2 55.5Z"],
-    ["Biceps", cap([25.3, 51], 4.2, [23.7, 66], 3.4)], ["Abs", absD], ["Quads", "M35.2 119C34 128 34.8 139 38 146C40.2 149.4 44.6 149.4 46.6 145.8C49 139 49.4 128 48.2 119C46.4 115.2 37.4 114.6 35.2 119Z"]];
-  const BACK = [["Side delts", E(27.5, 43.6, 4.9, 8.4, 16)], ["Rear delts", E(33.7, 40.8, 5.4, 5, 10)], ["Lats", "M46.5 60C44.5 54 38.5 50.5 32.6 51.5C32.4 62 35.2 76 40.6 89.5C42.8 92 45.6 91.6 46.2 88.5C45.4 79 45.6 68.5 46.5 60Z"],
-    ["Triceps", cap([26.8, 49.5], 4.2, [25, 66], 3.4)], ["Hamstrings", "M36 117.5C35 127 35.8 137 38.6 144.5C40.4 148 44.2 148 45.8 144.4C48 137 48.4 126.6 47.4 117.5C45.6 114.6 37.8 114.4 36 117.5Z"], ["Calves", E(41.8, 163.5, 5.1, 9.6)]];
-  const mus = list => list.map(([m, d]) => `<path class="bm-m${pct(m) >= 1 ? " full" : ""}" data-act="bm" data-m="${m}" d="${d}" style="fill:${fillOf(m)}"><title>${lab(m)}</title></path>`).join("");
-  const sheen = list => list.map(([, d]) => `<path d="${d}"/>`).join("");
-  const fig = (x, list, det, label) => `<g transform="translate(${x} 0)">
-      <g class="bm-base">${head}${half}<g transform="translate(100 0) scale(-1 1)">${half}</g></g>
-      <g class="bm-det">${det}<g transform="translate(100 0) scale(-1 1)">${det}</g></g>
-      <g>${mus(list)}</g><g transform="translate(100 0) scale(-1 1)">${mus(list)}</g>
-      <g class="bm-sh" fill="url(#bmsh)">${sheen(list)}<g transform="translate(100 0) scale(-1 1)">${sheen(list)}</g></g>
+  // one half of the body (the figure's right side, on the left of the picture); mirrored for the other half
+  const SIL = `M50 19L44.8 19.4L44.6 25C44.6 27.4 44.4 29.4 44 31C40 33 33 33.4 29 35C24 36.2 21.4 41 22 47C21.6 55 20.6 63 20.5 71C19.8 80 17.9 90 17.6 97.6C16.4 101 16 106 17.5 109C19 111.6 22 111.2 22.5 108C23 104 22.8 100.4 22.3 98C23.5 90 25.8 80.4 26.6 73C27.3 66 28.6 58 31 52.2C32 62 34 74 35.2 84C35.7 92 33.6 99 33 106C32 118 33 132 36.2 146.5C36.8 148.4 36.8 149.6 36.5 151C35 158 35.4 170 38 182C38 186 36.4 189 37 191C38 193.6 45 193.6 46 191.4C46.5 189 45 186 45 182C46.6 170 47.3 160 46.7 151.4C46.6 149.6 46.8 148 47.2 146C48.6 136 49.2 125 49.3 116L50 114Z`;
+  const HEAD = `<ellipse cx="50" cy="13.8" rx="8.4" ry="10.4"/>`;
+  const F = { // front: [muscle or null for untracked, path]
+    m: [["Side delts", "M28.6 35.4C24 36.6 21.8 40.8 22.4 46.6C22.8 50 24 52 25.6 52.6C25.9 46.8 26.8 41.4 30.4 36.9Z"],
+        ["Front delts", "M34.4 35.6C29.6 36 26.6 39.6 26.8 45C27.2 48.8 29.4 50.8 31.4 50.8C33.2 46.2 34.8 41.4 37.2 37.6Z"],
+        ["Chest", "M49.2 37.6C44 35.8 38.8 36.6 36.2 39.6C34 42.6 33.6 47.6 35.2 51.6C37 55.4 41.4 57.4 45.6 57C47.8 56.8 49 55.8 49.2 54.4Z"],
+        ["Biceps", "M26.2 51.4C23.8 54 22.9 60.4 23.4 66.2C23.8 69.4 25.3 70.6 26.3 69.6C27.6 64 28.6 57.8 28.5 52.6Z"],
+        ["Abs", [60, 69.4, 78.8].map(y => `M44.1 ${y + 1.8}Q44.1 ${y} 45.9 ${y}H49.3V${y + 8}H45.9Q44.1 ${y + 8} 44.1 ${y + 6.2}Z`).join("") + "M44.4 89.2Q44.4 88.2 45.6 88.2H49.3V99.4Q46.2 98 44.8 93.4Z"],
+        ["Quads", "M35.4 111.6C34.2 122 34.8 134 37.6 145C38.8 147.4 40.6 148.6 42.2 148.6C40.9 136 40.6 122.6 41.6 110.8C39.4 110.4 36.8 110.6 35.4 111.6Z"],
+        ["Quads", "M42.6 110.8C41.6 122.6 42 136 43.4 148.4C44.4 148 45.1 147.3 45.7 146C47.9 138 48.6 126 47.8 116.2C46.8 113.2 44.8 111.4 42.6 110.8Z"]],
+    u: ["M44.6 27.8C42.4 31 37.6 32.8 32.6 34.2L37.4 36.4C41.4 35.2 45.4 34.6 48.4 34.8V30Z", // trap (front)
+        "M22 74C21 81 19.4 89 19.2 95.4L22.2 95.8C23.2 88.4 25 80.4 25.8 74.4Z",          // forearm
+        "M36.2 59.6C37.6 68 38.8 77 39.8 88.4L43.2 88.8C42.8 79 42.8 69 43.2 60.2Z",        // obliques
+        "M38.2 156C37.6 165 38.4 174 39.8 181L42.2 181C41.8 172 41.6 163.4 42 155.6Z"]      // shin
+  };
+  const B = { // back
+    m: [["Lats", "M50 26.4C46.6 29.8 41.2 32.4 34.8 34.6C38.8 38 44 42.6 47.6 49.6L50 54.2Z"], // upper back / traps count with "Lats & back"
+        ["Side delts", "M28.6 35.4C24 36.6 21.8 40.8 22.4 46.6C22.8 50 24 52 25.6 52.6C25.9 46.8 26.8 41.4 30.4 36.9Z"],
+        ["Rear delts", "M34.2 35.8C30 36.6 27.2 39.6 26.8 44.6C27 47.8 28.8 49.6 30.8 49.4C32.4 45 33.8 40.6 36.6 37.6Z"],
+        ["Lats", "M47 52.6C43.2 47.4 37.8 45.4 32.6 47C31.8 56.6 34 70.4 39.6 84.6C41.8 88 45 87.8 46.2 84.4C45.4 74 45.8 63 47 52.6Z"],
+        ["Triceps", "M24.6 49.8C22.6 54.4 21.8 61.2 22.6 67.4C23 70 24.4 71 25.6 70.4C27.3 64.6 28.1 57.6 27.8 52Z"],
+        ["Hamstrings", "M35.6 117.4C34.8 127 35.6 137 38.4 145C39.4 147 40.8 148 42.2 148.2C41.4 138 41.2 127 41.6 116.2C39.4 115.8 36.8 116.2 35.6 117.4Z"],
+        ["Hamstrings", "M42.6 116.2C42.2 127 42.4 138 43.2 148.2C44.4 147.8 45.2 146.8 45.8 145C47.8 137 48.4 127 47.6 118C46.6 116.6 44.6 116 42.6 116.2Z"],
+        ["Calves", "M37.9 153.8C36.2 158.6 36.2 166 38.5 171.6C39.6 173.6 41.6 173.4 42 171C42.2 165 42 159 41.4 153.4C40.4 152.6 38.7 152.8 37.9 153.8Z"],
+        ["Calves", "M42.3 153.2C42.9 159 42.9 165 42.7 171.6C43.4 174.6 45.6 174.2 46.4 171.4C47.6 165.6 47 158.6 45.4 154C44.6 152.8 43.1 152.6 42.3 153.2Z"]],
+    u: ["M22 74C21 81 19.4 89 19.2 95.4L22.2 95.8C23.2 88.4 25 80.4 25.8 74.4Z",          // forearm
+        "M48.6 57.5C47.8 68 47.8 80 48.4 92.4Q48.8 95 50 95V55.5Z",                         // lower back
+        "M49.4 97C44 96 37.8 98.4 35.6 103.6C34.6 108.4 36.6 113.4 41.6 114.4C45.4 115 48.4 113.4 49.4 111Z"] // glutes
+  };
+  const mus = list => list.map(([m, d]) => `<path class="bm-m ${lvl(m)}" data-act="bm" data-m="${m}" d="${d}"><title>${lab(m)}</title></path>`).join("");
+  const half = side => `${side.u.map(d => `<path class="bm-u" d="${d}"/>`).join("")}${mus(side.m)}`;
+  const fig = (x, side, label) => `<g transform="translate(${x} 0)">
+      <g class="bm-out"><path d="${SIL}"/><path d="${SIL}" transform="translate(100 0) scale(-1 1)"/>${HEAD}</g>
+      <g class="bm-base"><path d="${SIL}"/><path d="${SIL}" transform="translate(100 0) scale(-1 1)"/>${HEAD}</g>
+      <g>${half(side)}</g><g transform="translate(100 0) scale(-1 1)">${half(side)}</g>
       <text class="bm-l" x="50" y="205" text-anchor="middle">${label}</text></g>`;
   const groups = MUSCLES.filter(([m]) => vol[m] && vol[m].p), full = groups.filter(([m]) => vol[m].d >= vol[m].p).length;
-  return `<div class="bmap"><svg viewBox="-2 0 218 210" role="img" aria-label="Body map: ${full} of ${groups.length} muscle groups done">
-    <defs><linearGradient id="bmsh" x1=".5" y1="0" x2=".5" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".2"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".16"/></linearGradient></defs>
-    ${fig(0, FRONT, detF, "Front")}${fig(114, BACK, detB, "Back")}</svg>
-    <p class="small bm-cap" id="bm-cap"><b class="num">${full} of ${groups.length}</b> muscle groups done. <span class="muted">Tap one for its sets.</span></p>
-    <div class="bm-key"><span><i style="background:var(--bm0)"></i>Not yet</span><span><i style="background:color-mix(in srgb, var(--c) 55%, var(--bm0))"></i>Some</span><span><i style="background:var(--c)"></i>Done</span></div></div>`;
+  // the muscle list: priority muscles first, each a chip with its sets and a thin bar; tapping one highlights it on the figure
+  const chips = groups.slice().sort((a, b) => b[2] - a[2]).map(([m, label, pr]) => { const v = vol[m], q = Math.min(1, v.d / v.p);
+    return `<button class="mg-c ${lvl(m)}" data-act="bm" data-m="${m}" style="--q:${(q * 100).toFixed(0)}%"><span class="mg-n">${pr ? `<i class="mg-pr" aria-label="priority"></i>` : ""}${label}</span><span class="mg-v num">${v.d}<small>/${v.p}</small></span><span class="mg-b"><i></i></span></button>`; }).join("");
+  return `<div class="bmap"><svg viewBox="0 0 214 210" role="img" aria-label="Body map: ${full} of ${groups.length} muscle groups done">
+      <defs><radialGradient id="bmglow" cx=".5" cy=".35" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+      ${fig(2, F, "Front")}${fig(112, B, "Back")}</svg>
+    <p class="small bm-cap" id="bm-cap"><b class="num">${full} of ${groups.length}</b> muscle groups done. <span class="muted">Tap a muscle for its sets.</span></p>
+    <div class="bm-key"><span><i class="l0"></i>Not yet</span><span><i class="l1"></i>Started</span><span><i class="l2"></i>Half</span><span><i class="l3"></i>Done</span></div>
+    <div class="mg">${chips}</div></div>`;
 }
 /* ---------- Levels: points for training, named levels ----------
    1 point per finished working set, +4 per personal record, +15 per finished workout (+8 for the Sunday core session).
@@ -2706,6 +2737,19 @@ function openDemo(wkKey, i, preview) {
 }
 
 /* ---------- WEEK ---------- */
+// sets planned / done per muscle for the week starting on Monday `mon`
+function weekVol(mon) {
+  const vol = {}; MUSCLES.forEach(m => vol[m[0]] = { p: 0, d: 0 });
+  for (let i = 0; i < 7; i++) {
+    const d = addD(mon, i), wk = wkOf(d), doc = dayDoc(d); if (wk.light) continue;
+    plan(d).forEach(({ ex, k, skip }) => { if (skip) return; const n = setsFor(d, ex), arr = (doc && doc.ex && doc.ex[k]) || []; vol[ex.m].p += n; vol[ex.m].d += arr.slice(0, n).filter(s => s && s.ok).length; });
+  }
+  return vol;
+}
+function musclesCard() {
+  const vol = weekVol(mondayOf(today())); S.bmVol = vol;
+  return `<section class="card" style="--c:var(--push)"><h2 class="sec-t">Muscles this week</h2><p class="small muted" style="margin-bottom:4px">Each muscle lights up as you do its planned sets. A dot marks your priority muscles.</p>${bodyMap(vol)}</section>`;
+}
 function weekSection() {
   const mon = addD(mondayOf(today()), S.weekOff * 7), sun = addD(mon, 6), t = today();
   const wkName = S.weekOff === 0 ? "This week" : S.weekOff === -1 ? "Last week" : S.weekOff === 1 ? "Next week" : S.weekOff > 0 ? "Ahead" : "Earlier";
@@ -3691,7 +3735,7 @@ document.addEventListener("click", e => {
   if (a === "rate") return setRate(b);
   if (a === "lvl") return openLevel();
   if (a === "bm") { const m = b.dataset.m, v = (S.bmVol || {})[m], L = (MUSCLES.find(x => x[0] === m) || [m, m])[1], cap = $("#bm-cap");
-    document.querySelectorAll(".bm-m.sel").forEach(x => x.classList.remove("sel")); document.querySelectorAll(`.bm-m[data-m="${m}"]`).forEach(x => x.classList.add("sel"));
+    document.querySelectorAll(".bm-m.sel,.mg-c.sel").forEach(x => x.classList.remove("sel")); document.querySelectorAll(`.bm-m[data-m="${m}"],.mg-c[data-m="${m}"]`).forEach(x => x.classList.add("sel"));
     if (cap && v) cap.innerHTML = `<b>${L}</b>: <span class="num">${v.d} of ${v.p}</span> sets${v.d >= v.p ? ` · <span style="color:var(--c);font-weight:600">done</span>` : v.d ? "" : ` · <span class="muted">not started</span>`}`; return; }
   if (a === "garon") { const k = ($("#garkey") || {}).value || ""; if (k.trim().length < 8) return toast("Paste the key first"); garSet({ key: k.trim(), tok: "", exp: 0, last: 0, state: "" }); openSheet(); return garSync(true).then(() => { if ($("#sheet").classList.contains("show") && !S.guide) openSheet(); }); }
   if (a === "garsync") return garSync(true).then(() => { if ($("#sheet").classList.contains("show") && !S.guide && $("[data-act=garoff]")) openSheet(); });
