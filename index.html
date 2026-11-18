@@ -193,6 +193,21 @@ input,select{font:inherit;color:inherit}
 .wt-v b{font-size:16px}
 .wt-v .tmr-c{font-size:12.5px}
 /* level up */
+.tour{position:fixed;inset:0;z-index:380;display:grid;place-items:center;padding:24px;background:rgba(4,6,10,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);animation:lvIn .3s ease both}
+.tour.out{animation:lvOut .3s ease both}
+.tour-card{width:min(340px, 100%);background:var(--surface);border-radius:26px;padding:24px 22px 18px;box-shadow:0 30px 60px -20px rgba(0,0,0,.6),inset 0 0 0 1px var(--line);text-align:center;position:relative;animation:tourIn .35s cubic-bezier(.3,1.3,.5,1) both}
+@keyframes tourIn{from{opacity:0;transform:translateY(16px) scale(.97)}to{opacity:1;transform:none}}
+.tour-i{width:64px;height:64px;border-radius:20px;display:grid;place-items:center;margin:0 auto 12px;background:color-mix(in srgb, var(--c) 20%, var(--surface-2));color:var(--c)}
+.tour-i svg{width:32px;height:32px;stroke-width:2}
+.tour-n{position:absolute;top:16px;right:18px;font-size:12px;color:var(--muted);font-weight:600}
+.tour-card h2{margin:0 0 8px;font-family:var(--display);font-size:26px;line-height:1.05}
+.tour-card p{margin:0;font-size:15px;line-height:1.5;color:color-mix(in srgb, var(--fg) 82%, transparent)}
+.tour-dots{display:flex;justify-content:center;gap:6px;margin:18px 0 14px}
+.tour-dots i{width:7px;height:7px;border-radius:4px;background:var(--line);transition:width .25s,background .25s}
+.tour-dots i.on{width:20px;background:var(--c)}
+.tour-b{display:flex;align-items:center;gap:10px}
+.tour-b .btn{flex:1;margin:0}
+.tour-b .linkb{--c:var(--muted)}
 .lv-replay{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin:2px 0 8px;color:var(--c);font-weight:600}
 .lv-replay svg{width:16px;height:16px}
 .lvfx{position:fixed;inset:0;z-index:400;display:grid;place-items:center;overflow:hidden;cursor:pointer;color:#fff;animation:lvIn .35s ease both;-webkit-tap-highlight-color:transparent}
@@ -495,6 +510,20 @@ details.more .mb{padding-top:8px;display:flex;flex-direction:column;gap:6px;colo
 .flame{width:58px;height:58px;border-radius:18px;background:var(--push);display:grid;place-items:center;flex-shrink:0}
 .flame svg{width:32px;height:32px;stroke:var(--on-c);fill:color-mix(in srgb, var(--on-c) 25%, transparent);stroke-width:1.8}
 .streak.live .flame{animation:flicker 2.4s ease-in-out infinite}
+.streak{background:color-mix(in srgb, var(--fl, var(--push)) 14%, var(--surface))}
+.flame{background:var(--fl, var(--push));transition:background .4s}
+.flame.sm{width:44px;height:44px;border-radius:14px}
+.flame.fs2{background:linear-gradient(165deg, #FFC24A, #FF5A1F);box-shadow:0 8px 22px -8px #FF6A1F}
+.flame.fs3{background:linear-gradient(165deg, #8FD8FF, #2F6BF0);box-shadow:0 8px 24px -8px #2F6BF0}
+.flame.fs4{background:linear-gradient(165deg, #E2A6FF, #7B3DFF);box-shadow:0 8px 26px -6px #7B3DFF}
+.flame.fs2 svg{width:36px;height:36px} .flame.fs3 svg,.flame.fs4 svg{width:38px;height:38px;fill:color-mix(in srgb, #fff 45%, transparent)}
+.flame.sm svg{width:26px;height:26px}
+.fl-n{color:color-mix(in srgb, var(--fl) 70%, var(--fg))}
+.st-n{display:flex;align-items:baseline;gap:2px}
+.st-fl{display:inline-grid;place-items:center;align-self:center;margin-left:6px;width:26px;height:26px;border-radius:9px;background:var(--fl)}
+.st-fl svg{width:17px;height:17px;stroke:#fff;fill:rgba(255,255,255,.3);stroke-width:1.9}
+.st-fl.fs2{background:linear-gradient(165deg, #FFC24A, #FF5A1F)} .st-fl.fs3{background:linear-gradient(165deg, #8FD8FF, #2F6BF0)} .st-fl.fs4{background:linear-gradient(165deg, #E2A6FF, #7B3DFF)}
+.st-fl.fs3,.st-fl.fs4{animation:flicker 2.4s ease-in-out infinite}
 @keyframes flicker{0%,100%{transform:rotate(-2deg) scale(1)}50%{transform:rotate(2deg) scale(1.05)}}
 .streak b{font-family:var(--display);font-size:48px;font-weight:700;line-height:.9}
 .streak .st{flex:1;min-width:0}
@@ -786,9 +815,39 @@ button.row{color:inherit}
 .bm-key span{display:flex;align-items:center;gap:5px}
 .bm-key i{width:11px;height:11px;border-radius:4px;display:block;background:var(--bm0)}
 .bm-key span.off{opacity:.45} .bm-key small{font-size:11px;opacity:.75}
+.mr-h{display:flex;align-items:center;gap:14px;margin:4px 0 12px}
+.mr-h h2{margin:2px 0 2px;font-family:var(--display);font-size:32px;line-height:1}
+.mr-t{font-weight:600;color:color-mix(in srgb, var(--rc) 75%, var(--fg))}
+.mg-lv.big{width:64px;height:64px;font-size:28px}
+.mr-bar{height:8px;flex-shrink:0;border-radius:4px;background:color-mix(in srgb, var(--fg) 10%, transparent);overflow:hidden}
+.mr-bar i{display:block;height:100%;border-radius:4px;background:var(--rc)}
+.mr-rows{display:flex;flex-direction:column;margin:12px 0 14px}
+.mr-row{display:grid;grid-template-columns:104px minmax(0,1fr);gap:10px;padding:11px 2px;border-top:1px solid var(--line);align-items:baseline}
+.mr-row>span:last-child{display:flex;flex-direction:column;gap:1px;min-width:0}
 .mg{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:8px}
 .mg-c{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:14px;background:var(--surface-2);text-align:left;color:var(--fg);font:inherit;min-width:0;transition:box-shadow .2s,transform .15s}
 .mg-c:active{transform:scale(.97)}
+.bm-m.pulse{animation:mrP 1.4s ease 2}
+@keyframes mrP{0%,100%{filter:none}40%{filter:drop-shadow(0 0 6px var(--mc)) brightness(1.5)}}
+.mg-c.pulse{animation:mrC 1.4s ease 2}
+@keyframes mrC{0%,100%{box-shadow:none}40%{box-shadow:inset 0 0 0 2px var(--rc),0 0 18px -2px var(--rc)}}
+.mrfx{position:fixed;left:50%;top:calc(env(safe-area-inset-top, 0px) + 12px);z-index:70;transform:translate(-50%,-140%);display:flex;align-items:center;gap:12px;padding:9px 18px 9px 10px;border-radius:20px;
+  background:color-mix(in srgb, var(--rc) 18%, var(--surface-2));box-shadow:0 16px 36px -12px rgba(0,0,0,.55),inset 0 0 0 1.5px color-mix(in srgb, var(--rc) 55%, transparent);color:var(--fg);text-align:left;font:inherit;
+  animation:mrIn .55s cubic-bezier(.3,1.4,.5,1) forwards;max-width:calc(100vw - 32px)}
+.mrfx.out{animation:mrOut .38s ease forwards}
+@keyframes mrIn{to{transform:translate(-50%,0)}}
+@keyframes mrOut{from{transform:translate(-50%,0)}to{transform:translate(-50%,-140%);opacity:0}}
+.mrfx-b{position:relative;display:grid;place-items:center}
+.mrfx-b .mg-lv{width:44px;height:44px;font-size:19px;animation:mrPop .6s cubic-bezier(.3,1.8,.5,1) .35s both}
+@keyframes mrPop{0%{transform:scale(.4) rotate(-40deg)}100%{transform:none}}
+.mrfx-ring{position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--rc);opacity:0;animation:mrRing 1s ease .45s 2}
+@keyframes mrRing{0%{opacity:.9;transform:scale(.6)}100%{opacity:0;transform:scale(1.6)}}
+.mrfx-t{display:flex;flex-direction:column;min-width:0}
+.mrfx-t .lbl{color:color-mix(in srgb, var(--rc) 75%, var(--fg))}
+.mrfx-t b{font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mrfx-t small{font-size:12.5px;color:var(--muted);font-weight:600}
+.mrfx.tier .mrfx-t small{color:color-mix(in srgb, var(--rc) 75%, var(--fg))}
+@media (prefers-reduced-motion: reduce){.mrfx,.mrfx.out,.mrfx-b .mg-lv,.mrfx-ring,.bm-m.pulse,.mg-c.pulse{animation:none}.mrfx{transform:translate(-50%,0)}}
 .mg-c.sel{box-shadow:inset 0 0 0 1.5px var(--rc)}
 .mg-lv{width:34px;height:34px;flex-shrink:0;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:16px;color:#fff;
   background:var(--rc);clip-path:polygon(50% 0,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);text-shadow:0 1px 2px rgba(0,0,0,.35)}
@@ -2170,7 +2229,7 @@ function vHome() {
   // streak + morning weight
   const st = streaks(), wake = (S.docs.settings && S.docs.settings.wake) || "05:30", wd = (doc && doc.wind) || {}, wn = WIND.filter(([k]) => wd[k]).length;
   const bwAvg = weekAvgBW(mondayOf(t));
-  h += `<div class="tiles">${T2("progress", "var(--push)", `<span class="lbl">Streak</span><b class="num"><span data-count="${st.cur}">${st.cur}</span><small>${st.cur === 1 ? "day" : "days"}</small></b><span class="muted">${st.cur ? `Best ${st.best}` : done ? "" : "Finish today to start one"}${st.freezeOn ? `<span class="fz-l"><svg class="i" viewBox="0 0 24 24">${IC_SNOW}</svg>${st.freezeLeft ? "1 freeze left" : "Freeze used " + fmt(st.frozen.find(x => mondayOf(x) === mondayOf(t)), { weekday: "short" })}</span>` : ""}</span>`)}
+  h += `<div class="tiles">${T2("progress", flameOf(st.cur).col, `<span class="lbl">Streak</span><b class="num st-n"><span data-count="${st.cur}">${st.cur}</span><small>${st.cur === 1 ? "day" : "days"}</small>${st.cur ? `<span class="st-fl fs${flameOf(st.cur).st}" style="--fl:${flameOf(st.cur).col}">${IC.flame}</span>` : ""}</b><span class="muted">${st.cur ? `Best ${st.best}` : done ? "" : "Finish today to start one"}${st.freezeOn ? `<span class="fz-l"><svg class="i" viewBox="0 0 24 24">${IC_SNOW}</svg>${st.freezeLeft ? "1 freeze left" : "Freeze used " + fmt(st.frozen.find(x => mondayOf(x) === mondayOf(t)), { weekday: "short" })}</span>` : ""}</span>`)}
     ${T2("today", "var(--legs)", `<span class="lbl">Morning weight</span><b class="num">${doc && doc.bw != null ? `${kg(doc.bw)}<small>kg</small>` : "–"}</b><span class="muted">${doc && doc.bw != null ? (bwAvg != null ? `Week average ${bwAvg.toFixed(1)} kg` : "Logged today") : "Tap to log it"}</span>`)}</div>`;
   const TB = TABS.includes("sleep");
   h += `<${TB ? "button" : "div"} class="card tonight" ${tap("sleep")} style="--c:var(--core)"><span class="tn-i"><svg class="i" viewBox="0 0 24 24">${TAB_DEF.sleep[1]}</svg></span>
@@ -2211,6 +2270,10 @@ function coachNote() {
   return W("var(--pull)", "info", tips[n % tips.length]);
 }
 const IC_SNOW = '<path d="M12 3v18M4.2 7.5l15.6 9M4.2 16.5l15.6-9"/><path d="M9.5 4.5L12 7l2.5-2.5M9.5 19.5L12 17l2.5 2.5M4 10.5l3.3-.9-.9-3.3M20 13.5l-3.3.9.9 3.3M4 13.5l3.3.9-.9 3.3M20 10.5l-3.3-.9.9-3.3"/>';
+// the streak flame grows: spark (1–6 days), fire (7+), blue flame (30+), purple flame (100+)
+const FLAMES = [[0, "", ""], [1, "Spark", "#FF6A2B"], [7, "Fire", "#FF8A1F"], [30, "Blue flame", "#3F86F5"], [100, "Purple flame", "#9B5CFF"]];
+function flameOf(n) { const i = FLAMES.filter(([d]) => n >= d).length - 1, nx = FLAMES[i + 1]; return { st: i, name: FLAMES[i][1], col: FLAMES[i][2] || "var(--push)", next: nx ? { name: nx[1], in: nx[0] - n } : null }; }
+const flameHTML = (n, cls = "") => { const f = flameOf(n); return `<div class="flame fs${f.st} ${cls}" style="--fl:${f.col}">${IC.flame}</div>`; };
 const COACH_IC = {
   ok: '<path d="M5 12.5l4.5 4.5L19 7.5"/>', star: '<path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/>',
   warn: '<path d="M12 4.5l8.5 14.5h-17z"/><path d="M12 10v4M12 16.8v.2"/>', moon: '<path d="M19.5 14.6A8 8 0 1 1 9.4 4.5a6.4 6.4 0 0 0 10.1 10.1z"/>',
@@ -2247,8 +2310,64 @@ function checkMuscleRanks() {
   try { localStorage.setItem("aub.mr", JSON.stringify(now)); } catch (e) {}
   if (!seen) return;
   const ups = Object.keys(now).filter(m => seen[m] != null && now[m] > seen[m]); if (!ups.length) return;
-  const m = ups[0], r = R[m], lab = (MUSCLES.find(x => x[0] === m) || [m, m])[1], tierUp = mrLevel(r.pts).ti > MR_TIERS.filter(([n]) => seen[m] >= n).length - 1;
-  setTimeout(() => toast(`${lab} reached level ${r.L}${tierUp ? ` · ${r.tier}` : ""}${ups.length > 1 ? ` (+${ups.length - 1} more)` : ""}`), 900);
+  S.mrPulse = S.mrPulse || new Set(); ups.forEach(m => S.mrPulse.add(m));
+  ups.forEach((m, i) => setTimeout(() => mrFX(m, MR_TIERS.filter(([n]) => seen[m] >= n).length - 1), 700 + i * 2600));
+  if (S.tab === "home") setTimeout(mrPulse, 400);
+}
+// rank-up moment: a badge drops in from the top, pops to the new level; tap it to open the muscle
+function mrFX(m, tiBefore) {
+  if ($("#lvfx")) return setTimeout(() => mrFX(m, tiBefore), 1500); // wait for the big level-up screen to close
+  const r = muscleRanks()[m], lab = (MUSCLES.find(x => x[0] === m) || [m, m])[1], tierUp = r.ti > tiBefore;
+  const el = document.createElement("button"); el.className = "mrfx" + (tierUp ? " tier" : ""); el.style.setProperty("--rc", r.col);
+  el.innerHTML = `<span class="mrfx-b"><span class="mg-lv num">${r.L}</span><i class="mrfx-ring"></i></span><span class="mrfx-t"><span class="lbl">${tierUp ? "New rank" : "Muscle level up"}</span><b>${lab} · level ${r.L}</b><small>${tierUp ? `${r.tier} reached` : r.tier}</small></span>`;
+  el.addEventListener("click", () => { el.remove(); openMuscle(m); });
+  document.body.appendChild(el); SND.tick();
+  setTimeout(() => { el.classList.add("out"); setTimeout(() => el.remove(), 400); }, tierUp ? 3600 : 2800);
+}
+// on Home, muscles that climbed since you last looked pulse once on the body map
+function mrPulse() {
+  if (S.tab !== "home" || !S.mrPulse || !S.mrPulse.size) return;
+  for (const m of S.mrPulse) { document.querySelectorAll(`.bm-m[data-m="${m}"], .mg-c[data-m="${m}"]`).forEach(e => { e.classList.remove("pulse"); void e.getBoundingClientRect(); e.classList.add("pulse"); }); }
+  S.mrPulse.clear();
+}
+// one muscle: level over time, best lift, next session that trains it
+function muscleHistory(m) {
+  return memo("mh|" + m, () => {
+    let pts = 0; const out = [];
+    for (const id of Object.keys(S.docs).filter(k => /^d\d{4}-\d\d-\d\d$/.test(k)).sort()) {
+      const x = S.docs[id]; let add = 0;
+      for (const k in x.ex || {}) { const ex = EXBY[k.split("@")[0]]; if (!ex || ex.m !== m) continue; for (const q of x.ex[k] || []) if (q && q.ok) add += 1 + (q.pr ? 3 : 0); }
+      if (!add) continue; pts += add; const lv = mrLevel(pts), y = Math.round((lv.L + lv.into / lv.need) * 10) / 10, wk = mondayOf(x.date);
+      if (out.length && out[out.length - 1].wk === wk) out[out.length - 1] = { date: x.date, y, wk }; else out.push({ date: x.date, y, wk });
+    }
+    return out;
+  });
+}
+function openMuscle(m) {
+  const r = muscleRanks()[m], M = MUSCLES.find(x => x[0] === m) || [m, m, 0], label = M[1], t = today(), hist = muscleHistory(m);
+  const exs = [...new Map(Object.values(EXBY).filter(e => e.m === m).map(e => [e.id, e])).values()];
+  let best = null;
+  for (const e of exs) for (const h of exHistory(e.id)) { const sc = e.bw ? h.br : h.e1; if (sc > 0 && (!best || sc > best.sc)) best = { sc, e, h }; }
+  let next = null;
+  for (let i = 0; i < 14 && !next; i++) { const d = addD(t, i); if (i === 0 && isDone(d)) continue; const it = plan(d).find(x => !x.skip && x.ex.m === m); if (it) next = { d, wk: wkOf(d).name, ex: it.ex.n }; }
+  const inPlan = [...new Set(["pushA", "pullA", "legsA", "pushB", "pullB", "legsB", "core"].flatMap(k => PROGRAM[k].ex.filter(e => e.m === m).map(e => e.n)))];
+  const chart = hist.length >= 2 ? lineChart("mr", hist.map(p => ({ date: p.date, y: p.y })), { c: r.col, label: `${label} level over time`, fy: v => Math.round(v * 10) / 10, h: 160 })
+    : ghostChart(hist.length ? "One week logged. The line appears after the second." : "Finish a set for this muscle to start its line.", r.col);
+  const sh = $("#sheet"); sh.classList.remove("full"); sh.style.setProperty("--c", r.col);
+  sh.innerHTML = `<div class="grab"></div>
+    <div class="mr-h" style="--rc:${r.col}"><span class="mg-lv big num">${r.L}</span><div><span class="lbl">${M[2] ? "Priority muscle" : "Muscle rank"}</span><h2>${label}</h2>
+      <span class="mr-t">${r.pts ? r.tier : "Untrained"} · level ${r.L}</span></div></div>
+    <div class="mr-bar" style="--rc:${r.col}"><i style="width:${(r.into / r.need * 100).toFixed(1)}%"></i></div>
+    <p class="small muted num" style="margin:6px 2px 12px">${r.need - r.into} point${r.need - r.into > 1 ? "s" : ""} to level ${r.L + 1}${(() => { const nt = MR_TIERS.find(([n]) => n > r.L); return nt ? ` · ${nt[1]} at level ${nt[0]}` : ""; })()}</p>
+    <div class="tiles"><div class="tile" style="--c:${r.col}"><span class="lbl">Sets</span><b class="num">${r.sets}</b><span class="muted">since you started</span></div>
+      <div class="tile" style="--c:${r.col}"><span class="lbl">This week</span><b class="num">${r.wk}</b><span class="muted">${r.prs} record${r.prs === 1 ? "" : "s"} in total</span></div></div>
+    <section class="card" style="--c:${r.col};margin-top:12px"><h2 class="sec-t">Level over time</h2>${chart}</section>
+    <div class="mr-rows">
+      <div class="mr-row"><span class="lbl">Best lift</span><span>${best ? `<b>${best.e.n}</b><span class="small muted num">${best.e.bw ? `${best.h.br} reps` : `${kg(best.h.top.w)} kg × ${best.h.top.r}`} · ${fShort(best.h.date)}</span>` : `<span class="small muted">No sets logged yet</span>`}</span></div>
+      <div class="mr-row"><span class="lbl">Next session</span><span>${next ? `<b>${next.d === t ? "Today" : fShort(next.d)} · ${next.wk}</b><span class="small muted">${next.ex}</span>` : `<span class="small muted">Not in the next two weeks</span>`}</span></div>
+      <div class="mr-row"><span class="lbl">In your plan</span><span class="small">${inPlan.join(" · ") || "–"}</span></div></div>
+    <button class="btn" data-act="close" style="--c:${r.col}">Close</button>`;
+  showSheet();
 }
 function bodyMap(R) {
   const fill = m => { const r = R[m]; if (!r || !r.pts) return ""; return `--mc:color-mix(in srgb, ${r.col} ${Math.round(62 + 38 * Math.min(1, r.into / r.need * .3 + r.ti / 6 * .7))}%, var(--bm0))`; };
@@ -2444,6 +2563,8 @@ const SW_PLAY = '<svg class="i" viewBox="0 0 24 24"><path d="M8 5.5l10 6.5-10 6.
 const SW_IC = '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.8M9.8 2.8h4.4M12 2.8V6M18.2 6.6l1.4-1.4"/></svg>';
 const CK_IC = '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 setInterval(() => { if (!document.hidden) syncStw(); }, 1000);
+setTimeout(maybeTour, 1400);
+setTimeout(() => { try { checkMuscleRanks(); } catch (e) {} }, 300); // remember today's muscle levels, so the next climb is noticed
 addEventListener("scroll", () => { if (S.tab === "today") { const b = $("#stw"); if (b && !b.hidden) { const row = $("#tmr"); let on = false; if (row && !row.hidden && S.sel === today()) { const r = row.getBoundingClientRect(); on = r.bottom > 70 && r.top < innerHeight; } b.classList.toggle("dim", on); } } }, { passive: true });
 function syncLevelBadge() {
   const b = $("#lvlbtn"); if (!b) return; const v = levelNow(), k = v.L + ":" + v.into;
@@ -2452,6 +2573,21 @@ function syncLevelBadge() {
   b.innerHTML = lvlBadge(v, 40); b.setAttribute("aria-label", `Level ${v.L}, ${v.name}. ${v.need - v.into} points to the next level`);
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
+/* First-day tour: four short cards, shown once (Settings → Show the app tour brings it back) */
+const TOUR = [
+  ["var(--good)", '<svg class="i" viewBox="0 0 24 24"><path d="M8 5.5l10 6.5-10 6.5z"/></svg>', "Start your workout", "Tap <b>Start workout</b> on Home or Today. The timer starts and you can compare with last time at the end."],
+  ["var(--pull)", '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>', "Tick each set", "Type the weight and reps, or just tap the circle to use last time's numbers. <b>+ Extra set</b> adds one more, <b>⋯</b> has notes, pain and skip."],
+  ["var(--push)", '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.8M9.8 2.8h4.4M12 2.8V6"/></svg>', "Rest between sets", "A rest timer starts by itself after each set, with <b>+15</b> and <b>Skip</b>. It shows your last sessions of that exercise while you wait."],
+  ["var(--core)", '<svg class="i" viewBox="0 0 24 24"><path d="M12 3l7.8 4.5v9L12 21l-7.8-4.5v-9z"/></svg>', "Level up", "Every set earns points. Your badge at the top levels up, and each muscle on Home gets its own rank. Train it more, it climbs faster."]];
+function tour(i = 0) {
+  let el = $("#tour"); if (!el) { el = document.createElement("div"); el.id = "tour"; el.className = "tour"; document.body.appendChild(el); el.addEventListener("click", e => { const b = e.target.closest("[data-tour]"); if (!b) return; const v = b.dataset.tour; if (v === "skip" || v === "end") tourEnd(); else tour(+v); }); }
+  const [c, ic, h, txt] = TOUR[i], last = i === TOUR.length - 1;
+  el.innerHTML = `<div class="tour-card" style="--c:${c}" role="dialog" aria-modal="true" aria-label="${h}"><span class="tour-i">${ic}</span><span class="tour-n num">${i + 1} / ${TOUR.length}</span><h2>${h}</h2><p>${txt}</p>
+    <div class="tour-dots">${TOUR.map((_, j) => `<i class="${j === i ? "on" : ""}"></i>`).join("")}</div>
+    <div class="tour-b">${last ? "" : `<button class="linkb" data-tour="skip">Skip</button>`}<button class="btn" data-tour="${last ? "end" : i + 1}">${last ? "Let's go" : "Next"}</button></div></div>`;
+}
+function tourEnd() { try { localStorage.setItem("aub.tour", "1"); } catch (e) {} const el = $("#tour"); if (!el) return; el.classList.add("out"); setTimeout(() => el.remove(), 300); }
+function maybeTour() { let seen = "1"; try { seen = localStorage.getItem("aub.tour"); } catch (e) {} if (seen || $("#lvfx") || $("#sheet").classList.contains("show")) return; tour(0); }
 /* Level up: full-screen moment (badge, number rolling to the new level, rays, sparks). Any tap closes it. */
 function lvlFX(up, replay) {
   if (!replay) { let best = 0; try { best = +(localStorage.getItem("aub.lvx") || 0); } catch (e) {}
@@ -2788,7 +2924,7 @@ function weekVol(mon) {
   return vol;
 }
 function musclesCard() {
-  const R = muscleRanks();
+  const R = muscleRanks(); setTimeout(mrPulse, 500);
   return `<section class="card" style="--c:var(--push)"><h2 class="sec-t">Muscle ranks</h2><p class="small muted" style="margin-bottom:4px">Every finished set gives its muscle 1 point, a record 3. The more you train a muscle, the faster it climbs. A dot marks your priority muscles.</p>${bodyMap(R)}</section>`;
 }
 function weekSection() {
@@ -2938,9 +3074,10 @@ function vProgress() {
   const exs = allExercises();
   if (!S.exSel) { const withH = exs.find(e => exHistory(e.id).length); S.exSel = withH ? withH.id : "sdp"; }
   const ex = exs.find(e => e.id === S.exSel) || exs[0], hist = exHistory(ex.id), col = TYPES[PROGRAM[ex.wk].type];
-  let h = `<section class="streak ${st.cur > 0 ? "live" : ""}"><div class="flame">${IC.flame}</div><div class="st">
-      <div class="lbl">Current streak</div><b class="num" data-count="${st.cur}">${st.cur}</b> <span class="muted">${st.cur === 1 ? "day" : "days"}</span>
-      <div class="small muted">${st.cur ? "Sundays never break it. Keep it alive tomorrow." : isDone(t) ? "" : "Finish today's workout to start one."}</div>
+  const fl = flameOf(st.cur);
+  let h = `<section class="streak ${st.cur > 0 ? "live" : ""}" style="--fl:${fl.col}">${flameHTML(st.cur)}<div class="st">
+      <div class="lbl">Current streak${fl.name ? ` · <span class="fl-n">${fl.name}</span>` : ""}</div><b class="num" data-count="${st.cur}">${st.cur}</b> <span class="muted">${st.cur === 1 ? "day" : "days"}</span>
+      <div class="small muted">${st.cur ? (fl.next ? `${fl.next.in} more day${fl.next.in > 1 ? "s" : ""} to the ${fl.next.name.toLowerCase()}. Sundays never break it.` : "The top flame. Sundays never break it.") : isDone(t) ? "" : "Finish today's workout to start one."}</div>
       ${st.freezeOn ? `<button class="fz-chip" data-act="lvl"><svg class="i" viewBox="0 0 24 24">${IC_SNOW}</svg>${st.freezeLeft ? "1 freeze left this week" : "Freeze used this week"}</button>` : ""}</div></section>`;
   h += `<div class="tiles"><div class="tile" style="--c:var(--push)"><span class="lbl">Best streak</span><b class="num"><span data-count="${st.best}">${st.best}</span><small>days</small></b></div>
     <div class="tile" style="--c:var(--pull)"><span class="lbl">Workouts done</span><b class="num"><span data-count="${st.total}">${st.total}</span></b><span class="muted">since you started</span></div></div>`;
@@ -3577,6 +3714,7 @@ function openSheet() {
         <button class="sw" role="switch" aria-checked="${!hid.has(t)}" data-act="tabhide" data-v="${t}" aria-label="Show ${TAB_DEF[t][0]}"></button></span></div>`).join(""); })()}
     </div><p class="small muted" style="margin:8px 4px 0">The order here is the order in the bottom bar. The top one opens first.</p></div>
     <div class="sgroup"><div class="lbl">Program</div><div class="sbox">
+      <button class="srow g-open" data-act="tour"><span>Show the app tour<small>The four cards you saw on the first day</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
       <button class="srow g-open" data-act="guide"><span>How the plan works<small>Goal, weekly split, phases, effort and progression</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="srow stack"><span>Week 1 starts on<small>Re-entry, build, push and deload weeks count from this Monday</small></span><input type="date" id="start" value="${getStart()}"></div>
     </div></div>
@@ -3772,12 +3910,14 @@ document.addEventListener("click", e => {
   if (a === "sheet") { S.guide = false; return openSheet(); }
   if (/^stw(pause|go|reset|start)?$/.test(a)) return stwAct(a);
   if (a === "startwk") { stwAct("stwstart"); if (TABS.includes("today")) { S.sel = today(); S.edit = false; go("today"); } return; }
+  if (a === "tour") { closeSheet(); setTimeout(() => tour(0), 350); return; }
   if (a === "lvreplay") { closeSheet(); const v = levelNow(); setTimeout(() => lvlFX({ L: v.L, L0: Math.max(1, v.L - 1), tierIx: TIERS.filter(([n]) => v.L - 1 >= n).length - 1 }, true), 380); return; }
   if (a === "rate") return setRate(b);
   if (a === "lvl") return openLevel();
   if (a === "bm") { const m = b.dataset.m, r = muscleRanks()[m], L = (MUSCLES.find(x => x[0] === m) || [m, m])[1], cap = $("#bm-cap");
     document.querySelectorAll(".bm-m.sel,.mg-c.sel").forEach(x => x.classList.remove("sel")); document.querySelectorAll(`.bm-m[data-m="${m}"],.mg-c[data-m="${m}"]`).forEach(x => x.classList.add("sel"));
-    if (cap && r) cap.innerHTML = `<b>${L}</b> · level ${r.L} <b style="color:${r.col}">${r.pts ? r.tier : "Untrained"}</b><br><span class="muted num">${r.sets} sets${r.prs ? ` · ${r.prs} record${r.prs > 1 ? "s" : ""}` : ""} · ${r.need - r.into} point${r.need - r.into > 1 ? "s" : ""} to level ${r.L + 1}${r.wk ? ` · +${r.wk} this week` : ""}</span>`; return; }
+    if (cap && r) cap.innerHTML = `<b>${L}</b> · level ${r.L} <b style="color:${r.col}">${r.pts ? r.tier : "Untrained"}</b>`;
+    return openMuscle(m); }
   if (a === "garon") { const k = ($("#garkey") || {}).value || ""; if (k.trim().length < 8) return toast("Paste the key first"); garSet({ key: k.trim(), tok: "", exp: 0, last: 0, state: "" }); openSheet(); return garSync(true).then(() => { if ($("#sheet").classList.contains("show") && !S.guide) openSheet(); }); }
   if (a === "garsync") return garSync(true).then(() => { if ($("#sheet").classList.contains("show") && !S.guide && $("[data-act=garoff]")) openSheet(); });
   if (a === "garoff") { try { localStorage.removeItem("aub.garmin"); } catch (e) {} toast("Disconnected. The key was deleted from this phone."); return openSheet(); }
@@ -4068,7 +4208,7 @@ function summary(d) {
       <div class="tile"><span class="lbl">Volume</span><b class="num">${vol ? `<span data-count="${Math.round(vol)}">${Math.round(vol)}</span><small>kg</small>` : "–"}</b><span class="muted">weight × reps</span></div>
       <div class="tile"><span class="lbl">Records</span><b class="num"><span data-count="${prs}">${prs}</span></b><span class="muted">${prs ? "new personal bests" : "next time"}</span></div></div>
     ${wk.light ? "" : `<div class="rate" style="padding:2px 2px 4px"><h2 class="sec-t">How did it go?</h2>${rateRows(d)}</div>`}
-    <div class="card" style="background:var(--surface-2);display:flex;gap:12px;align-items:center"><div class="flame" style="width:44px;height:44px;border-radius:14px">${IC.flame}</div><p class="small"><b>${st.cur}-day streak.</b> Next up: <b>${next.name}</b> (${next.focus.toLowerCase()}). Eat a proper breakfast with protein in the next 1–2 hours.</p></div>
+    <div class="card" style="background:var(--surface-2);display:flex;gap:12px;align-items:center">${flameHTML(st.cur, "sm")}<p class="small"><b>${st.cur}-day streak.</b> Next up: <b>${next.name}</b> (${next.focus.toLowerCase()}). Eat a proper breakfast with protein in the next 1–2 hours.</p></div>
     ${levelRow(S.lvUp)}
     <button class="btn" data-act="close">Nice</button>`;
   S.lvUp = false;
