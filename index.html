@@ -1704,7 +1704,7 @@ function slotInfo(d, i, doc = dayDoc(d)) {
   const tId = TRAVEL[base.id], trav = tId ? (has(tId) || (trav0 && !has(base.id) && !(ALT[base.id] && has(ALT[base.id][0])))) : trav0;
   let ex = base, auto = null;
   if (trav && base.id in TRAVEL) { const t = TRAVEL[base.id]; if (t === null) { if (!kept) auto = "travel"; } else ex = mkEx(base, t, { travel: true }); }
-  else if (swapOn(d, doc, base, i)) ex = altOf(base);
+  else if (swapOn(d, doc, base, i) && (!trav || TRAVEL_OK.has(ALT[base.id][0]))) ex = altOf(base); // in travel mode, only swaps that need no machine
   if (!ex.travel) { const pf = plFix()[ex.id]; if (pf && pf.kind === "reps" && pf.d <= d && d <= pf.until && !wkOf(d).light) ex = varEx(ex, { r: pf.r, plr: pf.until }); }
   const area = injOn(d);
   if (area && !kept && !auto) {
@@ -2024,21 +2024,22 @@ const TRAVEL_OK = new Set([...Object.values(TRAVEL).filter(Boolean), "sdp", "idp
 // Injury mode: what each sore area changes. swap → a gentler exercise, skip → hidden, light → 2 sets at about 60 %.
 const INJ = {
   "Shoulder": { swap: { ote: "trp", doe: "trp", pup: "lpd", chu: "lpd", abw: "dcr", hlr: "dcr" },
-    skip: ["sdp", "msp", "dpo", "pdk", "dfl", "lhf", "idf"],
+    skip: ["sdp", "msp", "dpo", "pdk", "dfl", "lhf", "idf"], noLight: ["ote", "doe", "pup", "chu"],
     light: ["bpr", "mcp", "idp", "imp", "clr", "dlr", "mlr", "lpd", "ngp", "sap", "trp", "sbp"] },
   "Elbow": { swap: { ote: "trp", doe: "trp", bbc: "ccu", pup: "lpd", chu: "lpd" },
     skip: [], light: ["trp", "sbp", "idc", "ccu", "lpd", "ngp", "kpd", "sap", "bpr", "mcp", "idp"] },
   "Wrist": { swap: { bpr: "mcp", bbc: "ccu", abw: "dcr" },
     skip: [], light: ["idp", "sdp", "msp", "idc", "ccu", "doe", "dfl", "dlr", "rdl", "drd"] },
   "Lower back": { swap: { rdl: "slc", drd: "slc", hsq: "lpr", scf: "sca" },
-    skip: ["abw"], light: ["lpr", "bss", "wlu", "gsq", "drf", "sdr", "hlr", "ckr", "dcr", "sca"] },
+    skip: ["abw"], noLight: ["rdl", "drd", "hsq"], light: ["lpr", "bss", "wlu", "gsq", "drf", "sdr", "hlr", "ckr", "dcr", "sca"] },
   "Knee": { swap: { hsq: "lpr" },
     skip: ["lex", "bss", "wlu"], light: ["lpr", "gsq", "slc", "llc"] } };
 const INJ_AREAS = Object.keys(INJ);
 function injRule(area, id, trav) {
   const R = INJ[area]; if (!R) return null;
   if (R.skip.includes(id)) return "skip";
-  const to = R.swap[id]; if (to) return trav && !TRAVEL_OK.has(to) ? "skip" : (R.skip.includes(to) ? "skip" : to);
+  const to = R.swap[id];
+  if (to) { if (R.skip.includes(to)) return "skip"; if (trav && !TRAVEL_OK.has(to)) return (R.noLight || []).includes(id) ? "skip" : "light"; return to; } // no gentler option while travelling → lighter, or skipped if risky
   return R.light.includes(id) ? "light" : null;
 }
 // the rule for one slot: a swap that would repeat an exercise already in the day becomes a skip
@@ -2075,8 +2076,13 @@ function plateauOf(ex, d) {
     const h = exHistory(ex.id).filter(s => s.date < d && s.date >= from && !["deload", "re", "pre"].includes(phase(s.date).key)
       && !inj.some(p => p.from <= s.date && s.date <= p.to) && !travelOn(s.date));
     if (h.length < 4) return null;
-    let best = -1, bi = -1;
-    h.forEach((x, j) => { const sc = Math.max(...x.sets.map(q => score(ex, q.w, q.r))); if (sc > best * 1.005 + .001) bi = j; best = Math.max(best, sc); });
+    // progress = a better estimated max, a heavier top weight, or more reps at a weight you already used
+    let best = -1, bi = -1, topW = -1; const repsAt = {};
+    h.forEach((x, j) => {
+      const sc = Math.max(...x.sets.map(q => score(ex, q.w, q.r))), w = x.top.w, r = Math.max(...x.sets.filter(q => q.w === w).map(q => q.r));
+      if (sc > best * 1.005 + .001 || w > topW + .01 || (repsAt[w] != null && r > repsAt[w])) bi = j;
+      best = Math.max(best, sc); topW = Math.max(topW, w); repsAt[w] = Math.max(repsAt[w] ?? -1, r);
+    });
     const stuck = h.length - 1 - bi; if (stuck < 3) return null;
     const last = h[h.length - 1], rr = range(ex.r);
     if (rr && last.sets.length && last.sets.every(q => q.r >= rr[1])) return null; // top of the range: the "add weight" hint already covers it
@@ -2478,10 +2484,11 @@ function vToday() {
         <button class="linkb" data-act="edit">${S.edit ? "Done" : "Reorder"}</button></div>
       <div class="tbar chips" style="--c:${col}"><button class="tchip ${weekExp ? "on" : ""}" data-act="expweek" aria-pressed="${weekExp}"><span class="tick">${IC.check}</span>Exam week</button>
         <button class="tchip ${trav ? "on" : ""}" data-act="travel" aria-pressed="${trav}"><span class="tick">${IC.check}</span>Travel</button></div>
-      ${exp ? `<p class="small muted exp-note"><b style="color:var(--fg)">Express · about ${wk.light ? 8 : 25} min.</b> ${EXPRESS_WHY[SCHEDULE[dow(d)]]}${weekExp ? " On for this whole week." : ""}</p>` : ""}
+      ${exp ? `<p class="small muted exp-note"><b style="color:var(--fg)">Express · about ${wk.light ? 8 : 25} min.</b> ${expWhy(d)}${weekExp ? " On for this whole week." : ""}</p>` : ""}
       ${trav ? `<p class="small muted exp-note"><b style="color:var(--fg)">Travel mode.</b> ${wk.light ? "Nothing to change today: it's all body weight." : `Dumbbells, a bench and body weight only.${travSum(d)} On until you switch it off.`}</p>` : ""}`;
   h += `<div id="exlist" class="exlist">${exList(d)}</div>`;
-  if (!wk.light && !exp) h += `<section class="card small muted" style="--c:${col}"><span class="hint">Time saver</span> · ${wk.tip}</section>`;
+  const plain = !trav && !injOn(d) && !(doc && ((doc.skip && doc.skip.length) || doc.order));
+  if (!wk.light && !exp && plain) h += `<section class="card small muted" style="--c:${col}"><span class="hint">Time saver</span> · ${wk.tip}</section>`;
   // weigh-in
   const avg = weekAvgBW(mondayOf(d));
   h += `<section class="card"><div class="field"><div><div class="sec-t" style="margin:0">Morning weight</div>
@@ -2765,13 +2772,13 @@ function questFor(d) {
     const ex = it.ex, last = lastBefore(ex.id, d), rr = range(ex.r), n = setsFor(d, ex, it.k), arr = (doc && doc.ex && doc.ex[it.k]) || [];
     if (ex.injL || (doc && doc.plw && doc.plw[it.k] != null)) continue;
     const okSets = arr.slice(0, n).filter(q => q && q.ok);
-    if (last && last.sets.length && !ex.bw) {
+    if (last && last.sets.length && !ex.bw && !travelOn(d)) { // weight quests make no sense with hotel dumbbells
       const ls = last.sets[last.sets.length - 1];
       if (ls && ls.w > 0) C.push({ id: "rep-" + ex.id, ic: "rep", txt: `<b>${ex.n}</b>: one set of <b class="num">${kg(ls.w)} kg × ${ls.r + 1}</b> or better, 1 rep more than your last set last time.`, done: okSets.some(q => q.w >= ls.w && q.r >= ls.r + 1) });
       const step = /Dumbbell|lateral|curl|fly|Cable|cable|Face|extension|pushdown|raise/i.test(ex.n) ? 1 : 2.5, tw = last.top.w + step, low = rr ? rr[0] : 6;
       if (last.top.w > 0) C.push({ id: "top-" + ex.id, ic: "top", txt: `<b>${ex.n}</b>: one set at <b class="num">${kg(tw)} kg</b> for ${low}+ reps, a new top weight.`, done: okSets.some(q => q.w >= tw && q.r >= low) });
     }
-    if (MUSCLES.some(([m, , pr]) => pr && m === ex.m)) C.push({ id: "xs-" + ex.id, ic: "xs", txt: `<b>${ex.n}</b>: add an <b>extra set</b> and finish it. Your ${ex.m === "Lats" ? "back" : ex.m.toLowerCase()} gets more work today.`, done: xsets(d, it.k) > 0 && !!(arr[n - 1] && arr[n - 1].ok) });
+    if (MUSCLES.some(([m, , pr]) => pr && m === ex.m)) C.push({ id: "xs-" + ex.id, ic: "xs", txt: `<b>${ex.n}</b>: add an <b>extra set</b> and finish it. Your ${ex.m === "Lats" ? "back gets" : ex.m.toLowerCase() + (/s$/.test(ex.m) ? " get" : " gets")} more work today.`, done: xsets(d, it.k) > 0 && !!(arr[n - 1] && arr[n - 1].ok) });
   }
   const pv = prevTime(d);
   if (pv) C.push({ id: "fast", ic: "fast", txt: `Finish today's <b>${wk.name}</b> faster than last time (<b class="num">${fmtDur(pv.ms)}</b>), with every set done.`, done: !!(doc && doc.done && doc.end && sessionMs(doc) < pv.ms) });
@@ -3131,7 +3138,10 @@ function bannerMeta(d) {
   if (m != null && d === today() && !(doc && doc.done)) return doc.pz || (doc.last && Date.now() - doc.last > IDLE) ? `Paused · ${m} min so far` : `In progress · ${m} min`;
   if (m != null && doc && doc.done && doc.end) return `Finished in ${m} min`;
   const p = plan(d), live = p.filter(x => !x.skip).length, sk = p.length - live, wk = wkOf(d);
-  return `${live} exercises${sk ? ` · ${sk} skipped` : ""} · ${isExpress(d) ? (wk.light ? "≈ 8 min" : "≈ 25 min") : wk.time}`;
+  let tm = isExpress(d) ? (wk.light ? "≈ 8 min" : "≈ 25 min") : wk.time;
+  if (!isExpress(d)) { const all = wk.ex.reduce((a, e) => a + setsFor(d, e), 0), now = p.filter(x => !x.skip).reduce((a, x) => a + setsFor(d, x.ex, x.k), 0), m0 = +((wk.time.match(/\d+/) || [0])[0]);
+    if (m0 && all && now !== all) tm = `≈ ${Math.max(5, Math.round(m0 * now / all / 5) * 5)} min`; }
+  return `${live} exercises${sk ? ` · ${sk} skipped` : ""} · ${tm}`;
 }
 function exList(d) {
   const wk = wkOf(d), doc = dayDoc(d), p = plan(d);
@@ -3176,7 +3186,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   // plateau reset weight for today, or about 60 % of last time on an injury-light exercise
   const pw = doc && doc.plw && doc.plw[k] != null ? doc.plw[k] : null;
   const lw = ex.injL ? lightW(ex, last) : null;
-  const pl = d === today() && ok < n && !wk.light && pw == null ? plateauOf(ex, d) : null;
+  const pl = d === today() && ok < n && !wk.light && pw == null && ["build", "push"].includes(phase(d).key) ? plateauOf(ex, d) : null;
   let rows = "";
   for (let j = 0; j < n; j++) {
     const st = arr[j] || {}, ls = last ? (last.sets[j] || last.sets[last.sets.length - 1]) : null;
@@ -3460,6 +3470,8 @@ function allExercises() {
   for (const k of ["pushA", "pullA", "legsA", "pushB", "pullB", "legsB"]) for (const ex of PROGRAM[k].ex) if (!seen.has(ex.id)) { seen.add(ex.id); out.push({ ...ex, wk: k }); }
   // alternatives (Swap) that have been logged at least once
   for (const k of ["pushA", "pullA", "legsA", "pushB", "pullB", "legsB"]) for (const ex of PROGRAM[k].ex) { const a = altOf(ex); if (a && !seen.has(a.id) && exHistory(a.id).length) { seen.add(a.id); out.push({ ...a, wk: k, swapped: true }); } }
+  // travel and injury versions that have been logged (they keep their own history)
+  for (const id in EXBY) if (!seen.has(id) && !EXBY[id].chk && exHistory(id).length) { seen.add(id); out.push({ ...EXBY[id], wk: "pushA", swapped: true }); }
   return out;
 }
 /* Consistency: planned lifting days (Mon–Sat) that were finished, per month. Today counts once it is done. */
@@ -3533,7 +3545,7 @@ function vProgress() {
     PROGRAM[k].ex.forEach(e => { if (exs.find(x => x.id === e.id).wk === k) opts += `<option value="${e.id}" ${e.id === ex.id ? "selected" : ""}>${e.n}${exHistory(e.id).length ? "" : " (no data yet)"}</option>`; });
     opts += `</optgroup>`;
   }
-  if (exs.some(x => x.swapped)) opts += `<optgroup label="Swapped in">${exs.filter(x => x.swapped).map(e => `<option value="${e.id}" ${e.id === ex.id ? "selected" : ""}>${e.n}</option>`).join("")}</optgroup>`;
+  if (exs.some(x => x.swapped)) opts += `<optgroup label="Other exercises you logged">${exs.filter(x => x.swapped).map(e => `<option value="${e.id}" ${e.id === ex.id ? "selected" : ""}>${e.n}</option>`).join("")}</optgroup>`;
   const metric = ex.bw ? "r" : S.metric;
   const pts = hist.map(x => ({ date: x.date, y: metric === "w" ? x.top.w : metric === "e" ? Math.round(x.e1 * 10) / 10 : x.br, s: x }));
   const unit = metric === "r" ? "reps" : "kg";
@@ -4661,6 +4673,10 @@ function setDayMode(v) {
   doc.mode = v; delete doc.order; touch("d" + d);
   const y = scrollY; render(false); scrollTo(0, y); animList();
   checkAutoDone(d);
+}
+function expWhy(d) {
+  const p = plan(d).filter(x => !x.skip).map(x => x.ex.n.split(" (")[0].replace(/^(Seated|Single-arm|Kneeling single-arm) /, "")), t = p.join(", ");
+  return p.length ? t.charAt(0).toUpperCase() + t.slice(1).toLowerCase().replace(/\brdl\b/g, "RDL") + "." : EXPRESS_WHY[SCHEDULE[dow(d)]];
 }
 // Travel mode: on from the selected day until switched off
 function toggleTravel(fromSet) {
