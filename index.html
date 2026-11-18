@@ -173,6 +173,13 @@ input,select{font:inherit;color:inherit}
 .tmr-btn.go{background:var(--good);color:#fff}
 .tmr-btn.warn{background:color-mix(in srgb, var(--bad, #FF5F57) 20%, var(--surface));color:var(--bad, #FF5F57)}
 .tmr.flash{animation:tmrF 1s ease}
+.tmr[data-s="none"]{padding:8px;gap:10px}
+.tmr-go{flex:1;min-width:0;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:9px;background:var(--good);color:#fff;font-weight:700;font-size:17px;box-shadow:0 8px 20px -10px color-mix(in srgb, var(--good) 80%, transparent);transition:transform .15s}
+.tmr-go:active{transform:scale(.97)}
+.tmr-go svg.i{width:20px;height:20px;fill:currentColor}
+.tmr-last{display:flex;flex-direction:column;align-items:flex-end;padding-right:6px;font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);flex-shrink:0}
+.tmr-last b{font-size:18px;letter-spacing:0;color:var(--fg);text-transform:none}
+.home-btn svg.i{width:18px;height:18px;fill:currentColor;margin-right:8px;vertical-align:-3px}
 @keyframes tmrF{0%,100%{box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--c) 22%, transparent)}30%{box-shadow:inset 0 0 0 2px var(--good),0 0 0 6px color-mix(in srgb, var(--good) 25%, transparent)}}
 /* Progress: workout times */
 .wt-r{display:grid;grid-template-columns:minmax(0,1fr) 58px auto;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
@@ -2129,7 +2136,7 @@ function vHome() {
       <div class="lbl">${WD[dow(t)]} · ${ph.w >= 1 ? "Week " + ph.w + " · " + (wk.light ? "Optional" : ph.label) : "Before week 1"}</div>
       <h2>${wk.name}</h2><div class="focus">${wk.focus}</div>
       <div class="meta">${bannerMeta(t)}</div></div>${ring(c.ok, c.tot)}
-      ${TABS.includes("today") ? `<button class="btn home-btn ${done ? "ghost" : ""}" ${tap("today")}>${done ? `<span class="done-note">${IC.ok} ${wk.light ? "Session" : "Workout"} complete</span>` : c.ok >= c.tot ? "All sets done · finish the workout" : c.ok ? `Continue · ${c.ok} of ${c.tot} sets done` : wk.light ? "Start the core session" : "Start workout"}</button>` : ""}</section>`;
+      ${TABS.includes("today") ? `<button class="btn home-btn ${done ? "ghost" : ""}" ${!done && !c.ok && !(doc && doc.start) ? `data-act="startwk"` : tap("today")}>${done ? `<span class="done-note">${IC.ok} ${wk.light ? "Session" : "Workout"} complete</span>` : c.ok >= c.tot ? "All sets done · finish the workout" : c.ok ? `Continue · ${c.ok} of ${c.tot} sets done` : doc && doc.start ? "Continue workout" : `${SW_PLAY}${wk.light ? "Start the core session" : "Start workout"}`}</button>` : ""}</section>`;
   h += coachCard();
   // protein + sleep
   const e = eatenToday(), left = Math.max(0, PROT - e.p), sl = sleepH(doc && doc.sleep);
@@ -2308,7 +2315,7 @@ function tmrHTML(d) {
   const k = st + "|" + STWR + "|" + ((doc && doc.pms) || 0) + "|" + (pv ? pv.ms : 0);
   const lab = { none: "Ready", run: "", pause: "Paused", idle: "Paused · no set for 30 min", fin: "Workout time", past: "Workout time" }[st];
   let sub = "", bar = "";
-  if (st === "none") sub = "Starts on your first tick" + (pv ? ` · last time <b class="num">${fmtDur(pv.ms)}</b>` : "");
+  if (st === "none") return `<div class="tmr" id="tmr" data-s="none" data-k="${k}"><button class="tmr-go" data-act="stwstart">${SW_PLAY}<span>${wk.light ? "Start the session" : "Start workout"}</span></button>${pv ? `<span class="tmr-last">Last time<b class="num">${fmtDur(pv.ms)}</b></span>` : ""}</div>`;
   else if (live) {
     if (pv) { const q = Math.min(1, ms / pv.ms); bar = `<div class="tmr-bar ${ms > pv.ms ? "over" : ""}" id="tmr-bar"><i id="tmr-f" style="width:${(q * 100).toFixed(1)}%"></i></div>`; sub = `Last time <b class="num">${fmtDur(pv.ms)}</b>`; }
     else sub = "First timed " + wk.name;
@@ -2347,16 +2354,24 @@ function stwAct(a) {
     if (S.tab !== "today") go("today"); if (S.sel !== d) goToday(); scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
     setTimeout(() => { const r = $("#tmr"); if (r) { r.classList.remove("flash"); void r.offsetWidth; r.classList.add("flash"); } }, 350); return;
   }
+  if (a === "stwstart") {
+    if (doc.start || doc.done) return; doc.start = now; doc.last = now; doc.pms = 0; delete doc.pz; SND.tick();
+    touch("d" + d); syncStw(); if (S.tab === "today" && S.sel === d) { const bm = $("#bmeta"); if (bm) bm.textContent = bannerMeta(d); } return;
+  }
   if (!doc.start || doc.done) return;
   if (a === "stwpause") { if (doc.last && now - doc.last > IDLE) doc.pz = doc.last; else doc.pz = now; }
   if (a === "stwgo") { stwWake(doc, now); doc.last = now; }
   if (a === "stwreset") {
     if (!STWR) { STWR = 1; clearTimeout(stwAct.t); stwAct.t = setTimeout(() => { STWR = 0; syncStw(); }, 3000); syncStw(); return; }
-    STWR = 0; clearTimeout(stwAct.t); const paused = !!doc.pz; doc.start = now; doc.pms = 0; doc.last = now; if (paused) doc.pz = now; else delete doc.pz; toast("Timer reset to 0:00");
+    STWR = 0; clearTimeout(stwAct.t);
+    const ticked = counts(d).ok > 0 || Object.keys(doc.wu || {}).length > 0;
+    if (!ticked) { delete doc.start; delete doc.last; delete doc.pms; delete doc.pz; toast("Timer cleared. Tap Start workout when you begin"); } // started by mistake: back to the Start button
+    else { const paused = !!doc.pz; doc.start = now; doc.pms = 0; doc.last = now; if (paused) doc.pz = now; else delete doc.pz; toast("Timer reset to 0:00"); }
   }
   touch("d" + d); syncStw();
   if (S.tab === "today" && S.sel === d) { const bm = $("#bmeta"); if (bm) bm.textContent = bannerMeta(d); }
 }
+const SW_PLAY = '<svg class="i" viewBox="0 0 24 24"><path d="M8 5.5l10 6.5-10 6.5z"/></svg>';
 const SW_IC = '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 13.5V9.8M9.8 2.8h4.4M12 2.8V6M18.2 6.6l1.4-1.4"/></svg>';
 const CK_IC = '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 setInterval(() => { if (!document.hidden) syncStw(); }, 1000);
@@ -3670,7 +3685,8 @@ document.addEventListener("click", e => {
   const b = e.target.closest("[data-act]"); if (!b) return;
   const a = b.dataset.act;
   if (a === "sheet") { S.guide = false; return openSheet(); }
-  if (/^stw(pause|go|reset)?$/.test(a)) return stwAct(a);
+  if (/^stw(pause|go|reset|start)?$/.test(a)) return stwAct(a);
+  if (a === "startwk") { stwAct("stwstart"); if (TABS.includes("today")) { S.sel = today(); S.edit = false; go("today"); } return; }
   if (a === "lvreplay") { closeSheet(); const v = levelNow(); setTimeout(() => lvlFX({ L: v.L, L0: Math.max(1, v.L - 1), tierIx: TIERS.filter(([n]) => v.L - 1 >= n).length - 1 }, true), 380); return; }
   if (a === "rate") return setRate(b);
   if (a === "lvl") return openLevel();
