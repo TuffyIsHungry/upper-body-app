@@ -68,6 +68,8 @@
 #boot.gone .h.d{animation:bOutB .45s cubic-bezier(.6,0,.2,1) forwards}
 #boot.gone .seam{animation:bSeamOut .14s ease forwards} #boot.gone .spk,#boot.gone .flash{display:none}
 @keyframes bGone{to{opacity:0}}
+#boot.sheen .h.o::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.5) 50%,transparent 62%);transform:translateX(-110%);animation:bSheen 1.5s ease .55s infinite}
+@keyframes bSheen{0%{transform:translateX(-110%)}60%,100%{transform:translateX(110%)}}
 @keyframes bSeamOut{from{opacity:.35}to{opacity:0}}
 /* the app behind: slightly zoomed out and dimmed while loading, it settles as the halves open */
 html.bootin .app{transform:scale(.94);opacity:.4}
@@ -119,7 +121,7 @@ html.booting .app,html.booting .tabs{transition:transform .55s cubic-bezier(.2,.
   <div class="spk l"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div><div class="spk r"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div>
   <div class="flash"></div>
 </div></div>
-<script>document.documentElement.classList.add("bootin","booting");try{var bt2=JSON.parse(localStorage.getItem("aub.boot2")||"null"),be2=document.getElementById("boot");if(bt2&&be2){for(var k in bt2)be2.style.setProperty("--"+k,bt2[k]);document.documentElement.style.background=bt2.bbg;}}catch(e){}</script>
+<script>document.documentElement.classList.add("bootin","booting");try{var bt2=JSON.parse(localStorage.getItem("aub.boot2")||"null"),be2=document.getElementById("boot");if(bt2&&be2){for(var k in bt2)if(k!=="cls")be2.style.setProperty("--"+k,bt2[k]);if(bt2.cls)be2.classList.add(bt2.cls);document.documentElement.style.background=bt2.bbg;}}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
@@ -310,6 +312,35 @@ input,select{font:inherit;color:inherit}
 .tour-b{display:flex;align-items:center;gap:10px}
 .tour-b .btn{flex:1;margin:0}
 .tour-b .linkb{--c:var(--muted)}
+.nw-h h2{margin:2px 0 12px;font-family:var(--display);font-size:32px;line-height:1}
+.nw-v{display:flex;flex-direction:column;gap:2px;margin-bottom:14px}
+.nw-v>.lbl{margin:0 2px 6px}
+.nw-i{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border-radius:14px;background:var(--surface-2)}
+.nw-i+.nw-i{margin-top:6px}
+.nw-i i{width:10px;height:10px;border-radius:50%;background:var(--c);flex-shrink:0;margin-top:5px;box-shadow:0 0 0 4px color-mix(in srgb, var(--c) 20%, transparent)}
+.nw-i div{display:flex;flex-direction:column;gap:2px;min-width:0}
+.quest{display:flex;gap:12px;align-items:flex-start;--c:var(--warn);background:radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--c) 14%, transparent), transparent 60%), var(--face)}
+.quest .q-i{width:40px;height:40px;border-radius:13px;display:grid;place-items:center;flex-shrink:0;background:color-mix(in srgb, var(--c) 20%, var(--surface-2));color:var(--c)}
+.quest .q-i svg{width:21px;height:21px;stroke-width:2.2}
+.quest .q-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.quest .q-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.quest .q-h .lbl{color:var(--c)}
+.quest b.num{white-space:nowrap}
+.quest .q-p{font-size:12.5px;font-weight:700;color:var(--c)}
+.quest.won{box-shadow:var(--elev),inset 0 0 0 1.5px color-mix(in srgb, var(--c) 60%, transparent)}
+.quest.won .q-i{background:var(--c);color:#1E1404}
+.quest.miss{opacity:.7;--c:var(--muted)}
+.bstyles{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:10px}
+.bsty{display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 4px;border-radius:14px;background:var(--surface-2);color:var(--fg);font:inherit;min-width:0}
+.bsty i{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;box-shadow:inset 0 0 0 1px rgba(255,255,255,.1)}
+.bsty i svg{width:18px;height:18px;color:#fff;stroke-width:2}
+.bsty span{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.bsty small{font-size:10.5px;color:var(--muted);font-weight:600}
+.bsty[aria-pressed="true"]{box-shadow:inset 0 0 0 2px var(--push)}
+.bsty.lock{opacity:.55}
+.bsty.lock i{filter:grayscale(.7) brightness(.75)}
+.bprev{display:inline-flex;align-items:center;gap:6px;margin:10px 0 2px;--c:var(--push)}
+.bprev svg{width:15px;height:15px}
 .lv-replay{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin:2px 0 8px;color:var(--c);font-weight:600}
 .lv-replay svg{width:16px;height:16px}
 .lvfx{position:fixed;inset:0;z-index:400;display:grid;place-items:center;overflow:hidden;cursor:pointer;color:#fff;animation:lvIn .35s ease both;-webkit-tap-highlight-color:transparent}
@@ -332,6 +363,7 @@ input,select{font:inherit;color:inherit}
 .lvfx-n .roll i{font-style:normal;height:1em;line-height:1;color:color-mix(in srgb, var(--t) 40%, #fff)}
 .lvfx-name{font-size:18px;font-weight:600;margin-top:10px;color:rgba(255,255,255,.88);animation:lvRise .5s ease 1.25s both}
 .lvfx-name b{color:color-mix(in srgb, var(--t) 45%, #fff)}
+.lvfx-new{display:inline-block;margin-top:10px;padding:5px 12px;border-radius:999px;background:rgba(255,255,255,.12);color:#fff;font-weight:600;font-size:13px}
 .lvfx-pts{font-size:14px;color:rgba(255,255,255,.6);margin-top:6px;animation:lvRise .5s ease 1.4s both}
 .lvfx-hint{position:absolute;left:0;right:0;text-align:center;bottom:calc(env(safe-area-inset-bottom, 0px) + 44px);font-size:14px;color:rgba(255,255,255,.55);animation:lvFade .6s ease 2s both, lvBreath 2.4s ease-in-out 2.6s infinite}
 @keyframes lvIn{from{opacity:0}to{opacity:1}}
@@ -629,6 +661,8 @@ details.more .mb{padding-top:8px;display:flex;flex-direction:column;gap:6px;colo
 @keyframes flicker{0%,100%{transform:rotate(-2deg) scale(1)}50%{transform:rotate(2deg) scale(1.05)}}
 .streak b{font-family:var(--display);font-size:48px;font-weight:700;line-height:.9}
 .streak .st{flex:1;min-width:0}
+.streak .st-more{display:flex;gap:14px;margin-top:6px;font-size:13px;color:var(--muted)}
+.streak .st-more b{font-family:var(--body, inherit);font-size:15px;font-weight:700;line-height:1.2;color:var(--fg);margin-right:3px}
 
 /* heatmap */
 .heat{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;grid-auto-columns:1fr;gap:3px}
@@ -755,6 +789,8 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .bwq .unit{font-size:16px;color:var(--muted);margin-left:-4px}
 .bwq-s{width:52px;height:52px;border-radius:16px;background:var(--surface-2);color:var(--fg);font-size:26px;font-weight:600;display:grid;place-items:center}
 .bwq-s:active{transform:scale(.92)}
+.bwq-b{display:grid;grid-template-columns:1fr 2fr;gap:10px;margin-top:16px}
+.bwq-b .btn{margin:0}
 .guide-b{display:flex;align-items:center;gap:14px;width:100%;text-align:left;color:var(--fg);font:inherit}
 .gb-i{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;background:color-mix(in srgb, var(--c) 18%, var(--surface-2));color:var(--c)}
 .gb-i svg{width:22px;height:22px}
@@ -1402,7 +1438,7 @@ const dirty = new Set(), inflight = new Set(), again = new Set(), timers = {};
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let LVRAF = 0;
 function touch(id) {
-  dataChanged(); saveLocal(); dirty.add(id); if (!LVRAF) LVRAF = requestAnimationFrame(() => { LVRAF = 0; syncLevelBadge(); syncStw(); checkMuscleRanks(); });
+  dataChanged(); saveLocal(); dirty.add(id); if (!LVRAF) LVRAF = requestAnimationFrame(() => { LVRAF = 0; checkQuest(); syncLevelBadge(); syncStw(); checkMuscleRanks(); });
   clearTimeout(timers[id]); timers[id] = setTimeout(() => flush(id), 600);
 }
 async function flush(id) {
@@ -1512,7 +1548,23 @@ const isLightNow = () => { const m = THEME_MODE(); return m === "light" || m ===
 // Background family + accents for the mode currently shown.
 function famNow(v) { const m = THEME_MODE(); return m === "soft" ? { g: softFam(v.bl), a: v.l } : m === "dim" ? { g: dimFam(v.bd), a: v.d } : m === "light" ? { g: v.bl, a: v.l } : { g: v.bd, a: v.d }; }
 // the loading animation reads these next launch: accent, text on accent, background, raised surface, text
+// opening animation styles: "default" follows your theme; the others unlock with your titles
+const BOOTS = [["default", "Theme", 1], ["iron", "Iron", 6, { ba: "#9AA6BA", bon: "#0B0E13", bbg: "#0A0C10", bs: "#20252E", bfg: "#E9EDF3" }],
+  ["bronze", "Bronze", 9, { ba: "#CD7E3E", bon: "#1C0F05", bbg: "#0E0A07", bs: "#2B1E14", bfg: "#F7E8DB" }],
+  ["silver", "Silver", 12, { ba: "#CDD5E1", bon: "#10141B", bbg: "#0A0C10", bs: "#242A33", bfg: "#F4F6FA" }, "sheen"],
+  ["steel", "Steel", 15, { ba: "#4F8BF0", bon: "#FFFFFF", bbg: "#050A14", bs: "#13223D", bfg: "#EAF1FF" }],
+  ["gold", "Gold", 19, { ba: "#F2B13A", bon: "#1E1404", bbg: "#0D0A04", bs: "#2C2310", bfg: "#FFF3D6" }, "sheen"],
+  ["titan", "Titan", 24, { ba: "#9B7BFF", bon: "#FFFFFF", bbg: "#07051A", bs: "#1D1542", bfg: "#EFEAFF" }, "sheen"],
+  ["legend", "Legend", 30, { ba: "#FF4F7B", bon: "#FFFFFF", bbg: "#0E0408", bs: "#2E0F1B", bfg: "#FFE6EE" }, "sheen"]];
+function bootVars() {
+  const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue(n).trim(), a = g("--push");
+  const sty = BOOTS.find(b => b[0] === SET().boot), L = levelNow().L;
+  if (sty && sty[3] && L >= sty[2]) return { ...sty[3], cls: sty[4] || "" };
+  const hex = /^#[0-9a-f]{6}$/i.test(a) ? parseInt(a.slice(1), 16) : null, lum = hex == null ? 1 : (.299 * (hex >> 16) + .587 * (hex >> 8 & 255) + .114 * (hex & 255)) / 255;
+  return { ba: a, bon: lum > .45 ? "#0B0E13" : "#FFFFFF", bbg: g("--bg"), bs: g("--surface-2") || g("--surface"), bfg: g("--fg"), cls: "" };
+}
 function saveBootTheme() {
+  try { localStorage.setItem("aub.boot2", JSON.stringify(bootVars())); return; } catch (e) {}
   try {
     const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue(n).trim(), a = g("--push");
     const hex = /^#[0-9a-f]{6}$/i.test(a) ? parseInt(a.slice(1), 16) : null, lum = hex == null ? 1 : (.299 * (hex >> 16) + .587 * (hex >> 8 & 255) + .114 * (hex & 255)) / 255;
@@ -2283,6 +2335,7 @@ function vToday() {
       <div class="meta" id="bmeta">${bannerMeta(d)}</div></div>${ring(c.ok, c.tot)}
       ${tmrHTML(d)}
       <p class="bnote">${wk.light ? wk.tip : ph.note}</p></section>`;
+  h += questCard(d);
   const sl = sleepH(doc && doc.sleep);
   if (d === t && sl != null && sl < 6.5 && !wk.light) h += `<section class="card ready" style="--c:var(--warn)"><span class="pill">Short night · ${fH(sl)}</span><p class="small" style="margin-top:8px">Keep every set at the easy end of today's RIR and skip the to-failure sets. Recovery beats one hard session.</p></section>`;
   const exp = isExpress(d), weekExp = expWeeks().includes(mondayOf(d));
@@ -2559,14 +2612,52 @@ const TIERS = [[1, "Rookie", "#8C97AA"], [2, "Beginner", "#2BB3A3"], [4, "Regula
   [12, "Silver", "#8D9AB0"], [15, "Steel", "#4F8BF0"], [19, "Gold", "#F0AE2E"], [24, "Titan", "#9B7BFF"], [30, "Legend", "#FF4F7B"]];
 function xpParts() {
   return memo("xpp", () => {
-    const o = { sets: 0, prs: 0, wk: 0, core: 0 };
+    const o = { sets: 0, prs: 0, wk: 0, core: 0, q: 0 };
     for (const id in S.docs) { const x = S.docs[id]; if (!x || !x.date) continue;
       for (const k in x.ex || {}) for (const q of x.ex[k] || []) if (q && q.ok) { o.sets++; if (q.pr) o.prs++; }
-      if (x.done) wkOf(x.date).light ? o.core++ : o.wk++; }
+      if (x.done) wkOf(x.date).light ? o.core++ : o.wk++;
+      if (x.qd) o.q++; }
     return o;
   });
 }
-function xpTotal() { const o = xpParts(); return o.sets + 4 * o.prs + 15 * o.wk + 8 * o.core; }
+/* Bonus quest: one optional mini-challenge per training day, picked from today's plan (same pick all day). */
+const QUEST_PTS = 25;
+function questFor(d) {
+  const wk = wkOf(d), t = today(); if (wk.light || d > t) return null;
+  const doc = dayDoc(d), p = plan(d).filter(it => !it.skip && !it.ex.chk), C = [];
+  for (const it of p) {
+    const ex = it.ex, last = lastBefore(ex.id, d), rr = range(ex.r), n = setsFor(d, ex, it.k), arr = (doc && doc.ex && doc.ex[it.k]) || [];
+    const okSets = arr.slice(0, n).filter(q => q && q.ok);
+    if (last && last.sets.length && !ex.bw) {
+      const ls = last.sets[last.sets.length - 1];
+      if (ls && ls.w > 0) C.push({ id: "rep-" + ex.id, ic: "rep", txt: `<b>${ex.n}</b>: one set of <b class="num">${kg(ls.w)} kg × ${ls.r + 1}</b> or better, 1 rep more than your last set last time.`, done: okSets.some(q => q.w >= ls.w && q.r >= ls.r + 1) });
+      const step = /Dumbbell|lateral|curl|fly|Cable|cable|Face|extension|pushdown|raise/i.test(ex.n) ? 1 : 2.5, tw = last.top.w + step, low = rr ? rr[0] : 6;
+      if (last.top.w > 0) C.push({ id: "top-" + ex.id, ic: "top", txt: `<b>${ex.n}</b>: one set at <b class="num">${kg(tw)} kg</b> for ${low}+ reps, a new top weight.`, done: okSets.some(q => q.w >= tw && q.r >= low) });
+    }
+    if (MUSCLES.some(([m, , pr]) => pr && m === ex.m)) C.push({ id: "xs-" + ex.id, ic: "xs", txt: `<b>${ex.n}</b>: add an <b>extra set</b> and finish it. Your ${ex.m === "Lats" ? "back" : ex.m.toLowerCase()} gets more work today.`, done: xsets(d, it.k) > 0 && !!(arr[n - 1] && arr[n - 1].ok) });
+  }
+  const pv = prevTime(d);
+  if (pv) C.push({ id: "fast", ic: "fast", txt: `Finish today's <b>${wk.name}</b> faster than last time (<b class="num">${fmtDur(pv.ms)}</b>), with every set done.`, done: !!(doc && doc.done && doc.end && sessionMs(doc) < pv.ms) });
+  if (!C.length) return null;
+  let h = 0; for (const ch of d) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const q = C[h % C.length]; q.got = !!(doc && doc.qd); return q;
+}
+function questCard(d) {
+  const q = questFor(d); if (!q) return "";
+  const won = q.got || q.done, past = d < today();
+  const IC2 = { rep: '<path d="M7 12h10M12 7v10"/>', top: '<path d="M12 19V6M6.5 11.5 12 6l5.5 5.5"/>', xs: '<path d="M12 5v14M5 12h14"/>', fast: '<circle cx="12" cy="13" r="7"/><path d="M12 13V9.5M10 3h4"/>' };
+  return `<section class="card quest ${won ? "won" : past ? "miss" : ""}" id="quest"><span class="q-i"><svg class="i" viewBox="0 0 24 24">${won ? '<path d="M5 12.5l4.5 4.5L19 7.5"/>' : IC2[q.ic]}</svg></span>
+    <div class="q-t"><div class="q-h"><span class="lbl">Bonus quest</span><span class="q-p num">${won ? "Done · " : ""}+${QUEST_PTS} pts</span></div><p class="small">${q.txt}</p>${!won && past ? `<span class="small muted">Missed. Tomorrow's is a new one.</span>` : !won ? `<span class="small muted">Optional. It checks itself as you tick sets.</span>` : ""}</div></section>`;
+}
+// a quest finished for the first time: points, a note, and the card turns gold
+function checkQuest() {
+  const d = today(), doc = dayDoc(d); if (!doc || doc.qd) return;
+  const q = questFor(d); if (!q || !q.done) return;
+  doc.qd = q.id; touch("d" + d); SND.tick();
+  setTimeout(() => toast(`Bonus quest done · +${QUEST_PTS} points`), 500);
+  const c = $("#quest"); if (c && S.sel === d) { c.outerHTML = questCard(d); const n = $("#quest"); if (n && !REDUCED && n.animate) n.animate([{ transform: "scale(1)" }, { transform: "scale(1.03)" }, { transform: "scale(1)" }], { duration: 420, easing: "cubic-bezier(.3,1.5,.5,1)" }); }
+}
+function xpTotal() { const o = xpParts(); return o.sets + 4 * o.prs + 15 * o.wk + 8 * o.core + QUEST_PTS * o.q; }
 function levelOf(xp) {
   let L = 1, need = 100, base = 0;
   while (xp >= base + need && L < 99) { base += need; L++; need = 100 + 40 * (L - 1); }
@@ -2693,6 +2784,7 @@ const SW_IC = '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7
 const CK_IC = '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
 setInterval(() => { if (!document.hidden) syncStw(); }, 1000);
 setTimeout(maybeTour, 1400);
+setTimeout(() => maybeNews(), 2200);
 setTimeout(() => { try { checkMuscleRanks(); } catch (e) {} }, 300); // remember today's muscle levels, so the next climb is noticed
 addEventListener("scroll", () => { if (S.tab === "today") { const b = $("#stw"); if (b && !b.hidden) { const row = $("#tmr"); let on = false; if (row && !row.hidden && S.sel === today()) { const r = row.getBoundingClientRect(); on = r.bottom > 70 && r.top < innerHeight; } b.classList.toggle("dim", on); } } }, { passive: true });
 function syncLevelBadge() {
@@ -2701,6 +2793,37 @@ function syncLevelBadge() {
   if (grew) { const up = checkLevel(); if (up) lvlFX(up); }
   b.innerHTML = lvlBadge(v, 40); b.setAttribute("aria-label", `Level ${v.L}, ${v.name}. ${v.need - v.into} points to the next level`);
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
+}
+/* What's new: shown once after an update (Settings → What's new lists the recent ones) */
+const APP_VER = "2026-11-18c";
+const NEWS = [
+  { v: "2026-11-18c", d: "18 Nov", items: [
+    ["var(--warn)", "Bonus quests", "A small optional challenge in each workout, worth 25 points. It checks itself as you tick sets."],
+    ["var(--push)", "Opening animation styles", "Iron, Bronze, Silver, Steel, Gold, Titan and Legend unlock with your titles. Pick one in Settings → Appearance, or keep your theme."],
+    ["var(--pull)", "What's new", "This card. It shows up once after each update."],
+    ["var(--legs)", "Polish", "A full check of every screen, with small fixes all over the app."]] },
+  { v: "2026-11-18b", d: "18 Nov", items: [
+    ["var(--push)", "New opening animation", "Full screen, in your theme's colors, and it plays again when you come back to the app."],
+    ["var(--core)", "Muscle ranks", "Every muscle levels up with its own sets. Tap one for its history, best lift and next session."],
+    ["var(--legs)", "Extra set, quick weigh-in, Food guide", "+ Extra set under every exercise, weigh in from Home, and the food reference moved into one guide."]] },
+  { v: "2026-11-17", d: "17 Nov", items: [
+    ["var(--good)", "Workout timer", "Start workout starts it, with pause, reset and your time compared with last time."],
+    ["var(--core)", "Full-screen level up", "A big moment for every new level. Replay it from the level panel."]] }];
+function newsHTML(list) {
+  return list.map((n, i) => `<div class="nw-v"><span class="lbl">${i === 0 ? "This update" : n.d}</span>${n.items.map(([c, h, t]) => `<div class="nw-i" style="--c:${c}"><i></i><div><b>${h}</b><span class="small muted">${t}</span></div></div>`).join("")}</div>`).join("");
+}
+function openNews(all) {
+  const sh = $("#sheet"); sh.classList.toggle("full", !!all); sh.style.setProperty("--c", "var(--push)");
+  sh.innerHTML = `<div class="grab"></div><div class="nw-h"><span class="lbl" style="color:var(--push)">Updated · ${NEWS[0].d}</span><h2>What's new</h2></div>${newsHTML(all ? NEWS : NEWS.slice(0, 1))}
+    ${all ? "" : `<button class="linkb" data-act="newsall" style="margin:2px 0 10px">Earlier updates</button>`}<button class="btn" data-act="close">Nice</button>`;
+  showSheet();
+}
+function maybeNews(tries = 0) {
+  let seen = null, toured = null; try { seen = localStorage.getItem("aub.ver"); toured = localStorage.getItem("aub.tour"); } catch (e) {}
+  if (seen === APP_VER || navigator.webdriver) return; // (automated test browsers skip it)
+  if (!seen && !toured) { try { localStorage.setItem("aub.ver", APP_VER); } catch (e) {} return; } // a brand-new install gets the tour instead
+  if ($("#lvfx") || $("#tour") || $("#boot") || $("#sheet").classList.contains("show")) { if (tries < 8) setTimeout(() => maybeNews(tries + 1), 2000); return; }
+  try { localStorage.setItem("aub.ver", APP_VER); } catch (e) {} openNews(false);
 }
 /* First-day tour: four short cards, shown once (Settings → Show the app tour brings it back) */
 const TOUR = [
@@ -2730,7 +2853,7 @@ function lvlFX(up, replay) {
     <div class="lvfx-c"><div class="lvfx-eb">Level up</div><div class="lvfx-badge">${lvlBadge(v, 156, false)}</div>
       <div class="lvfx-n">Level <span class="roll"><span><i>${up.L0 || up.L - 1}</i><i>${up.L}</i></span></span></div>
       <div class="lvfx-name">${newTier ? `New title · <b>${v.name}</b>` : v.name}</div>
-      <div class="lvfx-pts num">${v.need - v.into} points to level ${up.L + 1}</div>
+      <div class="lvfx-pts num">${v.need - v.into} points to level ${up.L + 1}${(() => { const bs = BOOTS.find(b => b[2] > (up.L0 || up.L - 1) && b[2] <= up.L && b[3]); return bs ? `<br><span class="lvfx-new">New opening animation: ${bs[1]}</span>` : ""; })()}</div>
 </div><div class="lvfx-hint">Tap anywhere to continue</div>`;
   document.body.appendChild(el);
   const t0 = Date.now(); let gone = false;
@@ -2763,7 +2886,7 @@ function openLevel(upFrom) {
       <div class="lw">${days}</div>
       <div class="lp-fz" style="--c:${fz.c}"><span class="fz-i"><svg class="i" viewBox="0 0 24 24">${IC_SNOW}</svg></span><div><b>${fz.h}</b><span class="small muted">${fz.s}</span></div></div></div>
     <div class="lp-sec"><span class="lbl">Your points</span>
-      ${row("s", "Finished sets", p.sets, 1)}${row("p", "Personal records", p.prs, 4)}${row("w", "Finished workouts", p.wk, 15)}${row("c", "Sunday core sessions", p.core, 8)}
+      ${row("s", "Finished sets", p.sets, 1)}${row("p", "Personal records", p.prs, 4)}${row("w", "Finished workouts", p.wk, 15)}${row("c", "Sunday core sessions", p.core, 8)}${row("q", "Bonus quests", p.q, QUEST_PTS)}
       <div class="lp-r tot"><span>Total</span><span></span><b class="num">${v.xp}</b></div></div>
     <div class="lp-sec"><span class="lbl">Titles</span><div class="ladder">${ladder}</div></div>
     <button class="linkb lv-replay" data-act="lvreplay" style="--c:${v.col}"><svg class="i" viewBox="0 0 24 24"><path d="M8 5.5l10 6.5-10 6.5z"/></svg>Replay the level-up animation</button>
@@ -3449,7 +3572,7 @@ function openBW() {
   sh.classList.remove("full"); sh.style.setProperty("--c", "var(--legs)");
   sh.innerHTML = `<div class="grab"></div><h2 class="sec-t" style="margin:4px 2px 2px">Morning weight</h2><p class="small muted" style="margin:0 2px 14px">After the toilet, before eating${prev ? ` · last: <b class="num">${kg(prev.v)} kg</b> (${fShort(prev.date)})` : ""}</p>
     <div class="bwq"><button class="bwq-s" data-act="bwstep" data-v="-0.1" aria-label="Minus 0.1 kg">−</button><input class="in num" id="bwq" inputmode="decimal" value="${doc && doc.bw != null ? kg(doc.bw) : prev ? kg(prev.v) : ""}" placeholder="84.0" aria-label="Weight in kg"><span class="unit">kg</span><button class="bwq-s" data-act="bwstep" data-v="0.1" aria-label="Plus 0.1 kg">+</button></div>
-    <button class="btn" data-act="bwsave" style="--c:var(--legs);margin-top:16px">Save</button>`;
+    <div class="bwq-b"><button class="btn ghost" data-act="close">Cancel</button><button class="btn" data-act="bwsave" style="--c:var(--legs)">Save</button></div>`;
   showSheet(); setTimeout(() => { const i = $("#bwq"); if (i) i.select(); }, 450);
 }
 function openFoodGuide() {
@@ -3832,6 +3955,11 @@ function openSheet() {
         <div class="pals">${Object.entries(PALS).map(([id, p]) => pal(id, p)).join("")}</div>
         <div class="pals" style="grid-template-columns:1fr;padding-top:0"><label class="pal" style="flex-direction:row;justify-content:center;gap:12px" aria-pressed="${st.palette === "custom"}">Custom color <input type="color" id="custom" value="${/^#[0-9a-f]{6}$/i.test(st.custom) ? st.custom : "#FF6A2B"}" aria-label="Custom color"></label></div></div>
       ${SEG("motion", "Animations", [["on", "On"], ["system", "iPhone"], ["off", "Off"]], MQ.matches ? "Reduce Motion is on in your iPhone settings" : "")}
+      ${(() => { const L = levelNow().L, cur = SET().boot || "default", tv = (() => { try { return bootVars(); } catch (e) { return null; } })();
+        return `<div class="srow stack"><span>Opening animation<small>New styles unlock with your titles. “Theme” follows the colors above.</small></span>
+        <div class="bstyles">${BOOTS.map(([id, name, lv, v]) => { const lock = L < lv, c = v || { ba: "var(--push)", bbg: "var(--bg)" };
+          return `<button class="bsty ${lock ? "lock" : ""}" data-act="bootstyle" data-v="${id}" aria-pressed="${cur === id}" ${lock ? `aria-label="${name}, unlocks at level ${lv}"` : ""}><i style="background:linear-gradient(160deg, ${c.ba} 0 48%, ${c.bbg} 52%)">${lock ? '<svg class="i" viewBox="0 0 24 24"><rect x="5.5" y="10.5" width="13" height="9" rx="2"/><path d="M8.5 10.5V8a3.5 3.5 0 0 1 7 0v2.5"/></svg>' : ""}</i><span>${name}</span><small class="num">${lock ? "Level " + lv : id === "default" ? "Default" : "Unlocked"}</small></button>`; }).join("")}</div>
+        <button class="linkb bprev" data-act="bootprev"><svg class="i" viewBox="0 0 24 24"><path d="M8 5.5l10 6.5-10 6.5z"/></svg>Preview</button></div>`; })()}
     </div></div>
     <div class="sgroup"><div class="lbl">Sounds</div><div class="sbox">
       ${SWI("snd.on", "Sounds")}
@@ -3863,6 +3991,7 @@ function openSheet() {
         <button class="sw" role="switch" aria-checked="${!hid.has(t)}" data-act="tabhide" data-v="${t}" aria-label="Show ${TAB_DEF[t][0]}"></button></span></div>`).join(""); })()}
     </div><p class="small muted" style="margin:8px 4px 0">The order here is the order in the bottom bar. The top one opens first.</p></div>
     <div class="sgroup"><div class="lbl">Program</div><div class="sbox">
+      <button class="srow g-open" data-act="news"><span>What's new<small>The latest changes to the app</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
       <button class="srow g-open" data-act="tour"><span>Show the app tour<small>The four cards you saw on the first day</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
       <button class="srow g-open" data-act="guide"><span>How the plan works<small>Goal, weekly split, phases, effort and progression</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="srow stack"><span>Week 1 starts on<small>Re-entry, build, push and deload weeks count from this Monday</small></span><input type="date" id="start" value="${getStart()}"></div>
@@ -4059,6 +4188,11 @@ document.addEventListener("click", e => {
   if (a === "sheet") { S.guide = false; return openSheet(); }
   if (/^stw(pause|go|reset|start)?$/.test(a)) return stwAct(a);
   if (a === "startwk") { stwAct("stwstart"); if (TABS.includes("today")) { S.sel = today(); S.edit = false; go("today"); } return; }
+  if (a === "news") { closeSheet(); setTimeout(() => openNews(true), 350); return; }
+  if (a === "newsall") return openNews(true);
+  if (a === "bootstyle") { const sty = BOOTS.find(x => x[0] === b.dataset.v); if (!sty) return; if (levelNow().L < sty[2]) return toast(`${sty[1]} unlocks at level ${sty[2]}`);
+    setPath("boot", sty[0]); saveBootTheme(); openSheet(); return; }
+  if (a === "bootprev") { closeSheet(); setTimeout(() => playBoot(bootVars()), 380); return; }
   if (a === "tour") { closeSheet(); setTimeout(() => tour(0), 350); return; }
   if (a === "foodguide") return openFoodGuide();
   if (a === "bwq") return openBW();
@@ -4501,14 +4635,19 @@ function bootOut(bt) {
     setTimeout(() => { bt.remove(); R.classList.remove("booting"); const v = document.getElementById("view"); if (v) { v.style.outline = "1px solid transparent"; requestAnimationFrame(() => { v.style.outline = ""; }); } }, 560);
   });
 }
+function playBoot(vars) {
+  if (!BOOT_HTML || document.getElementById("boot")) return;
+  const tpl = document.createElement("template"); tpl.innerHTML = BOOT_HTML; const bt = tpl.content.firstElementChild; bt.classList.remove("gone", "sheen");
+  if (vars) { for (const k in vars) if (k !== "cls") bt.style.setProperty("--" + k, vars[k]); if (vars.cls) bt.classList.add(vars.cls); }
+  document.documentElement.classList.add("bootin", "booting"); document.body.appendChild(bt); setTimeout(() => bootOut(bt), REDUCED ? 250 : 950);
+}
 let HIDDEN_AT = 0;
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { HIDDEN_AT = Date.now(); return; }
   const away = HIDDEN_AT ? Date.now() - HIDDEN_AT : 0; HIDDEN_AT = 0;
   const st = stwState(dayDoc(today()));
   if (!BOOT_HTML || away < 20000 || st === "run" || st === "pause" || document.getElementById("boot")) return;
-  const tpl = document.createElement("template"); tpl.innerHTML = BOOT_HTML; const bt = tpl.content.firstElementChild; bt.classList.remove("gone");
-  document.documentElement.classList.add("bootin", "booting"); document.body.appendChild(bt); setTimeout(() => bootOut(bt), REDUCED ? 250 : 950);
+  playBoot(bootVars());
 });
 if (UI0 && UI0.y && (TABS.includes(h0) ? h0 === UI0.tab : true)) requestAnimationFrame(() => scrollTo(0, UI0.y));
 if (UI0 && UI0.timer && UI0.timer.end > Date.now() + 1000) {
