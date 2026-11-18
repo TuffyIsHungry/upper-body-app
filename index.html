@@ -425,6 +425,8 @@ p{margin:0}
 .bnote{flex-basis:100%;font-size:13.5px;line-height:1.45;color:color-mix(in srgb, var(--fg) 78%, transparent);padding-top:11px;border-top:1px solid color-mix(in srgb, var(--c) 25%, transparent);position:relative;z-index:1}
 .tbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .tbar .linkb{margin-left:auto}
+.tbar.chips{flex-wrap:nowrap}
+.tbar.chips .tchip{flex:1;justify-content:center;min-width:0}
 .tchip{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 12px;border-radius:12px;background:var(--surface);box-shadow:var(--elev);font-size:13.5px;font-weight:600;color:var(--muted);transition:background .25s,color .25s}
 .tchip .tick{width:18px;height:18px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;transition:background .25s,border-color .25s}
 .tchip .tick svg{width:11px;height:11px;stroke:var(--on-c);stroke-width:3.4;fill:none;stroke-linecap:round;stroke-linejoin:round}
@@ -842,6 +844,24 @@ button.row{color:inherit}
 .swapb svg{width:15px;height:15px}
 .swp{font-size:12px;font-weight:600;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:5px}
 .swp svg{width:13px;height:13px;flex-shrink:0}
+.swp.inj{color:color-mix(in srgb, var(--warn) 80%, var(--fg))}
+.pl-note{display:flex;gap:10px;align-items:flex-start;margin:10px 0 0;padding:11px 12px;border-radius:12px;font-size:13.5px;line-height:1.42;background:color-mix(in srgb, var(--c) 12%, var(--surface-2))}
+.pl-note>svg{width:19px;height:19px;color:var(--c);flex-shrink:0;margin-top:1px}
+.pl-note>div{flex:1;min-width:0}
+.pl-note .lbl{color:var(--c)}
+.pl-note p{margin:3px 0 0}
+.pl-b{display:flex;align-items:center;gap:14px;margin-top:10px}
+.pl-b .btn.sm{flex:0 1 auto;height:38px;font-size:14px}
+.pn-b{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.inj .pill svg{width:13px;height:13px}
+.inj-b{display:flex;gap:8px;margin-top:12px}
+.inj-pv{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.inj-pv li{display:flex;justify-content:space-between;gap:10px;padding:9px 12px;border-radius:11px;background:var(--surface-2);font-size:14px}
+.inj-pv li b{font-weight:600;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.inj-pv li span{color:var(--muted);flex-shrink:0;font-size:13px;font-weight:600}
+.inj-pv li.p-sw span{color:var(--good)} .inj-pv li.p-sk span{color:var(--warn)}
+.pain-ch button[aria-pressed="true"]{background:var(--c);color:var(--on-c)}
+.ex.skipped.auto .ex-m{color:var(--muted)}
 .swap-ed{margin:10px 0 0;padding:12px;border-radius:14px;background:var(--surface-2);display:flex;flex-direction:column;gap:12px}
 .swap-top{display:flex;gap:12px;align-items:center}
 .swap-top .thumb{flex-shrink:0}
@@ -1640,7 +1660,7 @@ function phase(d) {
 }
 const setsFor = (d, ex, k) => (wkOf(d).light ? ex.s : phase(d).sets(ex.s)) + (k ? xsets(d, k) : 0);
 const xsets = (d, k) => { const x = S.docs["d" + d]; return (x && x.xs && x.xs[k]) || 0; };
-const effFor = (d, ex) => (wkOf(d).light ? null : phase(d).eff) || ex.e;
+const effFor = (d, ex) => ex.injL ? "easy, pain-free" : (wkOf(d).light ? null : phase(d).eff) || ex.e;
 const expWeeks = () => (S.docs.settings && S.docs.settings.expressWeeks) || [];
 function isExpress(d) {
   const doc = dayDoc(d);
@@ -1664,14 +1684,45 @@ function swapOn(d, doc, ex, i) {
     const has = id => (doc.ex[id + "@" + i] || []).some(q => q && (q.ok || q.w != null || q.r != null));
     if (has(a[0])) return true; if (has(ex.id)) return false;
   }
+  const pf = plFix()[ex.id]; if (pf && pf.kind === "swap" && d > pf.until) return false; // a 4-week plateau swap ends by itself
   return d >= today() && !!((S.docs.settings && S.docs.settings.swaps) || {})[ex.id];
 }
-const slotEx = (d, i, doc = dayDoc(d)) => { const ex = wkOf(d).ex[i]; return swapOn(d, doc, ex, i) ? altOf(ex) : ex; };
+// Travel mode: periods with only dumbbells, a bench and body weight → [{from, to}] (to null = still on)
+const travList = () => (S.docs.settings && S.docs.settings.trav) || [];
+const travelOn = d => travList().some(p => p.from <= d && (!p.to || d <= p.to));
+// Injury mode: [{area, from, to, ext, done}] (the last one is the current one until it's done)
+const injList = () => (S.docs.settings && S.docs.settings.inj) || [];
+const injOn = d => { const p = injList().find(p => p.from <= d && d <= p.to); return p ? p.area : null; };
+const injCur = () => { const L = injList(), p = L[L.length - 1]; return p && !p.done ? p : null; };
+const plFix = () => (S.docs.settings && S.docs.settings.plFix) || {};
+// What slot i of day d shows: travel version, swap, plateau rep range, then the injury rule on top.
+// auto = "travel" | "injury" when the slot is skipped for you (doc.keep brings it back)
+function slotInfo(d, i, doc = dayDoc(d)) {
+  const base = wkOf(d).ex[i], kept = !!(doc && doc.keep && doc.keep.includes(i)), trav0 = travelOn(d);
+  const has = id => !!(doc && doc.ex && (doc.ex[id + "@" + i] || []).some(q => q && (q.ok || q.w != null || q.r != null)));
+  // whatever was already logged in this slot that day stays (switching a mode mid-workout keeps your sets)
+  const tId = TRAVEL[base.id], trav = tId ? (has(tId) || (trav0 && !has(base.id) && !(ALT[base.id] && has(ALT[base.id][0])))) : trav0;
+  let ex = base, auto = null;
+  if (trav && base.id in TRAVEL) { const t = TRAVEL[base.id]; if (t === null) { if (!kept) auto = "travel"; } else ex = mkEx(base, t, { travel: true }); }
+  else if (swapOn(d, doc, base, i)) ex = altOf(base);
+  if (!ex.travel) { const pf = plFix()[ex.id]; if (pf && pf.kind === "reps" && pf.d <= d && d <= pf.until && !wkOf(d).light) ex = varEx(ex, { r: pf.r, plr: pf.until }); }
+  const area = injOn(d);
+  if (area && !kept && !auto) {
+    let r = injRule(area, ex.id, trav);
+    if (r && r !== "light" && r !== "skip" && has(ex.id)) r = null; // already logged the normal one
+    if (r === "skip" && has(ex.id)) r = null;
+    if (r === "skip") auto = "injury";
+    else if (r === "light") ex = varEx(ex, { s: Math.min(ex.s, 2), injL: area });
+    else if (r) ex = mkEx(ex, r, { inj: area, injS: true });
+  }
+  return { ex, auto };
+}
+const slotEx = (d, i, doc = dayDoc(d)) => slotInfo(d, i, doc).ex;
 // the exercises shown today, in order: [{ex, i, k, skip}]
 function plan(d) {
   const doc = dayDoc(d), keep = isExpress(d) ? new Set(EXPRESS[SCHEDULE[dow(d)]]) : null;
   const skip = new Set((doc && doc.skip) || []);
-  return fullOrder(d).filter(i => !keep || keep.has(i)).map(i => { const ex = slotEx(d, i, doc); return { ex, i, k: ex.id + "@" + i, skip: skip.has(i) }; });
+  return fullOrder(d).filter(i => !keep || keep.has(i)).map(i => { const { ex, auto } = slotInfo(d, i, doc), sk = skip.has(i); return { ex, i, k: ex.id + "@" + i, skip: sk || !!auto, auto: sk ? null : auto }; });
 }
 function counts(d) {
   const doc = dayDoc(d); let tot = 0, ok = 0;
@@ -1921,6 +1972,8 @@ Object.assign(FIGS, {
   cst: { A: { hip: [58, 70], t: -4, foot: [76, 89], th2: 204, sh2: 318, ft2: 300, ua: 150, fa: 120 }, B: { hip: [61, 71.7], t: -10, foot: [76, 89], th2: 214, sh2: 318, ft2: 300, ua: 150, fa: 120 }, p: [["mat", 30, 100], ["bench", 12, 74, 28]],
     how: "Back knee on the floor with that foot up on a bench or couch behind you. Squeeze the glute of the back leg and bring your chest up until the front of the hip and thigh stretch." },
 });
+FIGS.drf = { A: { hip: [44, 54], t: 76, foot: [48, 89], ua: 180, fa: 180 }, B: { hip: [44, 54], t: 76, foot: [48, 89], ua: 196, us: .32, fa: 200, fs: .3 }, p: [["db"]],
+  how: "Hinge forward until your chest is almost parallel to the floor, dumbbells hanging under your shoulders. Raise them out to the sides with soft elbows, pause, then lower slowly." };
 FIGS.sbp = { ...FIGS.trp, how: "Straight bar on a high pulley, elbows pinned to your sides. Push the bar down until your arms are straight, then let it rise to chest height." };
 const EXM = {}; for (const k in PROGRAM) for (const ex of PROGRAM[k].ex) EXM[ex.id] = ex.m;
 EXM.msp = "Front delts";
@@ -1952,6 +2005,81 @@ function altOf(ex) {
   if (ALTC[ck]) return ALTC[ck];
   const base = EX0[a[0]], o = a[2] || {};
   return (ALTC[ck] = { ...ex, id: a[0], n: base ? base.n : a[1], cue: base ? base.cue : o.cue, bw: base ? !!base.bw : !!o.bw, per: base ? base.per : o.per, sw: ex.n, alt: true, orig: ex.id });
+}
+// name, cue and options of any exercise id (plan exercise, alternative, or travel-only)
+const XINFO = { drf: { n: "Bent-over dumbbell rear-delt fly", cue: "Chest almost parallel to the floor, elbows slightly bent. Lead with the elbows and squeeze the shoulder blades only at the very top." } };
+for (const id in ALT) { const a = ALT[id]; if (!EX0[a[0]] && !XINFO[a[0]]) XINFO[a[0]] = { n: a[1], ...(a[2] || {}) }; }
+const exInfo = id => EX0[id] || XINFO[id] || { n: id };
+EXM.drf = "Rear delts";
+// Travel mode: dumbbells, an adjustable bench and body weight. id → replacement id, null = nothing fits (skipped). Not listed = keep.
+const TRAVEL = {
+  clr: "dlr", pdk: "dfl", ote: "doe", ccr: "dcr",
+  pup: "sdr", kpd: "dpo", rpd: "drf",
+  hsq: "gsq", rdl: "drd", lex: "wlu", slc: null, hlr: "dcr",
+  msp: "sdp", lhf: "idf", trp: "doe",
+  ngp: "sdr", scr: "csr", sap: "dpo", fpl: "drf", abw: "dcr",
+  lpr: "gsq", llc: "drd", sca: "scf", mlr: "dlr",
+  pal: "plk" };
+const TRAVEL_OK = new Set([...Object.values(TRAVEL).filter(Boolean), "sdp", "idp", "csr", "idc", "scf", "bpr", "dlr", "bss", "ccu", "dbg", "spl", "lst", "thr", "hfs", "plk"]);
+// Injury mode: what each sore area changes. swap → a gentler exercise, skip → hidden, light → 2 sets at about 60 %.
+const INJ = {
+  "Shoulder": { swap: { ote: "trp", doe: "trp", pup: "lpd", chu: "lpd", abw: "dcr", hlr: "dcr" },
+    skip: ["sdp", "msp", "dpo", "pdk", "dfl", "lhf", "idf"],
+    light: ["bpr", "mcp", "idp", "imp", "clr", "dlr", "mlr", "lpd", "ngp", "sap", "trp", "sbp"] },
+  "Elbow": { swap: { ote: "trp", doe: "trp", bbc: "ccu", pup: "lpd", chu: "lpd" },
+    skip: [], light: ["trp", "sbp", "idc", "ccu", "lpd", "ngp", "kpd", "sap", "bpr", "mcp", "idp"] },
+  "Wrist": { swap: { bpr: "mcp", bbc: "ccu", abw: "dcr" },
+    skip: [], light: ["idp", "sdp", "msp", "idc", "ccu", "doe", "dfl", "dlr", "rdl", "drd"] },
+  "Lower back": { swap: { rdl: "slc", drd: "slc", hsq: "lpr", scf: "sca" },
+    skip: ["abw"], light: ["lpr", "bss", "wlu", "gsq", "drf", "sdr", "hlr", "ckr", "dcr", "sca"] },
+  "Knee": { swap: { hsq: "lpr" },
+    skip: ["lex", "bss", "wlu"], light: ["lpr", "gsq", "slc", "llc"] } };
+const INJ_AREAS = Object.keys(INJ);
+function injRule(area, id, trav) {
+  const R = INJ[area]; if (!R) return null;
+  if (R.skip.includes(id)) return "skip";
+  const to = R.swap[id]; if (to) return trav && !TRAVEL_OK.has(to) ? "skip" : (R.skip.includes(to) ? "skip" : to);
+  return R.light.includes(id) ? "light" : null;
+}
+const XC = {};
+// a different movement in the same slot (keeps sets, reps, effort, rest)
+function mkEx(slot, id, extra) {
+  const ck = ["mk", slot.id, slot.s, slot.r, slot.e, slot.rest, slot.ss || "", slot.alt ? 1 : 0, id, JSON.stringify(extra)].join("|");
+  if (XC[ck]) return XC[ck];
+  const f = exInfo(id);
+  return (XC[ck] = { ...slot, id, n: f.n, cue: f.cue, bw: !!f.bw, per: f.per, sw: slot.n, alt: false, orig: slot.orig || slot.id, ...extra });
+}
+// the same movement with changed numbers (lighter, other rep range)
+function varEx(ex, extra) {
+  const ck = ["v", ex.id, ex.s, ex.r, ex.e, ex.rest, ex.ss || "", ex.alt ? 1 : 0, ex.travel ? 1 : 0, ex.injS ? 1 : 0, ex.sw || "", JSON.stringify(extra)].join("|");
+  return XC[ck] || (XC[ck] = { ...ex, ...extra });
+}
+// ---- Plateau doctor: a lift with no progress for 3 sessions gets one concrete fix ----
+const lowRange = r => { const m = range(r); if (!m) return null; const g = Math.max(2, Math.ceil((m[1] - m[0]) / 2)); return `${Math.max(4, m[0] - g)}–${m[0]}`; };
+function plReset(ex, w) {
+  const st = /dumbbell/i.test(ex.n) && !BARBELL[ex.id] ? 2 : 2.5;
+  let W = Math.round(w * .9 / st) * st; if (W >= w) W = w - st;
+  return Math.max(st, Math.round(W * 10) / 10);
+}
+function plateauOf(ex, d) {
+  return memo("pl|" + ex.id + "|" + d + "|" + (ex.alt ? 1 : 0), () => {
+    if (ex.chk || ex.m === "Abs" || ex.travel || ex.inj || ex.injL || ex.plr) return null;
+    const f = plFix()[ex.id], from = f ? f.d : "", inj = injList();
+    // only normal training days count: no deloads, re-entry weeks, injury days or travel days
+    const h = exHistory(ex.id).filter(s => s.date < d && s.date >= from && !["deload", "re", "pre"].includes(phase(s.date).key)
+      && !inj.some(p => p.from <= s.date && s.date <= p.to) && !travelOn(s.date));
+    if (h.length < 4) return null;
+    let best = -1, bi = -1;
+    h.forEach((x, j) => { const sc = Math.max(...x.sets.map(q => score(ex, q.w, q.r))); if (sc > best * 1.005 + .001) bi = j; best = Math.max(best, sc); });
+    const stuck = h.length - 1 - bi; if (stuck < 3) return null;
+    const last = h[h.length - 1], rr = range(ex.r);
+    if (rr && last.sets.length && last.sets.every(q => q.r >= rr[1])) return null; // top of the range: the "add weight" hint already covers it
+    const sw = ex.alt ? null : altOf(ex), tried = (f && f.tried) || [];
+    const opts = (ex.bw || !last.top.w ? ["reps", "swap"] : ["reset", "reps", "swap"]).filter(x => (x !== "swap" || sw) && (x !== "reps" || rr));
+    if (!opts.length) return null;
+    const fix = stuck >= 7 && sw && !tried.includes("swap") ? "swap" : opts.find(x => !tried.includes(x)) || opts[0];
+    return { stuck, fix, last, sw };
+  });
 }
 
 function joints(P, front) {
@@ -2335,15 +2463,17 @@ function vToday() {
       <div class="meta" id="bmeta">${bannerMeta(d)}</div></div>${ring(c.ok, c.tot)}
       ${tmrHTML(d)}
       <p class="bnote">${wk.light ? wk.tip : ph.note}</p></section>`;
-  h += questCard(d);
+  h += injCard(d) + questCard(d);
   const sl = sleepH(doc && doc.sleep);
   if (d === t && sl != null && sl < 6.5 && !wk.light) h += `<section class="card ready" style="--c:var(--warn)"><span class="pill">Short night · ${fH(sl)}</span><p class="small" style="margin-top:8px">Keep every set at the easy end of today's RIR and skip the to-failure sets. Recovery beats one hard session.</p></section>`;
-  const exp = isExpress(d), weekExp = expWeeks().includes(mondayOf(d));
+  const exp = isExpress(d), weekExp = expWeeks().includes(mondayOf(d)), trav = travelOn(d);
   h += `<div class="tbar mode" style="--c:${col}"><div class="seg" role="group" aria-label="Workout length">
         <button data-act="mode" data-v="full" aria-pressed="${!exp}">Full</button><button data-act="mode" data-v="express" aria-pressed="${exp}">Express</button></div>
-        <button class="tchip ${weekExp ? "on" : ""}" data-act="expweek" aria-pressed="${weekExp}"><span class="tick">${IC.check}</span>Exam week</button>
         <button class="linkb" data-act="edit">${S.edit ? "Done" : "Reorder"}</button></div>
-      ${exp ? `<p class="small muted exp-note"><b style="color:var(--fg)">Express · about ${wk.light ? 8 : 25} min.</b> ${EXPRESS_WHY[SCHEDULE[dow(d)]]}${weekExp ? " On for this whole week." : ""}</p>` : ""}`;
+      <div class="tbar chips" style="--c:${col}"><button class="tchip ${weekExp ? "on" : ""}" data-act="expweek" aria-pressed="${weekExp}"><span class="tick">${IC.check}</span>Exam week</button>
+        <button class="tchip ${trav ? "on" : ""}" data-act="travel" aria-pressed="${trav}"><span class="tick">${IC.check}</span>Travel</button></div>
+      ${exp ? `<p class="small muted exp-note"><b style="color:var(--fg)">Express · about ${wk.light ? 8 : 25} min.</b> ${EXPRESS_WHY[SCHEDULE[dow(d)]]}${weekExp ? " On for this whole week." : ""}</p>` : ""}
+      ${trav ? `<p class="small muted exp-note"><b style="color:var(--fg)">Travel mode.</b> ${wk.light ? "Nothing to change today: it's all body weight." : `Dumbbells, a bench and body weight only.${travSum(d)} On until you switch it off.`}</p>` : ""}`;
   h += `<div id="exlist" class="exlist">${exList(d)}</div>`;
   if (!wk.light && !exp) h += `<section class="card small muted" style="--c:${col}"><span class="hint">Time saver</span> · ${wk.tip}</section>`;
   // weigh-in
@@ -2795,8 +2925,12 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-18c";
+const APP_VER = "2026-11-18d";
 const NEWS = [
+  { v: "2026-11-18d", d: "18 Nov", items: [
+    ["var(--pull)", "Plateau doctor", "When a lift hasn't moved for 3 sessions, its card says so and gives one fix: drop 10 % and build back, a lower rep range for 3 weeks, or a swap for 4 weeks."],
+    ["var(--warn)", "Injury mode", "Mark a sore shoulder, elbow, wrist, lower back or knee. For those days, what loads it is swapped, skipped or lighter, and the app asks at the end if it's better."],
+    ["var(--legs)", "Travel mode", "Tap Travel above your workout: every day becomes a dumbbell, bench and body-weight version, until you switch it off."]] },
   { v: "2026-11-18c", d: "18 Nov", items: [
     ["var(--warn)", "Bonus quests", "A small optional challenge in each workout, worth 25 points. It checks itself as you tick sets."],
     ["var(--push)", "Opening animation styles", "Iron, Bronze, Silver, Steel, Gold, Titan and Legend unlock with your titles. Pick one in Settings → Appearance, or keep your theme."],
@@ -3018,12 +3152,18 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
         <span class="linkb editb">Edit</span><span class="donei">${IC.check}</span></header></article>`;
     }
   }
-  if (it.skip) return `<article class="ex skipped" style="--c:${col}" data-card="${k}"><header class="ex-h"><span class="ex-n">${pos + 1}</span>
-    <div class="ex-t"><h3>${ex.n}</h3><p class="ex-m">Skipped today</p></div><button class="linkb" data-act="unskip" data-v="${it.i}">Bring back</button></header></article>`;
+  if (it.skip) return `<article class="ex skipped${it.auto ? " auto" : ""}" style="--c:${col}" data-card="${k}"><header class="ex-h"><span class="ex-n">${pos + 1}</span>
+    <div class="ex-t"><h3>${ex.n}</h3><p class="ex-m">${it.auto === "travel" ? "No equipment for it in travel mode" : it.auto === "injury" ? `Skipped: it loads your ${(injOn(d) || "").toLowerCase()}` : "Skipped today"}</p></div>
+    <button class="linkb" data-act="${it.auto ? "keepslot" : "unskip"}" data-v="${it.i}">${it.auto ? "Do it anyway" : "Bring back"}</button></header></article>`;
   const n = setsFor(d, ex, k), arr = (doc && doc.ex && doc.ex[k]) || [], nx = xsets(d, k);
   const ok = arr.slice(0, n).filter(s => s && s.ok).length;
   const last = ex.chk ? null : lastBefore(ex.id, d);
   const eff = effFor(d, ex);
+  // plateau reset weight for today, or about 60 % of last time on an injury-light exercise
+  const pw = doc && doc.plw && doc.plw[k] != null ? doc.plw[k] : null;
+  const lwBase = ex.injL && last ? Math.max(...last.sets.map(q => q.w || 0)) : 0, lst = /dumbbell/i.test(ex.n) && !BARBELL[ex.id] ? 1 : 2.5;
+  const lw = lwBase ? Math.max(lst, Math.round(lwBase * .6 / lst) * lst) : null;
+  const pl = d === today() && ok < n && !wk.light && pw == null ? plateauOf(ex, d) : null;
   let rows = "";
   for (let j = 0; j < n; j++) {
     const st = arr[j] || {}, ls = last ? (last.sets[j] || last.sets[last.sets.length - 1]) : null;
@@ -3032,7 +3172,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
         <span class="chk-txt">${ex.r}${ex.per ? " " + ex.per : ""}</span>
         <button class="chk" data-act="chk" aria-label="Set ${j + 1} done" aria-pressed="${!!st.ok}">${IC.check}</button></div>`;
     } else {
-      const wp = ls ? kg(ls.w) : (ex.bw ? "+0" : "kg"), rp = ls ? String(ls.r) : (range(ex.r) ? range(ex.r)[0] + "+" : "reps");
+      const wp = pw != null ? kg(pw) : lw != null ? kg(lw) : ls ? kg(ls.w) : (ex.bw ? "+0" : "kg"), rp = ls && !ex.plr ? String(ls.r) : (range(ex.r) ? range(ex.r)[0] + "+" : "reps");
       rows += `<div class="set ${st.ok ? "ok" : ""} ${st.pr ? "pr" : ""} ${j >= n - nx ? "xset" : ""}" data-ex="${k}" data-i="${j}"><span class="sn">${st.pr ? "PR" : j + 1}</span>
         <input class="in" id="w-${d}-${k}-${j}" data-f="w" inputmode="decimal" placeholder="${wp}" value="${st.w != null ? kg(st.w) : ""}" aria-label="Set ${j + 1} ${ex.bw ? "added weight" : "weight"} in kg">
         <input class="in" id="r-${d}-${k}-${j}" data-f="r" inputmode="numeric" placeholder="${rp}" value="${st.r != null ? st.r : ""}" aria-label="Set ${j + 1} reps">
@@ -3048,7 +3188,8 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
     const hit = rr && last.sets.length >= n && last.sets.every(s => s.r >= rr[1]);
     const step = /Dumbbell|lateral|curl|fly|Cable|cable|Face|extension|pushdown|crunch/i.test(ex.n) ? "1–2 kg" : "2.5 kg";
     foot = `<span>Last (${fDM(last.date)}): <span class="num">${last.sets.slice(0, 4).map(s => `${kg(s.w)}×${s.r}`).join(", ")}</span></span>
-      ${hit ? `<span class="hint">Top of range hit. Add ${ex.bw ? "weight" : step} today</span>` : rr ? `<span class="hint">Aim for 1 more rep than last time</span>` : ""}`;
+      ${pw != null ? `<span class="hint">Reset day: ${kg(pw)} kg on every set, then build back up</span>` : ex.injL ? `<span class="hint">Go light${lw != null ? `: about ${kg(lw)} kg` : ""}. Stop if it hurts</span>`
+        : ex.plr ? `<span class="hint">Heavier than usual, ${ex.r} reps</span>` : hit ? `<span class="hint">Top of range hit. Add ${ex.bw ? "weight" : step} today</span>` : rr && !pl ? `<span class="hint">Aim for 1 more rep than last time</span>` : ""}`;
   } else if (!ex.chk) foot = `<span>First time: pick a weight you can do for ${range(ex.r) ? range(ex.r)[0] : ex.r} reps at ${eff}.</span>`;
   // warm-up checkbox (only where it helps), plates for barbell lifts, personal note
   let extra = "", wuHTML = "";
@@ -3071,7 +3212,19 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
     const msg = nT >= 2 ? `<b>Pain flagged ${nT} times in 4 weeks.</b> Switch to the alternative: <b>${ex.sw}</b>. If it keeps coming back, get it checked by a physio or doctor.`
       : pn ? `<b>${painName(pn)} flagged today.</b> If it comes back next time, switch to: <b>${ex.sw}</b>.`
       : `You flagged ${painName(lastP.area).toLowerCase()} here on ${fDM(lastP.date)}. If it comes back, switch to: <b>${ex.sw}</b>.`;
-    painHTML = `<div class="pain-note"><svg class="i" viewBox="0 0 24 24"><path d="M12 4.5l8.5 14.5h-17z"/><path d="M12 10v4.5M12 17v.2"/></svg><p>${msg}</p>${pn ? `<button class="linkb" data-act="painclear" data-v="${k}">Remove</button>` : ""}</div>`;
+    const pa = pn || (lastP && lastP.area), injB = pa && INJ[pa] && !injOn(d) && d >= today() ? `<button class="linkb" data-act="injopen" data-a="${pa}">Injury mode</button>` : "";
+    painHTML = `<div class="pain-note"><svg class="i" viewBox="0 0 24 24"><path d="M12 4.5l8.5 14.5h-17z"/><path d="M12 10v4.5M12 17v.2"/></svg><p>${msg}</p>${injB || pn ? `<span class="pn-b">${injB}${pn ? `<button class="linkb" data-act="painclear" data-v="${k}">Remove</button>` : ""}</span>` : ""}</div>`;
+  }
+  // plateau doctor: no progress for 3+ sessions → one fix, chosen in order (reset 10 %, lower rep range, swap for 4 weeks)
+  let plHTML = "";
+  if (pl) {
+    let fx, bt;
+    if (pl.fix === "reset") { const W = plReset(ex, pl.last.top.w); fx = `<b>Drop 10 % and build back.</b> Today: <b class="num">${kg(W)} kg</b> on every set (last time ${kg(pl.last.top.w)} kg), every rep clean. Then add weight as usual: most people pass their old best within 3 to 4 sessions.`; bt = `Use ${kg(W)} kg today`; }
+    else if (pl.fix === "reps") { fx = `<b>Change the rep range for 3 weeks.</b> Go heavier for <b class="num">${lowRange(ex.r)}</b> reps instead of ${ex.r}${ex.bw ? ", with a little added weight (a belt or a dumbbell between your feet)" : ""}. Then come back to ${ex.r}: you're usually stronger there.`; bt = "Switch for 3 weeks"; }
+    else { fx = `<b>Swap the exercise for 4 weeks.</b> Do <b>${pl.sw.n}</b> instead, same sets and reps, then come back. A new movement often restarts the old one.`; bt = "Swap for 4 weeks"; }
+    plHTML = `<div class="pl-note"><svg class="i" viewBox="0 0 24 24"><path d="M6 3.5v5a4 4 0 0 0 8 0v-5"/><path d="M10 12.5v2a4.5 4.5 0 0 0 9 0v-2"/><circle cx="19" cy="10.5" r="2"/></svg>
+      <div><span class="lbl">Plateau doctor</span><p>No progress in ${pl.stuck} sessions. ${fx}</p>
+      <div class="pl-b"><button class="btn sm" data-act="plfix" data-v="${k}">${bt}</button><button class="linkb" data-act="plsnooze" data-v="${ex.id}">Not now</button></div></div></div>`;
   }
   // swap chooser: shows the other exercise with its picture and your last session on it
   let swapHTML = "";
@@ -3086,24 +3239,39 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   const ss = mate ? `<div class="ss">Superset with ${mate.ex.n.split(" (")[0].toLowerCase()}</div>` : "";
   return `<article class="ex ${ok === n ? "all" : ""} ${isCur ? "cur" : ""}" style="--c:${col}" data-card="${k}">
     <header class="ex-h${ok === n && S.open.has(k) ? " tapfold" : ""}"${ok === n && S.open.has(k) ? ` data-act="fold" data-v="${k}" role="button" aria-label="Close ${ex.n}"` : ""}>${SET().ui.figs ? "" : `<button class="ex-n" data-act="demo" data-w="${SCHEDULE[dow(d)]}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${i + 1}</button>`}<button class="thumb" ${SET().ui.figs ? "" : "hidden"} data-act="demo" data-w="${SCHEDULE[dow(d)]}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${figSVG(ex.id)}<span class="ex-n">${i + 1}</span><span class="play"><svg viewBox="0 0 10 10"><path d="M2.5 1.5v7l6-3.5z"/></svg></span></button><div class="ex-t">${isCur ? `<div class="upnext">Up next</div>` : ""}<h3>${ex.n}</h3>
-      <p class="ex-m">${n} × ${ex.r}${ex.per ? " " + ex.per : ""} · ${eff}${ex.rest ? " · rest " + ex.restL : ""}</p>${ss}${ex.alt ? `<div class="swp"><svg class="i" viewBox="0 0 24 24"><path d="M4 8.5h13.5M14 5l3.5 3.5L14 12"/><path d="M20 15.5H6.5M10 12l-3.5 3.5L10 19"/></svg>Swapped in for ${ex.sw.split(" (")[0].toLowerCase()}</div>` : ""}</div>
+      <p class="ex-m">${n} × ${ex.r}${ex.per ? " " + ex.per : ""} · ${eff}${ex.rest ? " · rest " + ex.restL : ""}</p>${ss}${slotTag(ex)}</div>
       <span class="ex-c num" data-cnt="${k}">${ok}/${n}</span>${ok === n && S.open.has(k) ? `<span class="foldi" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M6 14.5l6-6 6 6"/></svg></span>` : ""}</header>
     ${wuHTML}
     ${ex.chk ? "" : `<div class="sets"><div class="set-h"><span>Set</span><span style="text-align:center">${ex.bw ? "+kg" : "kg"}</span><span style="text-align:center">Reps</span><span></span></div>${rows}</div>`}
     ${ex.chk ? `<div class="sets">${rows}</div>` : ""}
     ${extra}
     ${foot ? `<div class="ex-f">${foot}</div>` : ""}
+    ${plHTML}
     ${noteHTML}
     ${painHTML}
     ${swapHTML}
     <div class="ex-a">${ex.cue ? `<details class="more"><summary>Form tip</summary><div class="mb"><p>${ex.cue}</p></div></details>` : ""}
-      <span class="acts">${ALT[ex.orig || ex.id] && S.swapEdit !== d + ":" + it.i ? `<button class="linkb swapb" data-act="swapui" data-v="${it.i}"><svg class="i" viewBox="0 0 24 24"><path d="M4 8.5h13.5M14 5l3.5 3.5L14 12"/><path d="M20 15.5H6.5M10 12l-3.5 3.5L10 19"/></svg>${ex.alt ? "Swap back" : "Swap"}</button>` : ""}${xmenu([
+      <span class="acts">${ALT[ex.orig || ex.id] && !ex.travel && !ex.injS && S.swapEdit !== d + ":" + it.i ? `<button class="linkb swapb" data-act="swapui" data-v="${it.i}"><svg class="i" viewBox="0 0 24 24"><path d="M4 8.5h13.5M14 5l3.5 3.5L14 12"/><path d="M20 15.5H6.5M10 12l-3.5 3.5L10 19"/></svg>${ex.alt ? "Swap back" : "Swap"}</button>` : ""}${xmenu([
         !note && S.noteEdit !== ex.id && ["note", ex.id, "Add a note", XI.note],
         !ex.chk && !pn && S.painEdit !== k && ["pain", k, "Flag pain", XI.pain],
         ok < n && pos < p.length - 1 && ["later", it.i, "Do it later", XI.later],
         ok === 0 && ["skip", it.i, "Skip today", XI.skip]])}</span></div>
   </article>`;
 }
+// small line under the exercise name: why this exercise or these numbers today
+function slotTag(ex) {
+  const nm = x => x.split(" (")[0].toLowerCase(), T = (ic, t) => `<div class="swp${ic === "inj" ? " inj" : ""}">${XT[ic]}${t}</div>`;
+  if (ex.injS) return T("inj", `Easier on your ${ex.inj.toLowerCase()} · instead of ${nm(ex.sw)}`);
+  if (ex.injL) return T("inj", `Lighter for your ${ex.injL.toLowerCase()} · 2 sets, pain-free`);
+  if (ex.travel) return T("trav", `Travel version of ${nm(ex.sw)}`);
+  if (ex.plr) return T("pl", `Plateau fix · lower reps until ${fDM(ex.plr)}`);
+  return ex.alt ? T("swap", `Swapped in for ${nm(ex.sw)}`) : "";
+}
+const XT = {
+  swap: '<svg class="i" viewBox="0 0 24 24"><path d="M4 8.5h13.5M14 5l3.5 3.5L14 12"/><path d="M20 15.5H6.5M10 12l-3.5 3.5L10 19"/></svg>',
+  trav: '<svg class="i" viewBox="0 0 24 24"><rect x="4" y="7.5" width="16" height="11.5" rx="2.5"/><path d="M9 7.5V5.5h6v2M9 11v4.5M15 11v4.5"/></svg>',
+  inj: '<svg class="i" viewBox="0 0 24 24"><rect x="3.5" y="8.5" width="17" height="7" rx="3.5" transform="rotate(-45 12 12)"/><path d="M11 11.2v.1M13 12.8v.1M11 12.8v.1M13 11.2v.1"/></svg>',
+  pl: '<svg class="i" viewBox="0 0 24 24"><path d="M6 3.5v5a4 4 0 0 0 8 0v-5"/><path d="M10 12.5v2a4.5 4.5 0 0 0 9 0v-2"/><circle cx="19" cy="10.5" r="2"/></svg>' };
 // the "⋯" menu under an exercise: opens upward inside the card, closes on any other tap
 const XI = {
   note: '<svg class="i" viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>',
@@ -3871,6 +4039,7 @@ function startTimer(sec, label, color, hx) {
   clearInterval(tIv); tIv = setInterval(tick, 200); tick();
 }
 const EXBY = {}; for (const k in PROGRAM) for (const ex of PROGRAM[k].ex) { EXBY[ex.id] = ex; const a = altOf(ex); if (a && !EXBY[a.id]) EXBY[a.id] = a; }
+for (const k in PROGRAM) for (const ex of PROGRAM[k].ex) { const t = TRAVEL[ex.id]; if (t && !EXBY[t]) EXBY[t] = mkEx(ex, t, { travel: true }); }
 function setsLine(sets, ex) {
   const W = w => ex.bw ? (w ? "+" + kg(w) + " kg" : "body weight") : kg(w) + " kg";
   if (sets.every(x => x.w === sets[0].w)) return `${W(sets[0].w)} × ${sets.map(x => x.r).join(", ")}`;
@@ -3983,6 +4152,8 @@ function openSheet() {
       ${SWI("ui.freeze", "Streak freeze", "One missed training day a week doesn't break your streak")}
       ${SWI("ui.scroll", "Scroll to the next exercise")}
       ${SWI("ui.swipe", "Swipe to change day")}
+      ${(() => { const c = injCur(), on = c && c.to >= today(); return `<button class="srow g-open" data-act="injopen"><span>Injury mode<small>${on ? `On · ${c.area.toLowerCase()} until ${fShort(c.to)}` : "Something sore? Swap, skip or lighten what loads it"}</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>`; })()}
+      <div class="srow"><span>Travel mode<small>Dumbbells, a bench and body weight only, from the day you're on</small></span><button class="sw" role="switch" aria-checked="${travelOn(S.sel)}" data-act="travel" data-v="set" aria-label="Travel mode"></button></div>
     </div></div>
     ${garSettings()}
     <div class="sgroup"><div class="lbl">Tabs</div><div class="sbox">
@@ -4266,6 +4437,7 @@ document.addEventListener("click", e => {
     const d = S.sel, i = +b.dataset.v, base = wkOf(d).ex[i], to = !slotEx(d, i).alt, doc = ensureDay(d), next = to ? altOf(base) : base;
     doc.swap = { ...(doc.swap || {}), [i]: to };
     if (b.dataset.m === "always") { const sw = { ...((S.docs.settings && S.docs.settings.swaps) || {}) }; if (to) sw[base.id] = true; else delete sw[base.id]; setPath("swaps", sw); }
+    { const F = plFix(); if (F[base.id] && F[base.id].kind === "swap") { const G = { ...F }; G[base.id] = { ...G[base.id], kind: "snooze" }; setPath("plFix", G); } }
     S.swapEdit = null; touch("d" + d); flipList(); refreshToday();
     toast(`${next.n.split(" (")[0]} ${b.dataset.m === "always" ? "from now on" : d === today() ? "for today" : "for this day"}`);
     return;
@@ -4315,6 +4487,24 @@ document.addEventListener("click", e => {
   if (a === "up" || a === "down") return moveEx(+b.dataset.v, a === "up" ? -1 : 1);
   if (a === "later") return doLater(+b.dataset.v);
   if (a === "skip" || a === "unskip") return setSkip(+b.dataset.v, a === "skip");
+  if (a === "keepslot") { const d = S.sel, doc = ensureDay(d), s = new Set(doc.keep || []); s.add(+b.dataset.v); doc.keep = [...s]; touch("d" + d); flipList(); refreshToday(); return; }
+  if (a === "travel") return toggleTravel(b.dataset.v === "set");
+  if (a === "injopen") { const c = injCur(); S.injDraft = { area: b.dataset.a || (c ? c.area : null), days: c && c.to >= today() ? Math.min(14, Math.max(3, diffD(today(), c.to) + 1)) : 7 }; return openInjury(); }
+  if (a === "injarea") { S.injDraft.area = b.dataset.v; return openInjury(); }
+  if (a === "injdur") { S.injDraft.days = +b.dataset.v; return openInjury(); }
+  if (a === "injstart") return injStart();
+  if (a === "injend") return injEnd();
+  if (a === "injext") return injExt();
+  if (a === "plfix" || a === "plsnooze") {
+    const d = S.sel, F = { ...plFix() };
+    if (a === "plsnooze") { const id = b.dataset.v, pv = F[id]; F[id] = { d, kind: "snooze", tried: (pv && pv.tried) || [] }; setPath("plFix", F); flipList(); return toast("OK. It checks again after a few more sessions"); }
+    const k = b.dataset.v, i = +k.split("@")[1], ex = slotEx(d, i), pl = plateauOf(ex, d); if (!pl) return;
+    const pv = F[ex.id], tried = [...((pv && pv.tried) || []).filter(x => x !== pl.fix), pl.fix], doc = ensureDay(d);
+    if (pl.fix === "reset") { const W = plReset(ex, pl.last.top.w); doc.plw = { ...(doc.plw || {}), [k]: W }; F[ex.id] = { d, kind: "reset", tried }; toast(`Reset day: ${kg(W)} kg on every set`); }
+    else if (pl.fix === "reps") { F[ex.id] = { d, kind: "reps", until: addD(d, 20), r: lowRange(ex.r), tried }; toast(`${lowRange(ex.r)} reps for the next 3 weeks`); }
+    else { F[ex.id] = { d, kind: "swap", until: addD(d, 27), tried }; const sw = { ...((S.docs.settings && S.docs.settings.swaps) || {}) }; sw[ex.id] = true; setPath("swaps", sw); doc.swap = { ...(doc.swap || {}), [i]: true }; toast(`${pl.sw.n.split(" (")[0]} for 4 weeks, then back`); }
+    setPath("plFix", F); touch("d" + d); flipList(); refreshToday(); return;
+  }
   if (a === "resetorder") { const doc = ensureDay(S.sel); delete doc.order; touch("d" + S.sel); flipList(); return; }
   if (a === "wu") {
     SND.unlock();
@@ -4457,6 +4647,89 @@ function setDayMode(v) {
   doc.mode = v; delete doc.order; touch("d" + d);
   const y = scrollY; render(false); scrollTo(0, y); animList();
   checkAutoDone(d);
+}
+// Travel mode: on from the selected day until switched off
+function toggleTravel(fromSet) {
+  const d = S.sel, L = travList().map(p => ({ ...p })), j = L.findIndex(p => p.from <= d && (!p.to || d <= p.to)), on = j < 0;
+  if (on) { for (let x = L.length - 1; x >= 0; x--) if (L[x].from > d) L.splice(x, 1); L.push({ from: d, to: null }); }
+  else { L[j].to = addD(d, -1); if (L[j].to < L[j].from) L.splice(j, 1); }
+  setPath("trav", L.slice(-30));
+  toast(on ? "Travel mode: dumbbells, a bench and body weight" : "Back to the gym plan");
+  if (fromSet) openSheet();
+  const y = scrollY; render(false); scrollTo(0, y); if (!fromSet) animList();
+  checkAutoDone(d);
+}
+function travSum(d) {
+  const p = plan(d), sw = p.filter(x => x.ex.travel).length, sk = p.filter(x => x.auto === "travel").length;
+  return sw || sk ? ` ${sw ? `${sw} swapped` : ""}${sw && sk ? ", " : ""}${sk ? `${sk} skipped (nothing fits)` : ""}.` : "";
+}
+// Injury mode card on Today: while it's on, and a check-in once the days are over
+function injCard(d) {
+  const cur = injCur(), t = today(), area = injOn(d);
+  if (d === t && cur && cur.to < t) {
+    const days = diffD(cur.from, t);
+    return `<section class="card ready inj" style="--c:var(--warn)"><span class="pill">Check-in · ${cur.area.toLowerCase()}</span>
+      <p style="margin:9px 0 0;font-weight:600">Is your ${cur.area.toLowerCase()} better?</p>
+      <p class="small muted" style="margin:3px 0 0">Injury mode ended ${cur.to === addD(t, -1) ? "yesterday" : "on " + fShort(cur.to)}. Still sore keeps it on 3 more days.${days >= 14 ? ` It has been ${days} days: if it still hurts, get it checked by a physio or doctor.` : ""}</p>
+      <div class="inj-b"><button class="btn sm" data-act="injend" style="--c:var(--good)">Yes, all good</button><button class="btn sm ghost" data-act="injext">Still sore</button></div></section>`;
+  }
+  if (!area) return "";
+  const p = plan(d), sw = p.filter(x => x.ex.injS).length, sk = p.filter(x => x.auto === "injury").length, li = p.filter(x => x.ex.injL).length, until = injList().find(q => q.from <= d && d <= q.to).to;
+  const bits = [sw && `${sw} swapped for gentler ones`, sk && `${sk} skipped`, li && `${li} lighter (about 60 %, 2 sets)`].filter(Boolean);
+  return `<section class="card ready inj" style="--c:var(--warn)"><span class="pill">${XT.inj}${area} · until ${fShort(until)}</span>
+    <p class="small" style="margin:8px 0 0">${bits.length ? `Today: ${bits.join(", ")}.` : "Nothing today loads it, so the plan stays the same."} Only do what feels fine.</p>
+    ${d >= t ? `<div class="inj-b"><button class="btn sm" data-act="injend" style="--c:var(--good)">It's better</button><button class="btn sm ghost" data-act="injopen">Change</button></div>` : ""}</section>`;
+}
+function openInjury() {
+  const cur = injCur(), t = today(), D = S.injDraft || (S.injDraft = { area: cur ? cur.area : null, days: 7 }), sh = $("#sheet");
+  sh.classList.remove("full"); sh.style.setProperty("--c", "var(--warn)");
+  // preview on the next training day (today, or the next non-rest day)
+  let pv = "";
+  if (D.area) {
+    let pd = t; for (let j = 0; j < 7 && wkOf(pd).light; j++) pd = addD(pd, 1);
+    const tr = travelOn(pd), L = [];
+    for (const i of fullOrder(pd)) {
+      const base = wkOf(pd).ex[i], x = tr && base.id in TRAVEL ? (TRAVEL[base.id] ? mkEx(base, TRAVEL[base.id], { travel: true }) : null) : swapOn(pd, dayDoc(pd), base, i) ? altOf(base) : base;
+      if (!x) continue; const r = injRule(D.area, x.id, tr);
+      if (r === "skip") L.push(`<li class="p-sk"><b>${x.n}</b><span>Skipped</span></li>`);
+      else if (r === "light") L.push(`<li class="p-li"><b>${x.n}</b><span>Lighter · 2 sets</span></li>`);
+      else if (r) L.push(`<li class="p-sw"><b>${x.n}</b><span>→ ${exInfo(r).n}</span></li>`);
+    }
+    pv = `<div class="lbl" style="margin:16px 2px 6px">${pd === t ? "Today" : fShort(pd)} · ${wkOf(pd).name}</div>${L.length ? `<ul class="inj-pv">${L.join("")}</ul>` : `<p class="small muted" style="margin:0 2px">Nothing that day loads your ${D.area.toLowerCase()}.</p>`}`;
+  }
+  sh.innerHTML = `<div class="grab"></div><h2 class="sec-t" style="margin:4px 2px 2px">Injury mode</h2>
+    <p class="small muted" style="margin:0 2px 14px">Pick what's sore. For those days, exercises that load it are swapped for gentler ones, skipped, or done lighter. At the end, the app asks if it's better.</p>
+    <div class="lbl" style="margin:0 2px 6px">What hurts?</div>
+    <div class="pain-ch">${INJ_AREAS.map(a => `<button data-act="injarea" data-v="${a}" aria-pressed="${D.area === a}">${a}</button>`).join("")}</div>
+    <div class="lbl" style="margin:16px 2px 6px">For how long?</div>
+    <div class="seg" role="group" aria-label="How long">${[[3, "3 days"], [7, "1 week"], [14, "2 weeks"]].map(([v, l]) => `<button data-act="injdur" data-v="${v}" aria-pressed="${D.days === v}">${l}</button>`).join("")}</div>
+    ${pv}
+    <p class="small muted" style="margin:16px 2px 0">Sharp pain, swelling, numbness, or pain that lasts more than 2 weeks: see a physio or doctor. This mode doesn't replace that.</p>
+    <div class="bwq-b"><button class="btn ghost" data-act="${cur && cur.to >= t ? "injend" : "close"}">${cur && cur.to >= t ? "End injury mode" : "Cancel"}</button><button class="btn" data-act="injstart" ${D.area ? "" : "disabled"}>${cur && cur.to >= t ? "Update" : "Start"}</button></div>`;
+  if (!$("#sheet").classList.contains("show")) showSheet();
+}
+function injStart() {
+  const D = S.injDraft, t = today(); if (!D || !D.area) return;
+  const L = injList().map(p => ({ ...p })), cur = L.length && !L[L.length - 1].done ? L[L.length - 1] : null;
+  if (cur) { if (cur.from >= t) L.pop(); else { cur.to = addD(t, -1); cur.done = true; } }
+  L.push({ area: D.area, from: t, to: addD(t, D.days - 1), ext: 0 });
+  setPath("inj", L.slice(-20)); S.injDraft = null; closeSheet();
+  toast(`${D.area} mode until ${fShort(addD(t, D.days - 1))}`);
+  const y = scrollY; render(false); scrollTo(0, y); animList(); checkAutoDone(S.sel);
+}
+function injEnd() {
+  const t = today(), L = injList().map(p => ({ ...p })), cur = L.length && !L[L.length - 1].done ? L[L.length - 1] : null; if (!cur) return;
+  if (cur.to >= t) cur.to = addD(t, -1);
+  cur.done = true; if (cur.to < cur.from) L.pop();
+  setPath("inj", L); S.injDraft = null; if ($("#sheet").classList.contains("show")) closeSheet();
+  toast("Back to the normal plan. Take the first session easy");
+  const y = scrollY; render(false); scrollTo(0, y); animList();
+}
+function injExt() {
+  const t = today(), L = injList().map(p => ({ ...p })), cur = L[L.length - 1]; if (!cur || cur.done) return;
+  cur.to = addD(t, 2); cur.ext = (cur.ext || 0) + 1; setPath("inj", L);
+  toast(`${cur.area} mode until ${fShort(cur.to)}`);
+  const y = scrollY; render(false); scrollTo(0, y); animList();
 }
 function toggleExpWeek() {
   const mon = mondayOf(S.sel), w = new Set(expWeeks()), on = !w.has(mon);
