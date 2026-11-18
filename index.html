@@ -2412,9 +2412,10 @@ function render(anim = true, dir = 0) {
 }
 function renderView(anim = true, dir = 0) {
   const fn = { home: vHome, today: vToday, progress: vProgress, food: vFood, sleep: vSleep }[S.tab] || vToday;
-  syncLevelBadge(); syncStw();
+  syncLevelBadge();
   for (const k in CH) delete CH[k];
   view.innerHTML = fn();
+  syncStw(); // after the new screen exists: on Today it needs the banner's timer row to decide
   view.querySelectorAll(".note-pill").forEach(b => { b.querySelector("span").textContent = notes()[b.dataset.v] || ""; });
   if (S.tab === "sleep" || S.tab === "home") setTimeout(garAuto, 400);
   figScan(view);
@@ -2890,15 +2891,18 @@ function syncStw() {
   const show = st && (st !== "fin" || (S.tab === "today" && S.sel === today()));
   patchTmr();
   if (!show) { b.hidden = true; return; }
-  const wasHidden = b.hidden; b.hidden = false; b.dataset.s = st;
-  // on Today, while the banner's timer row is on screen, the header copy steps back
+  // on Today, while the banner's timer row is on screen, the header copy steps back.
+  // Measure and set "dim" before un-hiding, so the pill never flashes in and fades out.
   const row = S.tab === "today" && S.sel === today() && $("#tmr"); let onScreen = false;
   if (row && !row.hidden) { const r = row.getBoundingClientRect(); onScreen = r.bottom > 70 && r.top < innerHeight; }
-  b.classList.toggle("dim", onScreen);
+  const wasHidden = b.hidden;
+  if (wasHidden) { b.style.transition = "none"; b.classList.toggle("dim", onScreen); b.hidden = false; void b.offsetWidth; b.style.transition = ""; }
+  else b.classList.toggle("dim", onScreen);
+  b.dataset.s = st;
   const ms = sessionMs(doc); $("#stw-t").textContent = fmtDur(ms);
   b.querySelector(".stw-i").innerHTML = st === "fin" ? CK_IC : st === "run" ? SW_IC : '<svg class="i" viewBox="0 0 24 24"><path d="M9 6v12M15 6v12"/></svg>';
   b.setAttribute("aria-label", `Workout time ${fmtDur(ms)}${st === "run" ? "" : st === "fin" ? ", finished" : ", paused"}. Tap to open the timer`);
-  if (wasHidden && !REDUCED && b.animate) b.animate([{ transform: "scale(.6)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { duration: 420, easing: "cubic-bezier(.3,1.5,.5,1)" });
+  if (wasHidden && !onScreen && !REDUCED && b.animate) b.animate([{ transform: "scale(.6)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { duration: 420, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 function stwAct(a) {
   const d = today(), doc = ensureDay(d), now = Date.now();
@@ -4374,7 +4378,7 @@ function go(tab, anim = true) {
   const dir = Math.sign(TABS.indexOf(tab) - TABS.indexOf(S.tab));
   S.tab = tab; if (location.hash !== "#" + tab) location.hash = tab;
   if (tab === "home") S.weekOff = 0;
-  render(anim, dir); scrollTo(0, 0); saveUI();
+  scrollTo(0, 0); render(anim, dir); scrollTo(0, 0); syncStw(); saveUI(); // new tab opens at the top (measured there too)
 }
 document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("[data-tab]"); if (!b) return; if (b.dataset.tab !== S.tab) go(b.dataset.tab); else if (S.tab === "today") goToday(); });
 window.addEventListener("hashchange", () => { const t = location.hash.slice(1); if (TABS.includes(t) && t !== S.tab) go(t); });
