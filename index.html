@@ -25,22 +25,22 @@
 <body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-#boot{position:fixed;inset:0;z-index:9999;overflow:hidden;background:#06080C;font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+#boot{--ba:#FF6A2B;--bon:#0B0E13;--bbg:#06080C;--bs:#1A1F29;--bfg:#F3F5F9;position:fixed;inset:0;z-index:9999;overflow:hidden;background:var(--bbg);font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
   --ang:-14deg;--t1:.28s}
 #boot .h{position:absolute;inset:0;overflow:hidden;will-change:transform}
-#boot .h.o{clip-path:polygon(0 0,100% 0,100% 44.5%,0 55.5%);background:linear-gradient(160deg,#FFA25A 0%,#FF6A2B 45%,#E8480C 100%);color:#0B0E13;animation:bTop var(--t1) cubic-bezier(.6,0,.4,1.35) both}
-#boot .h.d{clip-path:polygon(0 55.5%,100% 44.5%,100% 100%,0 100%);background:radial-gradient(120% 70% at 50% 100%,#1A1F29 0%,#0A0D12 60%,#06080C 100%);color:#F3F5F9;animation:bBot var(--t1) cubic-bezier(.6,0,.4,1.35) both}
+#boot .h.o{clip-path:polygon(0 0,100% 0,100% 44.5%,0 55.5%);background:linear-gradient(160deg,color-mix(in srgb,var(--ba) 62%,#fff) 0%,var(--ba) 45%,color-mix(in srgb,var(--ba) 80%,#000) 100%);color:var(--bon);animation:bTop var(--t1) cubic-bezier(.6,0,.4,1.35) both}
+#boot .h.d{clip-path:polygon(0 55.5%,100% 44.5%,100% 100%,0 100%);background:radial-gradient(120% 70% at 50% 100%,var(--bs) 0%,var(--bbg) 62%);color:var(--bfg);animation:bBot var(--t1) cubic-bezier(.6,0,.4,1.35) both}
 #boot .h.o::before{content:"";position:absolute;inset:-50%;background:repeating-linear-gradient(-14deg,rgba(255,255,255,.07) 0 2px,transparent 2px 26px);animation:bSlide 6s linear infinite}
-#boot .h.d::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(255,106,43,.22),transparent 45%)}
-#boot .seam{position:absolute;left:-10%;right:-10%;top:50%;height:3px;margin-top:-1.5px;transform:rotate(var(--ang));background:linear-gradient(90deg,transparent,#FFE2C9 30%,#fff 50%,#FFE2C9 70%,transparent);
-  box-shadow:0 0 18px 4px rgba(255,140,70,.8);opacity:0;animation:bSeam .7s ease calc(var(--t1) - .02s) both}
+#boot .h.d::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--ba) 24%,transparent),transparent 45%)}
+#boot .seam{position:absolute;left:-10%;right:-10%;top:50%;height:3px;margin-top:-1.5px;transform:rotate(var(--ang));background:linear-gradient(90deg,transparent,color-mix(in srgb,var(--ba) 25%,#fff) 30%,#fff 50%,color-mix(in srgb,var(--ba) 25%,#fff) 70%,transparent);
+  box-shadow:0 0 18px 4px color-mix(in srgb,var(--ba) 80%,transparent);opacity:0;animation:bSeam .7s ease calc(var(--t1) - .02s) both}
 #boot .b-stage{position:absolute;inset:0;animation:bShake .28s ease calc(var(--t1) + .24s) both}
 #boot .b-art{position:absolute;inset:0;display:block}
 #boot .b-eb{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 11vh);text-align:center;font-weight:700;font-size:3.6vw;letter-spacing:.6em;padding-left:.6em;text-transform:uppercase;opacity:.7;animation:bFade .35s ease calc(var(--t1) + .3s) both}
 #boot .b-up,#boot .b-dn{position:absolute;left:0;right:0;display:flex;justify-content:center;font-weight:900;font-size:25vw;line-height:.86;letter-spacing:-.02em}
 #boot .b-up{top:calc(env(safe-area-inset-top,0px) + 16vh)}
 #boot .b-dn{top:61vh}
-#boot .h.d .b-dn span{background:linear-gradient(180deg,#fff 20%,#FFB27A 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+#boot .h.d .b-dn span{background:linear-gradient(180deg,var(--bfg) 20%,color-mix(in srgb,var(--ba) 55%,var(--bfg)) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
 #boot .b-up span{display:inline-block;animation:bDrop .4s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--t1) + .26s + var(--i) * 28ms)}
 #boot .b-dn span{display:inline-block;animation:bRise .4s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--t1) + .26s + var(--i) * 28ms)}
 #boot .b-dbw{position:absolute;left:4vw;right:4vw;top:50%;transform:translateY(-50%) rotate(var(--ang))}
@@ -49,17 +49,17 @@
 #boot .b-db .pl{transform-box:fill-box;transform-origin:center}
 #boot .b-db .pl.l{animation:bPlL .28s cubic-bezier(.5,0,.3,1.6) calc(var(--t1) + .06s) both}
 #boot .b-db .pl.r{animation:bPlR .28s cubic-bezier(.5,0,.3,1.6) calc(var(--t1) + .06s) both}
-#boot .h.o .b-db{fill:#0B0E13} #boot .h.d .b-db{fill:#fff;filter:drop-shadow(0 10px 30px rgba(255,106,43,.45))}
-#boot .b-tg{position:absolute;left:0;right:0;top:84vh;text-align:center;font-size:3.1vw;font-weight:700;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:rgba(243,245,249,.6);animation:bFade .35s ease calc(var(--t1) + .42s) both}
-#boot .b-tg b{color:#FF6A2B}
-#boot .b-tk{position:absolute;left:0;right:0;top:calc(84vh + 7.5vw);height:1.4em;overflow:hidden;font-size:3.4vw;font-weight:600;color:rgba(243,245,249,.42);animation:bFade .35s ease calc(var(--t1) + .5s) both}
+#boot .h.o .b-db{fill:var(--bon)} #boot .h.d .b-db{fill:var(--bfg);filter:drop-shadow(0 10px 30px color-mix(in srgb,var(--ba) 45%,transparent))}
+#boot .b-tg{position:absolute;left:0;right:0;top:84vh;text-align:center;font-size:3.1vw;font-weight:700;letter-spacing:.42em;padding-left:.42em;text-transform:uppercase;color:color-mix(in srgb,var(--bfg) 60%,transparent);animation:bFade .35s ease calc(var(--t1) + .42s) both}
+#boot .b-tg b{color:var(--ba)}
+#boot .b-tk{position:absolute;left:0;right:0;top:calc(84vh + 7.5vw);height:1.4em;overflow:hidden;font-size:3.4vw;font-weight:600;color:color-mix(in srgb,var(--bfg) 45%,transparent);animation:bFade .35s ease calc(var(--t1) + .5s) both}
 #boot .b-tk div{display:flex;flex-direction:column;align-items:center;animation:bTick 2.4s steps(1) calc(var(--t1) + .5s) infinite}
 #boot .b-tk span{height:1.4em;line-height:1.4em}
 #boot .b-tk span::after{content:"…"}
 #boot .h.o .b-tg,#boot .h.o .b-tk{display:none}
 #boot .h.d .b-eb{display:none}
 #boot .spk{position:absolute;left:50%;top:50%;pointer-events:none}
-#boot .spk i{position:absolute;width:5px;height:5px;margin:-2.5px;border-radius:50%;background:#FFE7D2;box-shadow:0 0 8px 2px #FF8A3D;opacity:0;animation:bSpk .55s cubic-bezier(.1,.7,.3,1) calc(var(--t1) + .26s + var(--s)) both}
+#boot .spk i{position:absolute;width:5px;height:5px;margin:-2.5px;border-radius:50%;background:color-mix(in srgb,var(--ba) 20%,#fff);box-shadow:0 0 8px 2px var(--ba);opacity:0;animation:bSpk .55s cubic-bezier(.1,.7,.3,1) calc(var(--t1) + .26s + var(--s)) both}
 #boot .spk.l{margin-left:-39vw} #boot .spk.r{margin-left:39vw}
 #boot .spk.l{transform:translateY(9vw)} #boot .spk.r{transform:translateY(-9vw)}
 #boot .flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;animation:bFlash .3s ease calc(var(--t1) + .25s) both}
@@ -113,6 +113,7 @@
   <div class="spk l"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div><div class="spk r"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div>
   <div class="flash"></div>
 </div></div>
+<script>try{var bt2=JSON.parse(localStorage.getItem("aub.boot2")||"null"),be2=document.getElementById("boot");if(bt2&&be2){for(var k in bt2)be2.style.setProperty("--"+k,bt2[k]);document.documentElement.style.background=bt2.bbg;}}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
@@ -1504,6 +1505,14 @@ const THEME_MODE = () => { const r = document.documentElement, a = r.dataset.app
 const isLightNow = () => { const m = THEME_MODE(); return m === "light" || m === "soft"; };
 // Background family + accents for the mode currently shown.
 function famNow(v) { const m = THEME_MODE(); return m === "soft" ? { g: softFam(v.bl), a: v.l } : m === "dim" ? { g: dimFam(v.bd), a: v.d } : m === "light" ? { g: v.bl, a: v.l } : { g: v.bd, a: v.d }; }
+// the loading animation reads these next launch: accent, text on accent, background, raised surface, text
+function saveBootTheme() {
+  try {
+    const cs = getComputedStyle(document.documentElement), g = n => cs.getPropertyValue(n).trim(), a = g("--push");
+    const hex = /^#[0-9a-f]{6}$/i.test(a) ? parseInt(a.slice(1), 16) : null, lum = hex == null ? 1 : (.299 * (hex >> 16) + .587 * (hex >> 8 & 255) + .114 * (hex & 255)) / 255;
+    localStorage.setItem("aub.boot2", JSON.stringify({ ba: a, bon: lum > .45 ? "#0B0E13" : "#FFFFFF", bbg: g("--bg"), bs: g("--surface-2") || g("--surface"), bfg: g("--fg") }));
+  } catch (e) {}
+}
 function applySettings() {
   const st = SET(), root = document.documentElement;
   buildTabs();
@@ -1517,6 +1526,7 @@ function applySettings() {
   const bg = famNow(v).g[0];
   document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", /^#/.test(bg) ? bg : (isLightNow() ? "#F2F3F6" : "#0C0F14")));
   if (typeof applyMotion === "function") applyMotion();
+  requestAnimationFrame(saveBootTheme);
 }
 matchMedia("(prefers-color-scheme: light)").addEventListener?.("change", () => applySettings());
 
