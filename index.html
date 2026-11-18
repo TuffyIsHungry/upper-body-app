@@ -12,15 +12,33 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Upper Body">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 402px) and (device-height: 874px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1206x2622.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1179x2556.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 440px) and (device-height: 956px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1320x2868.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1290x2796.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1170x2532.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1125x2436.png">
 <meta name="theme-color" content="#0C0F14" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F2F3F6" media="(prefers-color-scheme: light)">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}html{-webkit-text-size-adjust:100%}</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}html{-webkit-text-size-adjust:100%}html,body{background:#0C0F14}@media (prefers-color-scheme: light){html,body{background:#F2F3F6}}</style>
 </head>
 <body>
 <meta name="claude:viewport-fit-sides" content="cover">
+<style>#boot{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;background:#0C0F14;color:#EEF1F6;font:600 15px system-ui,-apple-system,sans-serif;letter-spacing:.24em;text-transform:uppercase;transition:opacity .35s ease}
+#boot.gone{opacity:0;pointer-events:none}
+#boot .bi{width:96px;height:96px;border-radius:24px;overflow:hidden;box-shadow:0 18px 40px -14px rgba(244,88,15,.55);animation:bootP 1.6s ease-in-out infinite}
+#boot .bi svg{width:100%;height:100%;display:block}
+#boot .bb{width:120px;height:3px;border-radius:2px;background:rgba(127,127,127,.25);overflow:hidden}
+#boot .bb i{display:block;width:40%;height:100%;border-radius:2px;background:#FF6A2B;animation:bootL 1.1s ease-in-out infinite}
+@keyframes bootP{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+@keyframes bootL{0%{transform:translateX(-110%)}100%{transform:translateX(280%)}}
+@media (prefers-color-scheme: light){#boot{background:#F2F3F6;color:#151920}}
+@media (prefers-reduced-motion: reduce){#boot .bi,#boot .bb i{animation:none}}</style>
+<div id="boot" role="status" aria-label="Loading"><div class="bi"><svg viewBox="0 0 1024 1024" aria-hidden="true"><defs><linearGradient id="bo" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF9448"/><stop offset=".6" stop-color="#F4580F"/></linearGradient><linearGradient id="bd" x1="0" y1="0" x2="1" y2="1"><stop offset=".4" stop-color="#1E232C"/><stop offset="1" stop-color="#0C0F14"/></linearGradient><linearGradient id="bs" x1="0" y1="0" x2="1" y2="1"><stop offset=".5" stop-color="#000" stop-opacity=".35"/><stop offset=".62" stop-color="#000" stop-opacity="0"/></linearGradient></defs><rect width="1024" height="1024" fill="url(#bd)"/><polygon points="0,0 1024,0 0,1024" fill="url(#bo)"/><polygon points="1024,0 1024,1024 0,1024" fill="url(#bs)"/><g transform="translate(512 512)" fill="#fff"><rect x="-210" y="-32" width="420" height="64" rx="32"/><rect x="-262" y="-170" width="84" height="340" rx="30"/><rect x="178" y="-170" width="84" height="340" rx="30"/><rect x="-352" y="-118" width="70" height="236" rx="26"/><rect x="282" y="-118" width="70" height="236" rx="26"/></g></svg></div><span>Upper Body</span><div class="bb"><i></i></div></div>
+<script>try{var bc=(localStorage.getItem("aub.boot")||"").split("|");if(bc[0]){var be=document.getElementById("boot");be.style.background=bc[0];be.style.color=bc[1]||"";}}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
 <style>
 /* Layout: one-column phone app. Sticky header, scrolling view, fixed bottom tab bar.
    Colour = workout type (push orange, pull blue, legs green, core violet), carried over from the PDF plan. */
@@ -648,6 +666,21 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .times input,#calcwake{-webkit-appearance:none;appearance:none;display:block}
 .times input::-webkit-date-and-time-value{text-align:center}
 #calcwake{min-height:44px}
+.bwq{display:flex;align-items:center;gap:10px;justify-content:center}
+.bwq .in{width:130px;height:60px;font-size:30px;font-weight:700;text-align:center;font-family:var(--display)}
+.bwq .unit{font-size:16px;color:var(--muted);margin-left:-4px}
+.bwq-s{width:52px;height:52px;border-radius:16px;background:var(--surface-2);color:var(--fg);font-size:26px;font-weight:600;display:grid;place-items:center}
+.bwq-s:active{transform:scale(.92)}
+.guide-b{display:flex;align-items:center;gap:14px;width:100%;text-align:left;color:var(--fg);font:inherit}
+.gb-i{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;flex-shrink:0;background:color-mix(in srgb, var(--c) 18%, var(--surface-2));color:var(--c)}
+.gb-i svg{width:22px;height:22px}
+.gb-t{flex:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.gb-a{width:20px;height:20px;color:var(--muted)}
+.fg{display:flex;flex-direction:column;gap:12px;margin-bottom:12px}
+.fg .card{background:var(--surface-2);box-shadow:none}
+.wind-t{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;margin:8px 0 6px}
+.wind-t #calcwake{width:112px;height:40px;font-size:16px;font-weight:600;text-align:center}
+.wind-t b{font-family:var(--display);font-size:24px;color:var(--core)}
 .qual{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .home-btn{flex:1 1 100%;position:relative;z-index:1}
 .tonight{display:flex;align-items:center;gap:12px;width:100%;text-align:left;color:inherit}
@@ -1036,6 +1069,9 @@ input[type=range].vol{width:100%;accent-color:var(--good);height:28px}
 .wu-sets{font-size:14px} .wu-sets b{font-family:var(--display);font-size:16px;color:var(--c)}
 .wu-txt small{font-size:12.5px;color:var(--muted);line-height:1.4}
 .wu-row.ok .wu-txt{opacity:.75}
+.wu-tip{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;cursor:pointer}
+.wu-tip.open{-webkit-line-clamp:unset;display:block}
+.wu-row.ok .wu-tip{display:none}
 .warm{background:var(--surface-2);border-radius:12px;padding:9px 12px;font-size:14px}
 .warm summary{list-style:none;font-weight:600;color:var(--c);cursor:pointer}
 .warm summary::-webkit-details-marker{display:none}
@@ -1451,11 +1487,11 @@ function phase(d) {
   if (w < 1) return P("pre", "Before week 1", s => s, null, `Program starts ${fShort(getStart())}. Weeks 1–2 are deliberately easy.`);
   if (w <= 2) return P("re", "Re-entry", s => Math.min(2, s), "RIR 3–4", "2 sets per exercise, about 70% of your old weights, never to failure.");
   if (w <= 4) return P("build", "Build", s => s, "RIR 2–3", "Full sets. Add weight every week, still no failure.");
-  if (w <= 8) return P("push", "Push", s => s, null, "Efforts as written. Double progression on every lift.");
+  if (w <= 8) return P("push", "Push phase", s => s, null, "Efforts as written. Double progression on every lift.");
   if (w === 9) return P("deload", "Deload", s => Math.max(1, Math.ceil(s / 2)), "RIR 3–4", "Half the sets, same weights as week 8. Let your body catch up.");
   const c = ((w - 10) % 7) + 1;
   if (c === 7) return P("deload", "Deload", s => Math.max(1, Math.ceil(s / 2)), "RIR 3–4", "Half the sets, same weights as last week.");
-  return P("push", `Push · cycle ${Math.floor((w - 10) / 7) + 2}`, s => s, null, "Efforts as written. Double progression on every lift.");
+  return P("push", `Push phase · cycle ${Math.floor((w - 10) / 7) + 2}`, s => s, null, "Efforts as written. Double progression on every lift.");
 }
 const setsFor = (d, ex, k) => (wkOf(d).light ? ex.s : phase(d).sets(ex.s)) + (k ? xsets(d, k) : 0);
 const xsets = (d, k) => { const x = S.docs["d" + d]; return (x && x.xs && x.xs[k]) || 0; };
@@ -2230,7 +2266,7 @@ function vHome() {
   const st = streaks(), wake = (S.docs.settings && S.docs.settings.wake) || "05:30", wd = (doc && doc.wind) || {}, wn = WIND.filter(([k]) => wd[k]).length;
   const bwAvg = weekAvgBW(mondayOf(t));
   h += `<div class="tiles">${T2("progress", flameOf(st.cur).col, `<span class="lbl">Streak</span><b class="num st-n"><span data-count="${st.cur}">${st.cur}</span><small>${st.cur === 1 ? "day" : "days"}</small>${st.cur ? `<span class="st-fl fs${flameOf(st.cur).st}" style="--fl:${flameOf(st.cur).col}">${IC.flame}</span>` : ""}</b><span class="muted">${st.cur ? `Best ${st.best}` : done ? "" : "Finish today to start one"}${st.freezeOn ? `<span class="fz-l"><svg class="i" viewBox="0 0 24 24">${IC_SNOW}</svg>${st.freezeLeft ? "1 freeze left" : "Freeze used " + fmt(st.frozen.find(x => mondayOf(x) === mondayOf(t)), { weekday: "short" })}</span>` : ""}</span>`)}
-    ${T2("today", "var(--legs)", `<span class="lbl">Morning weight</span><b class="num">${doc && doc.bw != null ? `${kg(doc.bw)}<small>kg</small>` : "–"}</b><span class="muted">${doc && doc.bw != null ? (bwAvg != null ? `Week average ${bwAvg.toFixed(1)} kg` : "Logged today") : "Tap to log it"}</span>`)}</div>`;
+    ${`<button class="tile tap" data-act="bwq" style="--c:var(--legs)">` + `<span class="lbl">Morning weight</span><b class="num">${doc && doc.bw != null ? `${kg(doc.bw)}<small>kg</small>` : "–"}</b><span class="muted">${doc && doc.bw != null ? (bwAvg != null ? `Week average ${bwAvg.toFixed(1)} kg` : "Logged today") : "Tap to log it"}</span></button>`}</div>`;
   const TB = TABS.includes("sleep");
   h += `<${TB ? "button" : "div"} class="card tonight" ${tap("sleep")} style="--c:var(--core)"><span class="tn-i"><svg class="i" viewBox="0 0 24 24">${TAB_DEF.sleep[1]}</svg></span>
     <span class="tn-t"><b>Lights out by ${bedFor(wake)}</b><span class="small muted">for ${SLEEP_L} before your ${wake} alarm</span></span><span class="pill">${wn}/${WIND.length} wind-down</span></${TB ? "button" : "div"}>`;
@@ -2804,7 +2840,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   if (wu) {
     const on = !!(doc && doc.wu && doc.wu[k]);
     wuHTML = `<div class="wu-row ${on ? "ok" : ""}" data-wu="${k}"><button class="wchk" data-act="wu" data-v="${k}" aria-pressed="${on}" aria-label="Warm-up done">${IC.check}</button>
-      <div class="wu-txt"><b>Warm up</b>${wu.sets ? `<span class="wu-sets" id="wu-${k}">${wu.sets}</span>` : ""}<small>${wu.tip}</small></div></div>`;
+      <div class="wu-txt"><b>Warm up</b>${wu.sets ? `<span class="wu-sets" id="wu-${k}">${wu.sets}</span>` : ""}<small class="wu-tip" data-act="wutip">${wu.tip}</small></div></div>`;
   }
   if (BARBELL[ex.id]) { const W = workWeight(d, it); extra += `<div class="plates" id="pl-${k}" data-note="${BARBELL[ex.id]}">${W ? plateText(W) + ` <span class="muted">· ${BARBELL[ex.id]}</span>` : `<span class="muted">Type a weight to see the plates per side</span>`}</div>`; }
   const note = notes()[ex.id];
@@ -3054,7 +3090,7 @@ function consCard() {
 // Progress: how long each workout took, last time vs the time before, and the trend of the last 6
 function timesCard() {
   const all = workoutTimes(), t = today();
-  if (!all.length) return `<section class="card"><h2 class="sec-t">Workout times</h2><p class="small muted">Your times appear here after your first timed workout. The timer starts by itself when you tick your first set.</p></section>`;
+  if (!all.length) return `<section class="card"><h2 class="sec-t">Workout times</h2><p class="small muted">Your times appear here after your first timed workout. Tap Start workout when you begin.</p></section>`;
   const keys = [...new Set(["pushA", "pullA", "legsA", "pushB", "pullB", "legsB", "core"].flatMap(k => [k, k + "x"]))].filter(k => all.some(x => x.key === k));
   const recent = all.filter(x => x.d > addD(t, -28) && !x.key.endsWith("x") && x.key !== "core");
   const avg = recent.length ? recent.reduce((a, x) => a + x.ms, 0) / recent.length : null;
@@ -3078,9 +3114,8 @@ function vProgress() {
   let h = `<section class="streak ${st.cur > 0 ? "live" : ""}" style="--fl:${fl.col}">${flameHTML(st.cur)}<div class="st">
       <div class="lbl">Current streak${fl.name ? ` · <span class="fl-n">${fl.name}</span>` : ""}</div><b class="num" data-count="${st.cur}">${st.cur}</b> <span class="muted">${st.cur === 1 ? "day" : "days"}</span>
       <div class="small muted">${st.cur ? (fl.next ? `${fl.next.in} more day${fl.next.in > 1 ? "s" : ""} to the ${fl.next.name.toLowerCase()}. Sundays never break it.` : "The top flame. Sundays never break it.") : isDone(t) ? "" : "Finish today's workout to start one."}</div>
+      <div class="st-more num"><span><b>${st.best}</b> best streak</span><span><b>${st.total}</b> workouts done</span></div>
       ${st.freezeOn ? `<button class="fz-chip" data-act="lvl"><svg class="i" viewBox="0 0 24 24">${IC_SNOW}</svg>${st.freezeLeft ? "1 freeze left this week" : "Freeze used this week"}</button>` : ""}</div></section>`;
-  h += `<div class="tiles"><div class="tile" style="--c:var(--push)"><span class="lbl">Best streak</span><b class="num"><span data-count="${st.best}">${st.best}</span><small>days</small></b></div>
-    <div class="tile" style="--c:var(--pull)"><span class="lbl">Workouts done</span><b class="num"><span data-count="${st.total}">${st.total}</span></b><span class="muted">since you started</span></div></div>`;
   // heatmap: 16 weeks
   const startMon = addD(mondayOf(t), -15 * 7);
   let cells = "";
@@ -3120,7 +3155,9 @@ function vProgress() {
   const prs = exs.map(e => { const hh = exHistory(e.id); if (!hh.length) return null; let b = hh[0]; hh.forEach(x => { if (x.e1 > b.e1 || (e.bw && x.br > b.br)) b = x; }); return { e, b }; }).filter(Boolean);
   h += `<section class="card"><h2 class="sec-t">Personal records</h2>`;
   if (!prs.length) h += `<p class="small muted">Your best set for every exercise will show up here once you start logging.</p>`;
-  else h += `<div class="rows">${prs.map(({ e, b }) => `<button class="row" data-act="pick" data-v="${e.id}" style="width:100%;text-align:left;--c:${TYPES[PROGRAM[e.wk].type]}"><span class="daybar"></span><div class="rk"><div style="font-weight:600">${e.n}</div><div class="small muted">${fShort(b.date)}</div></div><span class="rv num">${e.bw ? `${b.br} reps` : `${kg(b.top.w)} kg × ${b.top.r}`}</span></button>`).join("")}</div>`;
+  else { prs.sort((x, y) => x.b.date < y.b.date ? 1 : -1); }
+  if (prs.length) h += `<div class="rows">${prs.slice(0, S.prAll ? prs.length : 3).map(({ e, b }) => `<button class="row" data-act="pick" data-v="${e.id}" style="width:100%;text-align:left;--c:${TYPES[PROGRAM[e.wk].type]}"><span class="daybar"></span><div class="rk"><div style="font-weight:600">${e.n}</div><div class="small muted">${fShort(b.date)}</div></div><span class="rv num">${e.bw ? `${b.br} reps` : `${kg(b.top.w)} kg × ${b.top.r}`}</span></button>`).join("")}</div>`;
+  if (prs.length > 3) h += `<button class="linkb pr-all" data-act="prall">${S.prAll ? "Show the newest 3" : `Show all ${prs.length} records`}</button>`;
   h += `</section>`;
   // bodyweight
   const bws = bwSeries();
@@ -3178,7 +3215,7 @@ function foodEditHTML(e) {
 function foodLogCard() {
   const t = today(), doc = dayDoc(t), es = foodEntries(doc), p = es.reduce((a, e) => a + entryProtein(e), 0), rich = es.filter(e => (e.g || []).includes("p")).length;
   const rows = es.map(e => S.foodEdit === e.id && !e.id.startsWith("m:") ? foodEditHTML(e) : `<button class="fl-row" data-act="fedit" data-v="${e.id}" aria-label="Edit ${escH(entryName(e))}">
-      <span class="fl-t num">${e.t || "–"}</span><span class="fl-x"><b>${escH(entryName(e))}</b><span class="fl-s"><i class="sz sz-${e.s}"><u></u><u></u><u></u></i>${FSIZE[e.s] || "Normal"}${(e.g || []).map(k => ` · <em class="${k === "p" ? "pr" : ""}">${FTAGN[k] || k}</em>`).join("")}</span></span>
+      <span class="fl-t num">${e.t || "–"}</span><span class="fl-x"><b>${escH(entryName(e))}</b><span class="fl-s"><i class="sz sz-${e.s}"><u></u><u></u><u></u></i>${FSIZE[e.s] || "Normal"}${(e.g || []).slice(0, 2).map(k => ` · <em class="${k === "p" ? "pr" : ""}">${FTAGN[k] || k}</em>`).join("")}${(e.g || []).length > 2 ? ` <em class="more">+${e.g.length - 2}</em>` : ""}</span></span>
       <span class="fl-go">${e.id.startsWith("m:") ? "" : `<svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>`}</span></button>`).join("");
   const rec = recentFoods();
   return `<section class="card" id="foodlog" style="--c:var(--pull)">
@@ -3280,6 +3317,14 @@ function vFood() {
   h += proteinGap(p);
   h += foodWeekCard();
   h += mealPlanCard();
+  // this week's verdict from the scale stays here; the reference cards live in the Food guide
+  { const mon = mondayOf(t), bw = weekAvgBW(mon), bwp = weekAvgBW(addD(mon, -7)), adv = weightAdvice(bw != null && bwp != null ? bw - bwp : null);
+    if (adv) h += `<section class="card" style="--c:${adv.c}"><span class="pill">${adv.t}</span><p class="small" style="margin-top:8px">${adv.a}</p></section>`; }
+  h += `<button class="card guide-b" data-act="foodguide" style="--c:var(--legs)"><span class="gb-i"><svg class="i" viewBox="0 0 24 24"><path d="M5 4.5h10.5a3 3 0 0 1 3 3v12H8a3 3 0 0 1-3-3z"/><path d="M5 16.5a3 3 0 0 1 3-3h10.5"/></svg></span><span class="gb-t"><b>Food guide</b><span class="small muted">Daily targets, the scale table, early-morning rules, supplements</span></span><svg class="i gb-a" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>`;
+  return h;
+}
+function foodGuideHTML() {
+  const t = today(); let h = "";
   h += `<section class="card" style="--c:var(--push)"><h2 class="sec-t">Daily targets</h2><p class="small muted" style="margin-bottom:10px">For reference. You don't need to count: eat 3 normal-to-big meals and 2 snacks, ${PGOAL} of them protein-rich, and let the scale tell you if it's enough.</p>
     <div class="macro"><div style="--c:var(--push)"><b class="num">3250</b><span>kcal per day</span></div><div style="--c:var(--pull)"><b class="num">170–190</b><span>g protein</span></div>
     <div style="--c:var(--legs)"><b class="num">430–470</b><span>g carbs</span></div><div style="--c:var(--core)"><b class="num">70–90</b><span>g fat</span></div></div></section>`;
@@ -3304,6 +3349,20 @@ function vFood() {
     <div class="row"><div class="rk"><b>Vitamin D</b><div class="small muted">Common to be low in Swiss winters. Ask a doctor or pharmacist about the dose.</div></div></div></div></section>`;
   h += `<section class="card small muted">Numbers come from your plan: estimated maintenance plus about 250 kcal for a lean bulk. The scale decides, not the formula.</section>`;
   return h;
+}
+// quick weigh-in from Home
+function openBW() {
+  const t = today(), doc = dayDoc(t), prev = bwSeries().filter(x => x.date < t).pop(), sh = $("#sheet");
+  sh.classList.remove("full"); sh.style.setProperty("--c", "var(--legs)");
+  sh.innerHTML = `<div class="grab"></div><h2 class="sec-t" style="margin:4px 2px 2px">Morning weight</h2><p class="small muted" style="margin:0 2px 14px">After the toilet, before eating${prev ? ` · last: <b class="num">${kg(prev.v)} kg</b> (${fShort(prev.date)})` : ""}</p>
+    <div class="bwq"><button class="bwq-s" data-act="bwstep" data-v="-0.1" aria-label="Minus 0.1 kg">−</button><input class="in num" id="bwq" inputmode="decimal" value="${doc && doc.bw != null ? kg(doc.bw) : prev ? kg(prev.v) : ""}" placeholder="84.0" aria-label="Weight in kg"><span class="unit">kg</span><button class="bwq-s" data-act="bwstep" data-v="0.1" aria-label="Plus 0.1 kg">+</button></div>
+    <button class="btn" data-act="bwsave" style="--c:var(--legs);margin-top:16px">Save</button>`;
+  showSheet(); setTimeout(() => { const i = $("#bwq"); if (i) i.select(); }, 450);
+}
+function openFoodGuide() {
+  const sh = $("#sheet"); sh.classList.add("full"); sh.style.setProperty("--c", "var(--legs)");
+  sh.innerHTML = `<div class="grab"></div><h2 class="sec-t" style="font-size:28px;margin:4px 2px 12px">Food guide</h2><div class="fg">${foodGuideHTML()}</div><button class="btn" data-act="close" style="--c:var(--legs);margin-top:4px">Close</button>`;
+  showSheet();
 }
 
 /* ---------- SLEEP ---------- */
@@ -3410,7 +3469,8 @@ const WIND = [["screens", "Screens off", "30 min before bed"], ["alarm", "Alarm 
 function windCard() {
   const t = today(), w = (dayDoc(t) || {}).wind || {}, wake = (S.docs.settings && S.docs.settings.wake) || "05:30";
   return `<section class="card" style="--c:var(--core)"><div style="display:flex;justify-content:space-between;align-items:baseline;gap:10px"><h2 class="sec-t" style="margin:0">Before bed tonight</h2><b class="num muted" id="windn">${WIND.filter(([k]) => w[k]).length}/${WIND.length}</b></div>
-    <p class="small muted" style="margin:4px 0 10px">Lights out by <b class="num" style="color:var(--fg)">${bedFor(wake)}</b> to get ${SLEEP_L}.</p>
+    <div class="wind-t"><label for="calcwake" class="small muted">Alarm at</label><input type="time" id="calcwake" class="in" value="${wake}"><span class="small muted">→ lights out by</span><b class="num" id="calcout">${bedFor(wake)}</b></div>
+    <p class="small muted" style="margin:0 0 10px">${SLEEP_L} of sleep plus about 15 minutes to fall asleep.</p>
     ${WIND.map(([k, a, b]) => `<button class="meal ${w[k] ? "on" : ""}" data-act="wind" data-v="${k}" aria-pressed="${!!w[k]}" style="align-items:center"><span class="tick">${IC.check}</span><span class="mx"><b>${a}</b><span>${b}</span></span></button>`).join("")}</section>`;
 }
 /* Sleep regularity: how much the bedtime moves around its own average (last 7 logged nights of the past 14). */
@@ -3489,10 +3549,6 @@ function vSleep() {
   h += `<section class="card" id="sl-chart" style="--c:var(--core)"><h2 class="sec-t">Last 14 nights</h2>${logged.length ? barChart(nights) : ghostChart("Log a few nights to see the pattern.", "var(--core)")}
     <div class="legend" style="margin-top:8px"><span><i style="--c:var(--core)"></i>≥ ${SLEEP_L}</span><span><i style="--c:color-mix(in srgb, var(--core) 35%, var(--surface-2))"></i>below target</span><span class="muted">dashed = ${SLEEP_L}</span></div></section>`;
   h += windCard();
-  h += `<section class="card" style="--c:var(--pull)"><h2 class="sec-t">Bedtime calculator</h2>
-    <div class="field"><label for="calcwake" class="small muted">I need to wake at</label><input type="time" id="calcwake" class="in" style="width:130px" value="${(S.docs.settings && S.docs.settings.wake) || "05:30"}"></div>
-    <p style="margin-top:12px">Lights out by <b class="num" id="calcout" style="font-family:var(--display);font-size:24px;color:var(--pull)">${bedFor((S.docs.settings && S.docs.settings.wake) || "05:30")}</b></p>
-    <p class="small muted">${SLEEP_L} of sleep plus about 15 minutes to fall asleep.</p></section>`;
   h += `<section class="card"><h2 class="sec-t">Why it matters</h2><ul class="bul" style="--c:var(--core)">
     <li>Sleep is where recovery and muscle growth happen. Your target is ${SLEEP_L}; under 7 hours regularly slows both.</li>
     <li>The last-night card is coloured by length:<div class="sq-scale">${SLEEP_TIERS.map(t => `<span style="--c:${t.c}"><i></i>${t.r}</span>`).join("")}</div></li>
@@ -3911,6 +3967,12 @@ document.addEventListener("click", e => {
   if (/^stw(pause|go|reset|start)?$/.test(a)) return stwAct(a);
   if (a === "startwk") { stwAct("stwstart"); if (TABS.includes("today")) { S.sel = today(); S.edit = false; go("today"); } return; }
   if (a === "tour") { closeSheet(); setTimeout(() => tour(0), 350); return; }
+  if (a === "foodguide") return openFoodGuide();
+  if (a === "bwq") return openBW();
+  if (a === "wutip") { b.classList.toggle("open"); return; }
+  if (a === "bwstep") { const i = $("#bwq"), v = num(i.value); i.value = kg(Math.round(((v != null ? v : 84) + +b.dataset.v) * 10) / 10); return; }
+  if (a === "bwsave") { const v = num($("#bwq").value); if (v == null || v < 30 || v > 250) return toast("Type your weight in kg"); const doc = ensureDay(today()); doc.bw = Math.round(v * 10) / 10; touch("d" + today()); closeSheet(); toast(`${kg(doc.bw)} kg saved`); if (S.tab === "home") render(false); return; }
+  if (a === "prall") { S.prAll = !S.prAll; softRenderAnim(); return; }
   if (a === "lvreplay") { closeSheet(); const v = levelNow(); setTimeout(() => lvlFX({ L: v.L, L0: Math.max(1, v.L - 1), tierIx: TIERS.filter(([n]) => v.L - 1 >= n).length - 1 }, true), 380); return; }
   if (a === "rate") return setRate(b);
   if (a === "lvl") return openLevel();
@@ -4333,6 +4395,9 @@ if (UI0 && UI0.day === today() && UI0.sel) S.sel = UI0.sel;
 applySettings();
 MQ.addEventListener && MQ.addEventListener("change", () => { applyMotion(); render(false); });
 render(true); BOOTED = true;
+{ const bt = document.getElementById("boot"); if (bt) requestAnimationFrame(() => { bt.classList.add("gone"); setTimeout(() => bt.remove(), 400); });
+  // the loading screen uses your theme's colours next time
+  setTimeout(() => { try { const cs = getComputedStyle(document.documentElement); localStorage.setItem("aub.boot", cs.getPropertyValue("--bg").trim() + "|" + cs.getPropertyValue("--fg").trim()); } catch (e) {} }, 1500); }
 if (UI0 && UI0.y && (TABS.includes(h0) ? h0 === UI0.tab : true)) requestAnimationFrame(() => scrollTo(0, UI0.y));
 if (UI0 && UI0.timer && UI0.timer.end > Date.now() + 1000) {
   const tm = UI0.timer; T = { end: tm.end, total: tm.total, label: tm.label, lastS: null, hx: tm.hx || null }; setTimeout(timerHist, 0);
