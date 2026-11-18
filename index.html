@@ -2943,8 +2943,11 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-18d";
+const APP_VER = "2026-11-18e";
 const NEWS = [
+  { v: "2026-11-18e", d: "18 Nov", items: [
+    ["var(--good)", "Supersets flow", "After a set of a superset, a 15 s switch to its partner. The full rest comes after the pair."],
+    ["var(--pull)", "Timer fixes", "A finished workout keeps its time when you edit sets later, reopening it continues from where it stopped, and travel workouts get their own times."]] },
   { v: "2026-11-18d", d: "18 Nov", items: [
     ["var(--pull)", "Plateau doctor", "When a lift hasn't moved for 3 sessions, its card says so and gives one fix: drop 10% and build back, a lower rep range for 3 weeks, or a swap for 4 weeks."],
     ["var(--warn)", "Injury mode", "Mark a sore shoulder, elbow, wrist, lower back or knee. For those days, what loads it is swapped, skipped or lighter, and the app asks at the end if it's better."],
@@ -3132,6 +3135,12 @@ function sessionEnd(doc) { const now = Date.now(); if (doc.done && doc.end) retu
 // workout time: from the first tick, minus the time it was paused
 function sessionMs(doc) { if (!doc || !doc.start) return null; return Math.max(0, sessionEnd(doc) - doc.start - (doc.pms || 0)); }
 function sessionMin(doc) { const ms = sessionMs(doc); return ms == null ? null : Math.max(1, Math.round(ms / 60000)); }
+// a ticked set (or warm-up) on today's unfinished workout: starts the clock if needed, wakes it from a pause
+function liveTick(doc, d) {
+  if (d !== today() || doc.done) return; // a finished workout's time stays as it was, even if you edit sets later
+  const now = Date.now(); if (!doc.start) { doc.start = now; doc.pms = 0; }
+  stwWake(doc, now); doc.last = now;
+}
 // a tick after a pause (or after 30 min away) carries on from where the clock stopped
 function stwWake(doc, now) {
   if (doc.pz) { doc.pms = (doc.pms || 0) + (now - doc.pz); delete doc.pz; }
@@ -3505,14 +3514,14 @@ function consCard() {
 function timesCard() {
   const all = workoutTimes(), t = today();
   if (!all.length) return `<section class="card"><h2 class="sec-t">Workout times</h2><p class="small muted">Your times appear here after your first timed workout. Tap Start workout when you begin.</p></section>`;
-  const keys = [...new Set(["pushA", "pullA", "legsA", "pushB", "pullB", "legsB", "core"].flatMap(k => [k, k + "x"]))].filter(k => all.some(x => x.key === k));
-  const recent = all.filter(x => x.d > addD(t, -28) && !x.key.endsWith("x") && x.key !== "core");
+  const keys = [...new Set(["pushA", "pullA", "legsA", "pushB", "pullB", "legsB", "core"].flatMap(k => [k, k + "x", k + "t", k + "xt"]))].filter(k => all.some(x => x.key === k));
+  const recent = all.filter(x => x.d > addD(t, -28) && /[AB]$/.test(x.key)); // full gym workouts only
   const avg = recent.length ? recent.reduce((a, x) => a + x.ms, 0) / recent.length : null;
   const rows = keys.map(k => {
-    const xs = all.filter(x => x.key === k), last = xs[xs.length - 1], before = xs[xs.length - 2], pk = k.replace(/x$/, ""), col = TYPES[PROGRAM[pk].type];
+    const xs = all.filter(x => x.key === k), last = xs[xs.length - 1], before = xs[xs.length - 2], pk = k.replace(/x?t?$/, ""), col = TYPES[PROGRAM[pk].type];
     const c = before ? cmpTime(last.ms, before) : null, six = xs.slice(-6), mx = Math.max(...six.map(x => x.ms));
     const bars = six.map((x, i) => `<i style="height:${Math.max(18, x.ms / mx * 100).toFixed(0)}%" class="${i === six.length - 1 ? "on" : ""}" title="${fShort(x.d)}: ${fMin(x.ms)}"></i>`).join("");
-    return `<div class="wt-r" style="--c:${col}"><span class="wt-n"><b>${PROGRAM[pk].name}${k.endsWith("x") ? " · Express" : ""}</b><span class="small muted">${fShort(last.d)}</span></span>
+    return `<div class="wt-r" style="--c:${col}"><span class="wt-n"><b>${PROGRAM[pk].name}${/x/.test(k.slice(pk.length)) ? " · Express" : ""}${/t$/.test(k) ? " · Travel" : ""}</b><span class="small muted">${fShort(last.d)}</span></span>
       <span class="wt-bars" aria-hidden="true">${bars}</span>
       <span class="wt-v"><b class="num">${fMin(last.ms)}</b>${c && c.s ? `<span class="tmr-c ${c.c}">${c.s}</span>` : `<span class="small muted">${before ? "same" : "first"}</span>`}</span></div>`;
   }).join("");
@@ -4062,10 +4071,10 @@ let T = null, tIv = null, actx = null;
 // hx = { id, d, next }: which lift's past sessions to show while resting (next = it is the upcoming exercise)
 function startTimer(sec, label, color, hx) {
   const st = SET(); if (!sec || !st.rest.auto) return;
-  sec = Math.max(15, sec + (st.rest.adj || 0));
+  sec = hx && hx.fixed ? sec : Math.max(15, sec + (st.rest.adj || 0)); // the superset switch isn't stretched by the rest setting
   T = { end: Date.now() + sec * 1000, total: sec, label, lastS: null, hx: hx || null }; timerHist();
   const el = $("#timer"); el.style.setProperty("--c", color); el.classList.remove("over"); el.classList.add("show");
-  $("#tlab").textContent = "Rest · " + label;
+  $("#tlab").textContent = (hx && hx.fixed ? "" : "Rest · ") + label;
   clearInterval(tIv); tIv = setInterval(tick, 200); tick();
 }
 const EXBY = {}; for (const k in PROGRAM) for (const ex of PROGRAM[k].ex) { EXBY[ex.id] = ex; const a = altOf(ex); if (a && !EXBY[a.id]) EXBY[a.id] = a; }
@@ -4098,7 +4107,7 @@ function tick() {
   if (left <= 0) {
     clearInterval(tIv); const el = $("#timer"); el.classList.add("over"); $("#ttime").textContent = "Go";
     const late = Date.now() - T.end > 3000;
-    $("#tlab").textContent = late ? "Rest finished while you were away" : "Rest over · next set"; if (!late) SND.timer();
+    $("#tlab").textContent = T.hx && T.hx.fixed ? T.label.replace("Superset · now", "Go:") : late ? "Rest finished while you were away" : "Rest over · next set"; if (!late) SND.timer();
     T = null; setTimeout(() => { if (!T) el.classList.remove("show", "over"); }, 5000);
   }
 }
@@ -4541,7 +4550,7 @@ document.addEventListener("click", e => {
     const d = S.sel, doc = ensureDay(d); doc.wu = doc.wu || {}; const k = b.dataset.v, on = !doc.wu[k];
     if (on) doc.wu[k] = true; else delete doc.wu[k];
     const row = b.closest(".wu-row"); row.classList.toggle("ok", on); b.setAttribute("aria-pressed", on);
-    if (on) { burst(b); SND.tick(); row.classList.add("just"); setTimeout(() => row.classList.remove("just"), 700); if (!doc.start && d === today()) doc.start = Date.now(); if (d === today()) { stwWake(doc, Date.now()); doc.last = Date.now(); } startTimer(60, "after warm-up", TYPES[wkOf(d).type], { id: k.split("@")[0], d }); }
+    if (on) { burst(b); SND.tick(); row.classList.add("just"); setTimeout(() => row.classList.remove("just"), 700); liveTick(doc, d); startTimer(60, "after warm-up", TYPES[wkOf(d).type], { id: k.split("@")[0], d }); }
     touch("d" + d); return;
   }
   if (a === "chk") return toggleSet(b);
@@ -4575,8 +4584,7 @@ function toggleSet(btn) {
       if (st.r == null && /^\d+$/.test(ri.placeholder)) { st.r = num(ri.placeholder); ri.value = st.r; }
     }
     st.ok = true; row.classList.add("ok", "just"); btn.setAttribute("aria-pressed", "true");
-    if (!doc.start && d === today()) doc.start = Date.now();
-    if (d === today()) { stwWake(doc, Date.now()); doc.last = Date.now(); }
+    liveTick(doc, d);
     if (!ex.chk && (st.w != null || st.r != null)) {
       const sc = score(ex, st.w, st.r), prev = bestBefore(ex, d);
       const todayBest = Math.max(0, ...arr.filter((x, j) => x && x.ok && j !== i && x.pr).map(x => score(ex, x.w, x.r)));
@@ -4588,7 +4596,14 @@ function toggleSet(btn) {
     burst(btn); SND.tick(); setTimeout(() => row.classList.remove("just"), 800);
     const n = setsFor(d, ex, k), lastSet = arr.slice(0, n).filter(s => s && s.ok).length === n;
     const c = counts(d);
-    if (c.ok < c.tot) { const nx = lastSet ? nextOpen(d, k) : null; startTimer(ex.rest, lastSet ? "next exercise" : ex.n, TYPES[wk.type], { id: nx ? nx.ex.id : ex.id, d, next: !!nx }); }
+    // rest only while you're training today (not when fixing a finished or past workout).
+    // In a superset, the partner comes right after: a short 15 s switch, then the full rest after the pair.
+    if (c.ok < c.tot && d === today() && !doc.done) {
+      const mate = ex.ss ? plan(d).find(x => x.i === ex.ss - 1 && !x.skip) : null, myOk = arr.slice(0, n).filter(s => s && s.ok).length;
+      const mN = mate ? setsFor(d, mate.ex, mate.k) : 0, mOk = mate ? (((doc.ex[mate.k]) || []).slice(0, mN).filter(s => s && s.ok).length) : 0;
+      if (mate && mOk < mN && mOk < myOk) startTimer(15, "Superset · now " + mate.ex.n.split(" (")[0].toLowerCase(), TYPES[wk.type], { id: mate.ex.id, d, next: true, fixed: true });
+      else { const nx = lastSet ? nextOpen(d, k) : null; startTimer(ex.rest, lastSet ? "next exercise" : ex.n, TYPES[wk.type], { id: nx ? nx.ex.id : ex.id, d, next: !!nx }); }
+    }
     if (lastSet && c.ok < c.tot && SET().ui.scroll) {
       // glide to the next unfinished exercise
       const cards = [...view.querySelectorAll(".ex[data-card]:not(.skipped)")], me = cards.indexOf(row.closest(".ex"));
@@ -4822,7 +4837,9 @@ function celebrate() {
 }
 function toggleFinish() {
   const d = S.sel, doc = ensureDay(d);
-  doc.done = !doc.done; touch("d" + d);
+  doc.done = !doc.done;
+  if (!doc.done && d === today() && doc.start && doc.end) { doc.pz = doc.pz || doc.end; delete doc.end; }
+  touch("d" + d);
   if (doc.done) celebrate();
   refreshToday();
 }
@@ -4961,7 +4978,7 @@ if (UI0 && UI0.y && (TABS.includes(h0) ? h0 === UI0.tab : true)) requestAnimatio
 if (UI0 && UI0.timer && UI0.timer.end > Date.now() + 1000) {
   const tm = UI0.timer; T = { end: tm.end, total: tm.total, label: tm.label, lastS: null, hx: tm.hx || null }; setTimeout(timerHist, 0);
   const el = $("#timer"); el.style.setProperty("--c", tm.c || "var(--pull)"); el.classList.add("show");
-  $("#tlab").textContent = "Rest · " + tm.label; clearInterval(tIv); tIv = setInterval(tick, 200); tick();
+  $("#tlab").textContent = (tm.hx && tm.hx.fixed ? "" : "Rest · ") + tm.label; clearInterval(tIv); tIv = setInterval(tick, 200); tick();
 }
 connect();
 // keep "today" fresh if the app stays open overnight
