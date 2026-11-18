@@ -113,23 +113,6 @@
   <div class="spk l"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div><div class="spk r"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div>
   <div class="flash"></div>
 </div></div>
-  </div></div>
-  <div class="h o"><div class="b-art">
-    <div class="b-eb">Aesthetic</div>
-    <div class="b-up"><span style="--i:0">U</span><span style="--i:1">P</span><span style="--i:2">P</span><span style="--i:3">E</span><span style="--i:4">R</span></div>
-    <div class="b-dbw"><svg class="b-db o" viewBox="-370 -190 740 380" aria-hidden="true">
-  <rect class="bar" x="-215" y="-30" width="430" height="60" rx="30"/>
-  <g class="pl l"><rect x="-268" y="-172" width="86" height="344" rx="30"/><rect x="-360" y="-120" width="72" height="240" rx="26"/></g>
-  <g class="pl r"><rect x="182" y="-172" width="86" height="344" rx="30"/><rect x="288" y="-120" width="72" height="240" rx="26"/></g></svg></div>
-    <div class="b-dn"><span style="--i:0">B</span><span style="--i:1">O</span><span style="--i:2">D</span><span style="--i:3">Y</span></div>
-    <div class="b-tg">Train <b>·</b> Track <b>·</b> Recover</div>
-    <div class="b-tk"><div><span>Loading plates</span><span>Chalking up</span><span>Finding your PRs</span><span>Loading plates</span></div></div>
-  </div></div>
-  <div class="seam"></div>
-  <div class="spk l"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div><div class="spk r"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div>
-  <div class="flash"></div>
-</div></div>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
@@ -2279,7 +2262,7 @@ function vToday() {
   setHeader(d === t ? "Today" : (d < t ? "Looking back" : "Coming up"), fShort(d));
   let h = strip(d);
   h += `<section class="banner" style="--c:${col}"><div class="bt">
-      <div class="lbl">${WD[dow(d)]} · ${ph.w >= 1 ? "Week " + ph.w : "Before week 1"} · ${wk.light ? "Optional" : ph.label}</div>
+      <div class="lbl">${ph.w >= 1 ? "Week " + ph.w : "Before week 1"} · ${wk.light ? "Optional" : ph.label}</div>
       <h2>${wk.name}</h2><div class="focus">${wk.focus}</div>
       <div class="meta" id="bmeta">${bannerMeta(d)}</div></div>${ring(c.ok, c.tot)}
       ${tmrHTML(d)}
@@ -2345,7 +2328,7 @@ function vHome() {
   const tap = (tab, extra = "") => TABS.includes(tab) ? `data-act="gotab" data-v="${tab}" ${extra}` : "";
   const T2 = (tab, col, inner) => TABS.includes(tab) ? `<button class="tile tap" ${tap(tab)} style="--c:${col}">${inner}</button>` : `<div class="tile" style="--c:${col}">${inner}</div>`;
   let h = `<section class="banner" style="--c:${col}"><div class="bt">
-      <div class="lbl">${WD[dow(t)]} · ${ph.w >= 1 ? "Week " + ph.w + " · " + (wk.light ? "Optional" : ph.label) : "Before week 1"}</div>
+      <div class="lbl">${ph.w >= 1 ? "Week " + ph.w + " · " + (wk.light ? "Optional" : ph.label) : "Before week 1"}</div>
       <h2>${wk.name}</h2><div class="focus">${wk.focus}</div>
       <div class="meta">${bannerMeta(t)}</div></div>${ring(c.ok, c.tot)}
       ${TABS.includes("today") ? `<button class="btn home-btn ${done ? "ghost" : ""}" ${!done && !c.ok && !(doc && doc.start) ? `data-act="startwk"` : tap("today")}>${done ? `<span class="done-note">${IC.ok} ${wk.light ? "Session" : "Workout"} complete</span>` : c.ok >= c.tot ? "All sets done · finish the workout" : c.ok ? `Continue · ${c.ok} of ${c.tot} sets done` : doc && doc.start ? "Continue workout" : `${SW_PLAY}${wk.light ? "Start the core session" : "Start workout"}`}</button>` : ""}</section>`;
