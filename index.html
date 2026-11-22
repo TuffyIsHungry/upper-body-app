@@ -907,7 +907,22 @@ button.row{color:inherit}
 .rest-ring{display:grid;place-items:center;color:var(--core)}.rest-ring svg{width:38px;height:38px;opacity:.85}
 .lb-signin{text-align:center;padding:26px 20px}.lb-signin p{margin:6px 0 16px}
 .lb-hero{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:color-mix(in srgb, var(--c) 16%, transparent);color:var(--c)}.lb-hero svg{width:30px;height:30px}
-.lb-wrap .lb-tabs{margin-top:0}
+.lb-wrap{display:flex;flex-direction:column;gap:14px}
+.lb-board .lb-tabs{margin:0 0 12px}.lb-board .lb-why{margin:2px 2px 8px}
+.lb-note{margin:10px 2px 0}.lb-alone{padding:11px 13px;border-radius:12px;background:var(--surface-2);color:var(--muted);line-height:1.4}
+.lb-reqc .btn.sm,.lb-rq .btn.sm{flex:0 0 auto;height:34px;padding:0 12px;font-size:13px}
+.lb-reqc{box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--c) 45%, transparent)}
+.lb-inv .sec-t{margin-bottom:4px}.lb-inv>p{margin:0 0 12px}
+.lb-codebox{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-radius:14px;background:var(--surface-2)}
+.lb-codebox span{color:var(--muted);font-size:14px;font-weight:600}
+.lb-codebox .lb-code{font-size:26px;letter-spacing:.12em;margin:0}
+.lb-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.lb-btns .btn{min-width:0;padding:0 10px}
+.lb-inv .acc-msg{margin:10px 2px 0}
+.lb-rm{--c:var(--bad);color:var(--bad);flex:0 0 auto}
+.lb-own{padding:8px 2px}
+.lb-priv{margin:0 6px 4px}
+.lb-in{width:100%;height:54px;font-size:24px;text-align:center;letter-spacing:.18em;text-transform:uppercase;padding:0 12px}
+.lb-addbtn{width:100%;margin:14px 0 6px}
 .lb-r,.lb-rq{display:flex;align-items:center;gap:10px;padding:9px 4px;border-radius:12px}
 .lb-r.me{background:color-mix(in srgb, var(--c) 10%, transparent);padding-inline:8px;margin-inline:-4px}
 .lb-p{width:24px;height:24px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--muted)}
@@ -916,16 +931,13 @@ button.row{color:inherit}
 .lb-a.sm{width:28px;height:28px;font-size:11px;justify-self:center}
 .lb-n{flex:1;min-width:0;display:flex;flex-direction:column}.lb-n b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lb-n b small{font-weight:600;color:var(--muted);font-size:12px}.lb-n>small{color:var(--muted);font-size:12.5px}
 .lb-v{font-family:var(--display);font-weight:700;font-size:20px;white-space:nowrap}.lb-v small{font-size:13px;color:var(--muted);font-weight:600}
-.lb-tabs{display:flex;margin:6px 0 10px}.lb-tabs button{flex:1;font-size:13px;padding:0 4px}
+.lb-tabs{display:flex;margin:6px 0 10px}.lb-tabs button{flex:1 1 auto;min-width:0;font-size:13px;padding:0 6px;white-space:nowrap}
+@media (max-width:350px){.lb-tabs button{font-size:12px;padding:0 3px}.lb-codebox{padding:12px}.lb-codebox .lb-code{font-size:22px;letter-spacing:.08em}}
 .lb-why{margin:0 2px 6px}.lb-h{font-size:15px;margin:16px 2px 4px}
 .lb-lift{display:flex;flex-direction:column;margin:12px 2px 2px}
-.lb-req,.lb-pend{display:flex;flex-direction:column;gap:2px;margin:0 0 8px;padding:6px 10px;border-radius:14px;background:color-mix(in srgb, var(--push) 9%, var(--surface-2))}
-.lb-pend{background:var(--surface-2);margin-top:10px}
 .lb-rq .btn.sm{flex:0 0 auto;height:34px;padding:0 12px;font-size:13px}
-.lb-empty{padding:18px 4px;text-align:center}.lb-empty p{margin:6px 0 0}
 .lb-code{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.06em;margin-left:auto;white-space:nowrap}
-.lb-add .srow{gap:10px}.lb-add .srow>span:first-child{flex:1}.lb-add .lb-code{flex-shrink:0}.lb-add .btn.sm{flex:0 0 auto;height:38px;padding:0 14px}
-.lb-in{flex:1;min-width:0;height:42px;font-size:17px;text-align:left;padding:0 12px;text-transform:uppercase;letter-spacing:.08em}
+
 .lb-mg{display:grid;grid-template-columns:minmax(84px,1fr) repeat(var(--n),minmax(30px,40px));gap:6px 6px;align-items:center;margin-top:6px}
 .lb-mn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .lb-ml{justify-self:center;width:30px;height:26px;display:grid;place-items:center;border-radius:8px;font-weight:700;font-size:13px;color:color-mix(in srgb, var(--rc) 80%, var(--fg));background:color-mix(in srgb, var(--rc) 16%, transparent)}
@@ -2109,15 +2121,16 @@ const lbInit = n => (n || "?").trim().split(/\s+/).map(w => w[0]).join("").slice
 const lbHue = id => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
 // 1, 2, 2, 4: equal scores share a place
 const lbPlaces = (L, f) => L.map((r, i) => { let j = i; while (j > 0 && f(L[j - 1]) === f(r)) j--; return j; });
+let lbSolo = false; // only you on the board: no medals
 function lbRow(r, i, val, sub) {
-  return `<div class="lb-r${r.me ? " me" : ""}"><span class="lb-p num" style="${i < 3 ? `--md:${MEDAL[i]}` : ""}">${i + 1}</span><span class="lb-a" style="--h:${lbHue(r.id)}">${escH(lbInit(r.name))}</span>
+  return `<div class="lb-r${r.me ? " me" : ""}"><span class="lb-p num" style="${i < 3 && !lbSolo ? `--md:${MEDAL[i]}` : ""}">${i + 1}</span><span class="lb-a" style="--h:${lbHue(r.id)}">${escH(lbInit(r.name))}</span>
     <span class="lb-n"><b>${escH(r.name)}${r.me ? ' <small>you</small>' : ""}</b><small>${sub}</small></span><span class="lb-v num">${val}</span></div>`;
 }
 function lbTab(tab) {
-  const P = lbPeople();
+  const P = lbPeople(); lbSolo = P.length < 2;
   if (tab === "week") {
     const L = P.slice().sort((a, b) => b.wk.pts - a.wk.pts), pl = lbPlaces(L, r => r.wk.pts);
-    return `<p class="small muted lb-why">Points this week, Monday to Sunday: 1 per set, 4 per record, 15 per workout, 8 per core session, 25 per bonus quest.</p>` + L.map((r, i) => lbRow(r, pl[i], `${r.wk.pts}<small> pts</small>`, `${r.wk.done}/${r.wk.plan} workouts · ${r.wk.prs} record${r.wk.prs === 1 ? "" : "s"}`)).join("");
+    return `<p class="small muted lb-why">Resets every Monday. 1 point per set, +4 per record, +15 per workout, +8 per core session, +25 per bonus quest.</p>` + L.map((r, i) => lbRow(r, pl[i], `${r.wk.pts}<small> pts</small>`, `${r.wk.done}/${r.wk.plan} workouts · ${r.wk.prs} record${r.wk.prs === 1 ? "" : "s"}`)).join("");
   }
   if (tab === "reg") {
     const L = P.slice().sort((a, b) => ((b.p.cons || {}).pct ?? -1) - ((a.p.cons || {}).pct ?? -1) || (b.p.streak || 0) - (a.p.streak || 0));
@@ -2127,6 +2140,13 @@ function lbTab(tab) {
   if (tab === "rec") {
     const L = P.slice().sort((a, b) => b.wk.prs - a.wk.prs), pl = lbPlaces(L, r => r.wk.prs);
     let h = `<p class="small muted lb-why">Personal records beaten this week.</p>` + L.map((r, i) => lbRow(r, pl[i], `${r.wk.prs}`, r.wk.prs ? "new bests this week" : "none yet this week")).join("");
+    if (lbSolo) { // nobody to compare with yet: your own best sets
+      const me = P[0], mine = KEY_LIFTS.filter(id => me && me.p.lifts && me.p.lifts[id] && EXBY[id]);
+      h += `<h3 class="lb-h">Your best lifts</h3>` + (mine.length ? mine.map(id => { const ex = EXBY[id], b = me.p.lifts[id];
+        return `<div class="lb-r lb-own"><span class="lb-n"><b>${escH(ex.n.split(" (")[0])}</b><small>${ex.bw ? (b.w ? `+${kg(b.w)} kg × ${b.r}` : "body weight") : `${kg(b.w)} kg × ${b.r}`}</small></span><span class="lb-v num">${ex.bw ? `${b.r}<small> reps</small>` : `${kg(Math.round(b.s))}<small> kg</small>`}</span></div>`; }).join("")
+        : `<p class="small muted">Log the main lifts and your best sets show up here.</p>`) + `<p class="small muted lb-why" style="margin-top:8px">With friends, every lift you both do is compared here.</p>`;
+      return h;
+    }
     const ids = KEY_LIFTS.filter(id => P.filter(r => r.p.lifts && r.p.lifts[id]).length >= 2);
     h += `<h3 class="lb-h">Lifts you share</h3>`;
     if (!ids.length) h += `<p class="small muted">When two of you have logged the same lift, the best sets are compared here.</p>`;
@@ -2150,20 +2170,42 @@ function friendsHTML() {
     : `<section class="card lb-signin" style="--c:var(--push)"><span class="lb-hero"><svg class="i" viewBox="0 0 24 24">${TAB_DEF.friends[1]}</svg></span><h2 class="sec-t">Train with your friends</h2>
       <p class="small muted">Compare points, regularity, records and muscle levels every week with the friends you add. You need an account for this. It also keeps a private copy of your data.</p>
       <button class="btn" data-act="account">Create an account or sign in</button></section>`;
-  const T = [["week", "This week"], ["reg", "Regularity"], ["rec", "Records"], ["mus", "Muscles"]];
-  const loading = !FBS.list;
-  const pend = (FBS.list || []).filter(f => !FBS.prof[f.fid]);
+  const T = [["week", "Week"], ["reg", "Regularity"], ["rec", "Records"], ["mus", "Muscles"]];
+  const list = FBS.list || [], friends = list.filter(f => FBS.prof[f.fid]), pend = list.filter(f => !FBS.prof[f.fid]);
+  const code = FBS.code ? FBS.code.slice(0, 3) + " " + FBS.code.slice(3) : "…";
+  const person = (id, name, sub, btns) => `<div class="lb-rq"><span class="lb-a" style="--h:${lbHue(id)}">${escH(lbInit(name))}</span><span class="lb-n"><b>${escH(name)}</b><small>${sub}</small></span>${btns}</div>`;
   return `<div class="lb-wrap" style="--c:var(--push)">
-    ${FBS.reqIn.length ? `<div class="lb-req">${FBS.reqIn.map(r => `<div class="lb-rq"><span class="lb-a" style="--h:${lbHue(r.from)}">${escH(lbInit(r.fromName))}</span><span class="lb-n"><b>${escH(r.fromName)}</b><small>wants to be friends</small></span><button class="btn sm ghost" data-act="lbno" data-v="${r.from}">Decline</button><button class="btn sm" data-act="lbyes" data-v="${r.from}">Accept</button></div>`).join("")}</div>` : ""}
-    <div class="seg lb-tabs" role="tablist">${T.map(([k, l]) => `<button data-act="lbtab" data-v="${k}" aria-pressed="${FBS.tab === k}">${l}</button>`).join("")}</div>
-    <div class="lb-body">${loading ? `<p class="small muted">Loading…</p>` : (FBS.list || []).length ? lbTab(FBS.tab) : `<div class="lb-empty"><b>Add your first friend</b><p class="small muted">Send them your code below. When they type it in the app, you both appear here.</p></div>`}</div>
-    ${pend.length ? `<div class="lb-pend">${pend.map(f => `<div class="lb-rq"><span class="lb-a" style="--h:${lbHue(f.fid)}">${escH(lbInit(f.name))}</span><span class="lb-n"><b>${escH(f.name)}</b><small>${FBS.reqOut[f.fid] ? "Waiting for them to accept" : "Not sharing with you"}</small></span><button class="linkb" data-act="lbrm" data-v="${f.fid}" style="--c:var(--bad);color:var(--bad)">Remove</button></div>`).join("")}</div>` : ""}
-    <div class="sgroup"><div class="lbl">Add a friend</div><div class="sbox lb-add">
-      <div class="srow"><span>Your code<small>Send it to a friend who uses the app</small></span><span class="lb-code num">${FBS.code ? FBS.code.slice(0, 3) + " " + FBS.code.slice(3) : "…"}</span><button class="btn ghost sm" data-act="lbcopy" ${FBS.code ? "" : "disabled"}>Copy</button></div>
-      <div class="srow"><input class="in lb-in" id="lbcode" maxlength="7" placeholder="Friend's code" autocapitalize="characters" autocomplete="off"><button class="btn sm" data-act="lbadd">Add</button></div>
-      ${FBS.msg ? `<p class="small acc-msg" role="alert" style="padding:0 0 10px">${escH(FBS.msg)}</p>` : ""}</div></div>
-    ${(FBS.list || []).filter(f => FBS.prof[f.fid]).length ? `<div class="sgroup"><div class="lbl">Your friends</div><div class="sbox">${FBS.list.filter(f => FBS.prof[f.fid]).map(f => `<div class="srow"><span>${escH(FBS.prof[f.fid].name || f.name)}<small>Level ${FBS.prof[f.fid].lvl || 1}${FBS.prof[f.fid].prog ? " · " + escH(FBS.prof[f.fid].prog) : ""}</small></span><button class="linkb" data-act="lbrm" data-v="${f.fid}" style="--c:var(--bad);color:var(--bad)">Remove</button></div>`).join("")}</div></div>` : ""}
-    <p class="small muted" style="margin:4px 4px 18px">Friends see your name, level, points, regularity, records, best lifts and muscle levels. Never your sleep, weight, food or notes.</p></div>`;
+    ${FBS.reqIn.length ? `<section class="card lb-reqc"><h2 class="sec-t">Friend request${FBS.reqIn.length > 1 ? "s" : ""}</h2>${FBS.reqIn.map(r => person(r.from, r.fromName, "wants to compare with you",
+      `<button class="btn sm ghost" data-act="lbno" data-v="${r.from}">Decline</button><button class="btn sm" data-act="lbyes" data-v="${r.from}">Accept</button>`)).join("")}</section>` : ""}
+    <section class="card lb-board">
+      <div class="seg lb-tabs" role="tablist">${T.map(([k, l]) => `<button data-act="lbtab" data-v="${k}" role="tab" aria-pressed="${FBS.tab === k}">${l}</button>`).join("")}</div>
+      <div id="lbbody">${lbTab(FBS.tab)}</div>
+      ${FBS.list === null ? `<p class="small muted lb-note">Loading your friends…</p>` : !friends.length ? `<p class="small lb-note lb-alone">Only you for now. Invite a friend below and you'll be compared on all four boards.</p>` : ""}
+    </section>
+    <section class="card lb-inv">
+      <h2 class="sec-t">${friends.length ? "Add more friends" : "Invite a friend"}</h2>
+      <p class="small muted">They install the app and create an account, then one of you enters the other's code. That's it.</p>
+      <div class="lb-codebox"><span>Your code</span><b class="lb-code num">${code}</b></div>
+      <div class="lb-btns"><button class="btn" data-act="lbshare" ${FBS.code ? "" : "disabled"}>Send my code</button><button class="btn ghost" data-act="lbaddopen">Enter a code</button></div>
+      ${FBS.msg && !$("#sheet.show #lbcode") ? `<p class="small acc-msg" role="alert">${escH(FBS.msg)}</p>` : ""}
+    </section>
+    ${pend.length ? `<section class="card"><h2 class="sec-t">Waiting</h2>${pend.map(f => person(f.fid, f.name, FBS.reqOut[f.fid] ? "Waiting for them to accept" : "Not sharing with you",
+      `<button class="linkb lb-rm" data-act="lbrm" data-v="${f.fid}">Remove</button>`)).join("")}</section>` : ""}
+    ${friends.length ? `<section class="card"><h2 class="sec-t">Your friends</h2>${friends.map(f => { const p = FBS.prof[f.fid];
+      return person(f.fid, p.name || f.name, `Level ${p.lvl || 1}${p.prog ? " · " + escH(p.prog) : ""}`, `<button class="linkb lb-rm" data-act="lbrm" data-v="${f.fid}">Remove</button>`); }).join("")}</section>` : ""}
+    <p class="small muted lb-priv">Friends see your name, level, points, regularity, records, best lifts and muscle levels. Never your sleep, weight, food or notes.</p></div>`;
+}
+// Settings-style sheet to type a friend's code (the keyboard opens there, not on the tab)
+function openAddFriend(keep) {
+  const sh = $("#sheet"), v = keep ? (($("#lbcode") || {}).value || "") : "";
+  sh.classList.remove("full"); sh.style.setProperty("--c", "var(--push)");
+  sh.innerHTML = `<div class="grab"></div><div class="sheet-h"><h2>Add a friend</h2><button class="linkb" data-act="close" style="--c:var(--pull);font-size:16px">Cancel</button></div>
+    <p class="small muted" style="margin:0 2px 14px">Type the 6-character code your friend sent you. They'll get a request, and you appear on each other's boards once they accept.</p>
+    <input class="in lb-in" id="lbcode" maxlength="7" placeholder="ABC 123" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" enterkeyhint="send" aria-label="Friend's code" value="${escH(v)}">
+    ${FBS.msg ? `<p class="small acc-msg" role="alert" style="margin:10px 2px 0">${escH(FBS.msg)}</p>` : ""}
+    <button class="btn lb-addbtn" data-act="lbadd">Add friend</button>`;
+  if (!sh.classList.contains("show")) showSheet();
+  if (!keep) setTimeout(() => { const i = $("#lbcode"); if (i) i.focus(); }, 380);
 }
 function vFriends() {
   setHeader("Friends", "Leaderboard");
@@ -2171,18 +2213,35 @@ function vFriends() {
   return friendsHTML();
 }
 async function lbRefresh(force) { await fbLoadSocial(force); lbRedraw(); }
-// redraw the Friends tab in place (keeps a half-typed code and the scroll position)
+// redraw the Friends tab in place (keeps the scroll position)
 function lbRedraw() {
   if (S.tab !== "friends" || !BOOTED) return;
   if ($("#sheet").classList.contains("show")) { S.lbStale = true; return; } // redrawn when the sheet closes
-  const inp = $("#lbcode"), v = inp ? inp.value : "", y = scrollY;
-  render(false); const n = $("#lbcode"); if (n && v) n.value = v; scrollTo(0, y);
+  const y = scrollY; render(false); scrollTo(0, Math.min(y, Math.max(0, document.documentElement.scrollHeight - innerHeight)));
 }
+document.addEventListener("keydown", e => { if (e.key === "Enter" && e.target && e.target.id === "lbcode") { e.preventDefault(); lbAct("lbadd"); } });
+// iOS 26: after the keyboard closes, fixed bars (the tab bar) can stay shifted up until the page scrolls again.
+// Once no field has focus, scroll the page to a valid position so they snap back to the bottom.
+function fixViewport() {
+  const a = document.activeElement; if (a && /^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName)) return;
+  const max = Math.max(0, document.documentElement.scrollHeight - innerHeight), y = Math.max(0, Math.min(scrollY, max));
+  const vv = window.visualViewport, off = vv ? vv.offsetTop : 0;
+  if (y !== scrollY || off > 0.5) { scrollTo(scrollX, y + (y > 0 ? -1 : 1)); scrollTo(scrollX, y); }
+}
+document.addEventListener("focusout", () => setTimeout(fixViewport, 150));
+if (window.visualViewport) { let vh0 = visualViewport.height; visualViewport.addEventListener("resize", () => { const h = visualViewport.height; if (h > vh0 + 80) setTimeout(fixViewport, 80); vh0 = h; }); }
 async function lbAct(a, b) {
   if (a === "friends") { FBS.msg = ""; if ($("#sheet").classList.contains("show")) closeSheet(); if (S.tab !== "friends" && TABS.includes("friends")) go("friends"); else lbRedraw(); await fbPushNow(); return lbRefresh(true); }
-  if (a === "lbtab") { FBS.tab = b.dataset.v; return lbRedraw(); }
-  if (a === "lbcopy") { const c = FBS.code; try { await navigator.clipboard.writeText(`Add me in Upper Body: ${c}`); toast("Code copied"); } catch (e) { toast("Your code: " + c); } return; }
-  if (a === "lbadd") { const ok = await fbAddFriend((($("#lbcode") || {}).value || "")); if (ok && $("#lbcode")) $("#lbcode").value = ""; return lbRefresh(true); }
+  if (a === "lbtab") { FBS.tab = b.dataset.v; const body = $("#lbbody"); if (!body) return lbRedraw();
+    body.innerHTML = lbTab(FBS.tab); document.querySelectorAll("#view .lb-tabs [data-act=lbtab]").forEach(x => x.setAttribute("aria-pressed", x.dataset.v === FBS.tab)); return; }
+  if (a === "lbshare") { const c = FBS.code; if (!c) return; const url = /^https?:/.test(location.protocol) ? location.origin + location.pathname : "https://tuffyishungry.github.io/upper-body-app/";
+    const text = `Add me on Upper Body, my friend code is ${c}. Get the app here: ${url}`;
+    if (navigator.share) { try { await navigator.share({ text }); } catch (e) {} return; }
+    try { await navigator.clipboard.writeText(text); toast("Copied. Paste it in a message"); } catch (e) { toast("Your code: " + c); } return; }
+  if (a === "lbaddopen") { FBS.msg = ""; return openAddFriend(); }
+  if (a === "lbadd") { const ok = await fbAddFriend((($("#lbcode") || {}).value || ""));
+    if (ok) { closeSheet(); return lbRefresh(true); }
+    return openAddFriend(true); }
   if (a === "lbyes" || a === "lbno" || a === "lbrm") FBS.msg = "";
   if (a === "lbyes" || a === "lbno") { await fbAccept(b.dataset.v, a === "lbyes"); return lbRefresh(true); }
   if (a === "lbrm") { await fbRemove(b.dataset.v); return lbRefresh(true); }
@@ -3883,8 +3942,11 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22c";
+const APP_VER = "2026-11-22d";
 const NEWS = [
+  { v: "2026-11-22d", d: "22 Nov", items: [
+    ["var(--push)", "Friends tab, redone", "The four boards work even before you add anyone, so you see your own week, regularity, records and muscles. Send your code in one tap; typing a friend's code opens its own small screen."],
+    ["var(--pull)", "Tab bar fix", "After typing on iPhone, the bottom bar could stay lifted above the bottom of the screen. It now snaps back."]] },
   { v: "2026-11-22c", d: "22 Nov", items: [
     ["var(--push)", "Friends tab", "Everything about friends now has its own tab: this week's points, regularity, records and muscle levels. Move or hide it in Settings → Tabs."],
     ["var(--pull)", "Your program", "Settings → Your program: change which day you train what, swap exercises, sets and reps, or start from another template. Days you already trained keep their plan."],
