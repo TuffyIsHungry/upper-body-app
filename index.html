@@ -1021,6 +1021,9 @@ button.row{color:inherit}
 .me-st .gold b{color:color-mix(in srgb, #F0AE2E 78%, var(--fg))}
 .me-row{display:flex;align-items:center;gap:12px}
 .me-ava{position:relative;flex-shrink:0;border-radius:50%}
+.me-ava::before{content:"";position:absolute;inset:-6px;border-radius:50%;background:conic-gradient(var(--lc, var(--push)) calc(var(--lp) * 1%), color-mix(in srgb, var(--fg) 12%, transparent) 0);
+  -webkit-mask:radial-gradient(farthest-side, transparent calc(100% - 3.5px), #000 calc(100% - 3px));mask:radial-gradient(farthest-side, transparent calc(100% - 3.5px), #000 calc(100% - 3px))}
+.lb-me .me-ava .lb-a{box-shadow:none}
 .me-ava .lb-a{width:56px;height:56px;font-size:22px;box-shadow:0 0 0 2.5px var(--surface),0 0 0 4.5px color-mix(in srgb, var(--push) 70%, transparent)}
 .me-cam{position:absolute;right:-3px;bottom:-3px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--push);color:#fff;box-shadow:0 0 0 2.5px var(--surface);pointer-events:none}
 .me-cam svg{width:13px;height:13px}
@@ -1079,38 +1082,39 @@ button.row{color:inherit}
 .wr-h b{font-family:var(--display);font-size:21px;font-weight:700}
 .wr-left{font-size:12.5px;font-weight:700;color:var(--push);background:color-mix(in srgb, var(--push) 13%, transparent);padding:3px 9px;border-radius:10px;white-space:nowrap}
 .wr-say{margin:4px 6px 10px;font-size:14px;line-height:1.4;color:var(--muted)}.wr-say b{color:var(--fg);font-weight:650}
-.wr-ls{display:flex;flex-direction:column;gap:2px}
-.wr-l{display:grid;grid-template-columns:20px minmax(0,1fr) 62px;align-items:end;column-gap:10px;padding:7px 8px 6px 4px;border-radius:14px}
-.wr-l.me{background:color-mix(in srgb, var(--push) 8%, transparent)}
-.wr-pl{align-self:center;text-align:center;font-family:var(--display);font-weight:700;font-size:16px;color:var(--muted)}
+.wr-ls{display:flex;flex-direction:column;gap:8px}
+.wr-l{display:grid;grid-template-columns:22px minmax(0,1fr) 64px;align-items:center;column-gap:8px}
+.wr-pl{text-align:center;font-family:var(--display);font-weight:700;font-size:15px;color:var(--muted)}
 .wr-pl.md{justify-self:center;width:22px;height:22px;line-height:22px;border-radius:50%;font-size:13px;color:#1A1306;background:var(--md);box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
-.wr-m{display:flex;flex-direction:column;gap:3px;min-width:0}
-.wr-t{display:flex;align-items:baseline;gap:8px;min-width:0}
-.wr-t b{font-size:15px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;flex-shrink:0}
-.wr-t small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.wr-tr{position:relative;height:30px}
-.wr-tr::before{content:"";position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;border-radius:3px;background:repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), color-mix(in srgb, var(--fg) 14%, transparent) calc(25% - 1px) 25%), var(--surface-2)}
-.wr-l.lead .wr-a::before{content:"";position:absolute;inset:-9px;border-radius:50%;background:radial-gradient(closest-side, color-mix(in srgb, #F0AE2E 45%, transparent), transparent);animation:wrHalo 2.6s ease-in-out infinite}
+.wr-bar{position:relative;display:flex;align-items:center;gap:9px;height:46px;padding:0 10px 0 7px;border-radius:23px;background:var(--surface-2);min-width:0}
+.wr-f{position:absolute;left:0;top:0;bottom:0;width:calc(var(--p) * (100% - 46px) + 46px);border-radius:23px;overflow:hidden;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--k) 14%, transparent), color-mix(in srgb, var(--k) 42%, transparent));box-shadow:inset -3px 0 0 var(--k)}
+.wr-l.lead .wr-f{box-shadow:inset -3px 0 0 #F0AE2E;background:linear-gradient(90deg, color-mix(in srgb, #F0AE2E 16%, transparent), color-mix(in srgb, #F0AE2E 50%, transparent))}
+.wr-l.lead .wr-f::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg, transparent 30%, rgba(255,255,255,.22) 45%, transparent 60%);background-size:250% 100%;animation:wrShine 3.2s ease-in-out 1.4s infinite}
+@keyframes wrShine{0%{background-position:120% 0}60%,100%{background-position:-60% 0}}
+.wr-l.me .wr-bar{box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--push) 55%, transparent)}
+.wr-a{position:relative;z-index:1;flex-shrink:0;width:32px;height:32px}
+.wr-a .lb-a{width:32px;height:32px;font-size:12px;box-shadow:0 0 0 2px var(--k)}
+.wr-l.lead .wr-a .lb-a{box-shadow:0 0 0 2px #F0AE2E}
+.wr-l.lead .wr-a::before{content:"";position:absolute;inset:-8px;z-index:-1;border-radius:50%;background:radial-gradient(closest-side, color-mix(in srgb, #F0AE2E 45%, transparent), transparent);animation:wrHalo 2.6s ease-in-out infinite}
 @keyframes wrHalo{50%{transform:scale(1.18);opacity:.7}}
-.rm .wr-l.lead .wr-a::before{animation:none}
-.wr-f{position:absolute;left:0;top:50%;height:6px;margin-top:-3px;border-radius:3px;width:calc(var(--p) * (100% - 30px) + 15px);background:var(--k)}
-.wr-l.lead .wr-f{background:linear-gradient(90deg, color-mix(in srgb, #F0AE2E 35%, transparent), #F0AE2E)}
-.wr-a{position:absolute;top:1px;left:calc(var(--p) * (100% - 30px));width:28px;height:28px}
-.wr-a .lb-a{width:28px;height:28px;font-size:11px;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--k)}
-.wr-l.me .wr-a .lb-a{box-shadow:0 0 0 2px color-mix(in srgb, var(--push) 8%, var(--surface)),0 0 0 3.5px var(--k)}
-.wr-l.lead .wr-a .lb-a{box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px #F0AE2E}
 .wr-a .lb-crown{position:absolute;left:50%;top:-12px;width:20px;height:14px;margin-left:-10px;transform:rotate(-10deg)}
-.wr-v{display:flex;align-items:baseline;justify-content:flex-end;gap:2px;height:30px;line-height:30px}
-.wr-v b{font-family:var(--display);font-size:22px;font-weight:700}.wr-v small{font-size:11px;color:var(--muted)}
+.wr-t{position:relative;z-index:1;display:flex;flex-direction:column;min-width:0;line-height:1.2}
+.wr-t b{font-size:15px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wr-t small{font-size:12px;color:color-mix(in srgb, var(--fg) 62%, transparent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wr-v{display:flex;align-items:baseline;justify-content:flex-end;gap:2px}
+.wr-v b{font-family:var(--display);font-size:21px;font-weight:700}.wr-v small{font-size:10.5px;color:var(--muted)}
+.wr-l.lead .wr-v b{color:color-mix(in srgb, #F0AE2E 78%, var(--fg))}
 .wr-ghost{width:100%;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer}
-.wr-ghost .wr-pl{color:var(--push);font-size:20px}.wr-ghost .wr-t b{color:var(--push);max-width:none}
-.wr-ghost .wr-tr::before{background:none;height:0;margin-top:0;border-top:2px dashed var(--line)}
+.wr-ghost .wr-pl{color:var(--push);font-size:20px}.wr-ghost .wr-t b{color:var(--push)}
+.wr-ghost .wr-bar{background:none;box-shadow:inset 0 0 0 1.5px var(--line)}
+.wr-ghost .wr-a .lb-a{background:var(--surface-2);color:var(--push);font-size:18px;box-shadow:none}
+.rm .wr-l.lead .wr-a::before,.rm .wr-l.lead .wr-f::after{animation:none}
 .wr-rule{margin:10px 6px 0;font-size:12px;line-height:1.4;color:var(--muted)}
 .lb-anim .wr-f{animation:wrGrow 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 110ms + 120ms)}
-.lb-anim .wr-a{animation:wrRide 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 110ms + 120ms)}
+.lb-anim .wr-l{animation:mgIn .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 70ms)}
 .lb-anim .wr-a .lb-crown{animation:wrCrown .55s cubic-bezier(.3,1.7,.5,1) 1.2s both}
-@keyframes wrGrow{from{width:15px}}
-@keyframes wrRide{from{left:0}}
+@keyframes wrGrow{from{width:46px}}
 @keyframes wrCrown{from{opacity:0;transform:translateY(8px) rotate(-10deg) scale(.3)}}
 /* head to head: one column per person */
 .hh{padding:16px 14px 10px}.card.hh{background:var(--surface)} /* flat, so the sticky names row matches it */
@@ -1125,7 +1129,7 @@ button.row{color:inherit}
 .hh-cap{align-self:end;padding:0 8px 8px 2px;font-size:11.5px;line-height:1.3;color:var(--muted)}
 .hh-p{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;padding:8px 2px 8px}
 .hh-p.me{background:color-mix(in srgb, var(--push) 9%, transparent);border-radius:14px 14px 0 0}
-.hh-p .lb-a{width:34px;height:34px;font-size:13px;margin-bottom:3px}
+.hh-p .lb-a{width:34px;height:34px;font-size:13px;margin-bottom:3px;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--k)}
 .hh-p.me .lb-a{box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--push)}
 .hh-p b{font-size:13px;font-weight:650;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hh-p small{font-size:11px;color:var(--muted);white-space:nowrap}
@@ -1160,8 +1164,8 @@ button.row{color:inherit}
 .lb-anim .hh-v.dim svg{animation:hhDim .6s ease both;animation-delay:calc(.9s + min(var(--i, 0), 16) * 35ms)}
 @keyframes hhGold{from{background-color:transparent;box-shadow:none;transform:scale(.8)}}
 @keyframes hhDim{from{opacity:1;filter:none}}
-@media (max-width:350px){.wr-t small{font-size:11.5px}.wr-v b{font-size:20px}.wr-l{grid-template-columns:16px minmax(0,1fr) 54px;column-gap:8px}.hh-k b{font-size:13px}.hh-k small{font-size:11px}.hh-v{font-size:15px}}
-@media (prefers-reduced-motion: reduce){.lb-anim .wr-f,.lb-anim .wr-a,.lb-anim .wr-a .lb-crown,.lb-anim .hh-v.gold b,.lb-anim .hh-v.dim svg{animation:none}}
+@media (max-width:350px){.wr-t small{font-size:11px}.wr-v b{font-size:19px}.wr-l{grid-template-columns:18px minmax(0,1fr) 54px;column-gap:6px}.hh-k b{font-size:13px}.hh-k small{font-size:11px}.hh-v{font-size:15px}}
+@media (prefers-reduced-motion: reduce){.wr-l.lead .wr-a::before,.wr-l.lead .wr-f::after,.lb-anim .wr-l,.lb-anim .wr-f,.lb-anim .wr-a,.lb-anim .wr-a .lb-crown,.lb-anim .hh-v.gold b,.lb-anim .hh-v.dim svg{animation:none}}
 /* managing friends */
 .lb-mng{padding:4px 16px}
 .mng-h{width:100%;display:flex;align-items:center;justify-content:space-between;height:48px;font:inherit;color:inherit;font-weight:600}
@@ -1359,8 +1363,34 @@ button.row{color:inherit}
 .mr-rows{display:flex;flex-direction:column;margin:12px 0 14px}
 .mr-row{display:grid;grid-template-columns:104px minmax(0,1fr);gap:10px;padding:11px 2px;border-top:1px solid var(--line);align-items:baseline}
 .mr-row>span:last-child{display:flex;flex-direction:column;gap:1px;min-width:0}
-.mg{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;margin-top:8px}
-.mg-c{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:14px;background:var(--surface-2);text-align:left;color:var(--fg);font:inherit;min-width:0;transition:box-shadow .2s,transform .15s}
+.mr-sub{margin:0 0 6px}
+.mg{display:flex;flex-direction:column;width:100%;margin-top:6px}
+.mg-c{display:grid;grid-template-columns:16px 32px minmax(0,1fr) auto;align-items:center;column-gap:11px;width:100%;padding:8px 4px;border-top:1px solid var(--line);background:none;text-align:left;color:var(--fg);font:inherit;min-width:0;transition:background .2s,transform .15s;border-radius:0}
+.mg-c:first-child{border-top:0}
+.mg-rk{font-size:12px;font-weight:700;color:var(--faint);text-align:center}
+.mg-c .mg-lv{width:32px;height:32px;font-size:15px}
+.mg-c .mg-s{display:flex;flex-direction:column;align-items:flex-end;gap:1px;font-size:12.5px;white-space:nowrap}
+.mg-c .mg-s small{font-size:11px;font-weight:500;color:var(--muted)}
+.mg-c .mg-b{height:5px;margin-top:6px;border-radius:3px}
+.mg-c .mg-b i{background:linear-gradient(90deg, color-mix(in srgb, var(--rc) 55%, transparent), var(--rc))}
+.bmap.bm-in .mg-c{animation:mgIn .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.5s + var(--n) * 35ms)}
+.bmap.bm-in .mg-b i{animation:mgBar .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.6s + var(--n) * 35ms)}
+@keyframes mgIn{from{opacity:0;transform:translateY(6px)}}
+@keyframes mgBar{from{width:0}}
+.rm .bmap.bm-in .mg-c,.rm .bmap.bm-in .mg-b i{animation:none}
+.bm-sum{display:grid;grid-template-columns:1.5fr 1fr 1fr;width:100%;margin-top:4px;padding:10px 0;border-radius:16px;background:var(--surface-2)}
+.bm-sum>*{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:0;padding:0 6px}
+.bm-sum>*+*{border-left:1px solid color-mix(in srgb, var(--fg) 9%, transparent)}
+.bm-sum small{font-size:11px;color:var(--muted);white-space:nowrap}
+.bm-sum b{font-family:var(--display);font-size:20px;font-weight:700;line-height:1.15}.bm-sum b i{font-style:normal;font-size:12px;color:var(--muted)}
+.bm-s1{flex-direction:row!important;gap:9px!important;border:0;background:none;font:inherit;color:var(--fg);text-align:left}
+.bm-s1>span:last-child{display:flex;flex-direction:column;min-width:0}.bm-s1 b{font-family:inherit;font-size:14px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:color-mix(in srgb, var(--rc) 70%, var(--fg))}
+.bm-s1 .mg-lv{width:34px;height:34px;font-size:16px}
+.bm-lad{width:100%;margin-top:12px}
+.bm-lbar{display:flex;gap:3px;height:9px}.bm-lbar i{display:block;border-radius:5px;min-width:9px}
+.bmap.bm-in .bm-lbar i{animation:mgIn .5s ease both .35s}
+.bm-lkey{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:8px;font-size:12px;color:var(--muted)}
+.bm-lkey span{display:flex;align-items:center;gap:5px}.bm-lkey i{width:8px;height:8px;border-radius:3px}.bm-lkey b{color:var(--fg);font-weight:650}
 .mg-c:active{transform:scale(.97)}
 .bm-m.pulse{animation:mrP 1.4s ease 2}
 @keyframes mrP{0%,100%{filter:none}40%{filter:drop-shadow(0 0 6px var(--mc)) brightness(1.5)}}
@@ -1649,9 +1679,8 @@ button.row{transition:opacity .15s} button.row:active{opacity:.6}
   .banner h2{font-size:38px}
   .tmr{gap:8px;padding:10px 8px 10px 10px}
   .tmr-top b{font-size:25px}
-  .mg-c{gap:8px;padding:9px 8px}
-  .mg-lv{width:30px;height:30px;font-size:14px}
-  .mg-n{font-size:13px;white-space:normal;line-height:1.15}
+  .mg-c{column-gap:8px}
+  .bm-sum b{font-size:18px}.bm-s1 .mg-lv{width:30px;height:30px;font-size:14px}
   .ss-v{white-space:normal}
   .top .eyebrow{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .stw{padding:0 10px;gap:0}.stw .stw-i{display:none}.stw.dim{display:none}
@@ -2537,12 +2566,12 @@ function lbRace(P) {
   const lane = (r, i) => { const w = r.wk.plan ? `${r.wk.done}/${r.wk.plan} workouts` : `${r.wk.done} workout${r.wk.done === 1 ? "" : "s"}`, first = pl[i] === 0 && r.wk.pts > 0 && !solo;
     return `<div class="wr-l${r.me ? " me" : ""}${first ? " lead" : ""}" style="--p:${(r.wk.pts / top).toFixed(3)};--k:${lbCol(r)};--i:${i}">
       <span class="wr-pl num${!solo && pl[i] < 3 && r.wk.pts ? " md" : ""}" style="--md:${MEDAL[pl[i]] || "transparent"}">${pl[i] + 1}</span>
-      <span class="wr-m"><span class="wr-t"><b>${escH(lbFirst(r))}</b><small>${w}${r.wk.prs ? ` · ${r.wk.prs} PR${r.wk.prs === 1 ? "" : "s"}` : ""}</small></span>
-        <span class="wr-tr"><i class="wr-f"></i><span class="wr-a">${lbAva(r)}${first ? IC_CROWN : ""}</span></span></span>
+      <span class="wr-bar"><i class="wr-f"></i><span class="wr-a">${lbAva(r)}${first ? IC_CROWN : ""}</span>
+        <span class="wr-t"><b>${escH(lbFirst(r))}</b><small>${w}${r.wk.prs ? ` · ${r.wk.prs} PR${r.wk.prs === 1 ? "" : "s"}` : ""}</small></span></span>
       <span class="wr-v"><b class="num" data-count="${r.wk.pts}">${r.wk.pts}</b><small>pts</small></span></div>`; };
   return `<section class="card wr"><div class="wr-h"><b>This week</b><span class="wr-left">${weekLeft()}</span></div>
     <p class="wr-say">${say}</p>
-    <div class="wr-ls">${L.map(lane).join("")}${solo ? `<button class="wr-l wr-ghost" data-act="lbinv"><span class="wr-pl">+</span><span class="wr-m"><span class="wr-t"><b>Invite a friend</b><small>and race each other every week</small></span><span class="wr-tr"></span></span><span class="wr-v"></span></button>` : ""}</div>
+    <div class="wr-ls">${L.map(lane).join("")}${solo ? `<button class="wr-l wr-ghost" data-act="lbinv"><span class="wr-pl">+</span><span class="wr-bar"><span class="wr-a"><span class="lb-a">+</span></span><span class="wr-t"><b>Invite a friend</b><small>and race each other every week</small></span></span><span class="wr-v"></span></button>` : ""}</div>
     <p class="wr-rule">1 point per set, +4 per record, +15 per workout, +25 per quest. Starts again on Monday.</p></section>`;
 }
 // everything else, side by side: one column per person, the best of each row in gold
@@ -2560,7 +2589,7 @@ function lbH2H(P) {
       rows: lifts.map(id => { const ex = EXBY[id];
         return { k: liftName(id), s: ex.bw ? "most reps" : "estimated max", vals: cols.map(r => { const b = r.p.lifts && r.p.lifts[id]; return b ? b.s : null; }),
           f: (v, r) => { const b = r.p.lifts[id]; return ex.bw ? `<b>${b.r}<small> reps</small></b>` : `<b>${kg(Math.round(v))}<small> kg</small></b>`; } }; }) },
-    { t: "Muscles", rows: MUSCLES.map(([m, lab]) => ({ k: lab, vis: v => mrHex(v, 28), vals: cols.map(r => (r.p.mus || {})[m] || 1) })) }];
+    { t: "Muscles", rows: MUSCLES.map(([m, lab]) => ({ k: lab, vis: v => mrHex(v, 26), vals: cols.map(r => (r.p.mus || {})[m] || 1) })) }];
   const wins = cols.map(() => 0); let ri = 0;
   for (const x of secs) { x.mine = 0;
     for (const row of x.rows) { const v = row.vals.filter(q => q != null), mx = v.length ? Math.max(...v) : null;
@@ -2572,7 +2601,7 @@ function lbH2H(P) {
   const cell = (row, k) => { const r = cols[k], v = row.vals[k], lead = row.lead[k], any = row.lead.some(Boolean);
     const c = v == null ? " no" : row.vis ? (any && !lead ? " dim" : "") : lead ? " gold" : any ? " lo" : "";
     return `<span class="hh-v${r.me && !solo ? " me" : ""}${c}">${v == null ? "–" : row.vis ? row.vis(v, r) : row.f(v, r)}</span>`; };
-  const head = solo ? "" : `<div class="hh-row hh-head"><span class="hh-k hh-cap">Gold is the best of the group</span>${cols.map((r, k) => `<span class="hh-p${r.me ? " me" : ""}${wins[k] === topW && topW ? " best" : ""}">${lbAva(r)}<b>${escH(lbFirst(r))}</b><small><span class="num">${wins[k]}</span> win${wins[k] === 1 ? "" : "s"}</small></span>`).join("")}</div>`;
+  const head = solo ? "" : `<div class="hh-row hh-head"><span class="hh-k hh-cap">Gold is the best of the group</span>${cols.map((r, k) => `<span style="--k:${lbCol(r)}" class="hh-p${r.me ? " me" : ""}${wins[k] === topW && topW ? " best" : ""}">${lbAva(r)}<b>${escH(lbFirst(r))}</b><small><span class="num">${wins[k]}</span> win${wins[k] === 1 ? "" : "s"}</small></span>`).join("")}</div>`;
   const SC = { Consistency: "var(--good)", "Best lifts": "var(--pull)", Muscles: "var(--core)" };
   const body = secs.map(x => `<div class="hh-sec" style="--sc:${SC[x.t]}"><b>${x.t}</b>${!solo && x.rows.length ? `<small>You lead ${x.mine} of ${x.rows.length}</small>` : ""}</div>`
     + (x.rows.length ? x.rows.map(row => `<div class="hh-row${row.i % 2 ? " z" : ""}" style="--i:${row.i}"><span class="hh-k"><b>${escH(row.k)}</b>${row.s ? `<small>${row.s}</small>` : ""}</span>${cols.map((_, k) => cell(row, k)).join("")}</div>`).join("")
@@ -2592,7 +2621,7 @@ function friendsHTML(anim) {
   const person = (id, name, photo, sub, btns) => `<div class="lb-rq">${lbAva({ id, name, photo: okPhoto(photo) ? photo : "" })}<span class="lb-n"><b>${escH(name)}</b><small>${sub}</small></span>${btns}</div>`;
   return `<div class="lb-wrap${anim ? " lb-anim" : ""}" style="--c:var(--push)">
     <section class="card lb-me" style="--lc:${lv.col}">
-      <div class="me-row"><span class="me-ava">${lbAva(me, "me-a")}<span class="me-cam">${IC_CAM}</span><input type="file" accept="image/*" id="lbphoto" aria-label="Choose a profile photo"></span>
+      <div class="me-row"><span class="me-ava" style="--lp:${Math.round(lv.into / lv.need * 100)}">${lbAva(me, "me-a")}<span class="me-cam">${IC_CAM}</span><input type="file" accept="image/*" id="lbphoto" aria-label="Choose a profile photo"></span>
         <span class="me-n"><b>${escH(me.name)}</b><small><span class="me-lv">${lvlBadge(lv, 20, false)}</span>Level ${lv.L} · ${escH(lv.name)}</small></span>
         <button class="me-inv" data-act="lbinv" aria-expanded="${!!FBS.inv}">Invite<svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div>
       ${(() => { const L = P.slice().sort((a, b) => b.wk.pts - a.wk.pts), pl = lbPlaces(L, r => r.wk.pts), mi = L.indexOf(me), c = me.p.cons;
@@ -4713,22 +4742,27 @@ function bodyMap(R) {
       <g>${half(side)}</g><g transform="translate(100 0) scale(-1 1)">${half(side)}</g>
       ${tagsFor(k)}
       <text class="bm-l" x="50" y="205" text-anchor="middle">${label}</text></g>`;
-  // ranked list: highest level first; each chip shows the level badge, the rank name and the way to the next level
+  // ranked list: one row per muscle, strongest first, with the way to its next level
   const list = MUSCLES.slice().sort((a, b) => R[b[0]].pts - R[a[0]].pts || b[2] - a[2]);
-  const chips = list.map(([m, label, pr]) => { const r = R[m], q = r.into / r.need;
-    return `<button class="mg-c" data-act="bm" data-m="${m}" style="--rc:${r.col};--q:${(q * 100).toFixed(0)}%"><span class="mg-lv num">${r.L}</span>
-      <span class="mg-t"><span class="mg-n">${label}${pr ? `<i class="mg-pr" aria-label="priority muscle"></i>` : ""}</span><span class="mg-s">${r.pts ? r.tier : "Not trained yet"}</span><span class="mg-b"><i></i></span></span></button>`; }).join("");
-  const top = list[0], tr = R[top[0]], avg = list.reduce((a, [m]) => a + R[m].L, 0) / list.length;
-  const reached = MR_TIERS.filter((t, i) => list.some(([m]) => R[m].pts && R[m].ti === i));
+  const rows = list.map(([m, label, pr], n) => { const r = R[m], q = r.into / r.need;
+    return `<button class="mg-c" data-act="bm" data-m="${m}" style="--rc:${r.col};--q:${(q * 100).toFixed(0)}%;--n:${n}"><span class="mg-rk num">${n + 1}</span><span class="mg-lv num">${r.L}</span>
+      <span class="mg-t"><span class="mg-n">${label}${pr ? `<i class="mg-pr" aria-label="priority muscle"></i>` : ""}</span><span class="mg-b"><i></i></span></span>
+      <span class="mg-s">${r.pts ? r.tier : "New"}<small class="num">${r.need - r.into} pts to lvl ${r.L + 1}</small></span></button>`; }).join("");
+  const top = list[0], tr = R[top[0]], avg = list.reduce((a, [m]) => a + R[m].L, 0) / list.length, goldUp = list.filter(([m]) => R[m].pts && R[m].ti >= 3).length;
+  // how many muscles sit in each rank, as one bar
+  const per = MR_TIERS.map((t, ti) => ({ t, n: list.filter(([m]) => (R[m].pts ? R[m].ti : 0) === ti).length })).filter(x => x.n).reverse();
+  const ladder = `<div class="bm-lad"><div class="bm-lbar">${per.map(x => `<i style="flex:${x.n};background:${x.t[2]}"></i>`).join("")}</div>
+    <div class="bm-lkey">${per.map(x => `<span><i style="background:${x.t[2]}"></i>${x.t[0] === 1 ? "New" : x.t[1]} <b class="num">${x.n}</b></span>`).join("")}</div></div>`;
+  const summary = `<div class="bm-sum"><button class="bm-s1" data-act="bm" data-m="${top[0]}" style="--rc:${tr.col}"><span class="mg-lv num">${tr.L}</span><span><small>Strongest</small><b>${tr.pts ? top[1] : "–"}</b></span></button>
+    <span><small>Average</small><b class="num">${avg.toFixed(1)}</b></span><span><small>Gold or better</small><b class="num">${goldUp}<i>/${list.length}</i></b></span></div>`;
   const first = !S.bmSeen; S.bmSeen = true; // the muscles light up one after another once per visit
   return `<div class="bmap${first && !REDUCED ? " bm-in" : ""}" style="--top:${tr.pts ? tr.col : "var(--bm0)"}"><div class="bm-stage"><svg viewBox="0 0 214 210" role="img" aria-label="Body map coloured by each muscle's rank">
       <defs><linearGradient id="bmBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="bm-g0"/><stop offset="1" class="bm-g1"/></linearGradient>
         <linearGradient id="bmSheen" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
         <radialGradient id="bmFloor"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>
       ${fig(2, F, "Front", "F")}${fig(112, B, "Back", "B")}</svg></div>
-    <p class="small bm-cap" id="bm-cap">${tr.pts ? `Strongest: <b>${top[1]}</b> · level ${tr.L} ${tr.tier}. <span class="muted">Average level ${avg.toFixed(1)}.</span>` : `<span class="muted">Finish a set and its muscle starts climbing.</span>`}</p>
-    <div class="bm-key">${MR_TIERS.slice(1).map(([n, name, c]) => `<span class="${reached.some(t => t[1] === name) ? "" : "off"}"><i style="background:${c}"></i>${name} <small class="num">${n}+</small></span>`).join("")}</div>
-    <div class="mg">${chips}</div></div>`;
+    ${summary}${ladder}
+    <div class="mg">${rows}</div></div>`;
 }
 /* ---------- Levels: points for training, named levels ----------
    1 point per finished working set, +4 per personal record, +15 per finished workout (+8 for the Sunday core session).
@@ -4931,8 +4965,11 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22j";
+const APP_VER = "2026-11-22k";
 const NEWS = [
+  { v: "2026-11-22k", d: "22 Nov", items: [
+    ["var(--core)", "Muscle ranks, redone", "Your strongest muscle, your average level and how many are Gold or better at a glance, a bar showing your ranks, and one clear row per muscle with its way to the next level."],
+    ["var(--push)", "A bolder race", "This week's race is now big bars with everyone's photo inside: the leader's shines in gold, and the ring around your photo is your progress to the next level."]] },
   { v: "2026-11-22j", d: "22 Nov", items: [
     ["var(--push)", "Swaps always work", "A swap you pick for the day is applied every time, also in travel mode and injury mode (injury mode only makes it lighter)."],
     ["var(--core)", "A new look for your muscles", "The body on Home is lit up like a stage: rounded muscles, a glow on your best ones, and the level of your three strongest right on the body."],
@@ -5422,7 +5459,7 @@ function weekVol(mon) {
 }
 function musclesCard() {
   const R = muscleRanks(); setTimeout(mrPulse, 500);
-  return `<section class="card mr-card" style="--c:var(--push)"><h2 class="sec-t">Muscle ranks</h2><p class="small muted" style="margin-bottom:4px">Every finished set gives its muscle 1 point, a record 3. The more you train a muscle, the faster it climbs. A dot marks your priority muscles.</p>${bodyMap(R)}</section>`;
+  return `<section class="card mr-card" style="--c:var(--push)"><h2 class="sec-t">Muscle ranks</h2><p class="small muted mr-sub">1 point per finished set, 3 more for a record. Tap a muscle for its history. A dot marks a priority muscle.</p>${bodyMap(R)}</section>`;
 }
 function weekSection() {
   const mon = addD(mondayOf(today()), S.weekOff * 7), sun = addD(mon, 6), t = today();
