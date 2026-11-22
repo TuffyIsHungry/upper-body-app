@@ -905,18 +905,105 @@ button.row{color:inherit}
 .pe-add{position:relative;color:var(--c);font-weight:600}.pe-add select{position:absolute;inset:0;opacity:0;width:100%;font-size:16px}
 .pe-newday{margin-top:6px}
 .rest-ring{display:grid;place-items:center;color:var(--core)}.rest-ring svg{width:38px;height:38px;opacity:.85}
-.ds-card{display:flex;flex-direction:column;gap:2px;background:var(--surface);border-radius:16px;padding:6px 14px}
-.ds-st{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line)}.ds-st:first-child{border-top:0}
-.ds-st>span:last-child{display:flex;flex-direction:column;gap:2px}.ds-st b{font-weight:600}.ds-st small{color:var(--muted);font-size:13px;line-height:1.35}
-.ds-ic{width:26px;height:26px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb, var(--good) 16%, transparent);color:var(--good)}.ds-ic svg{width:16px;height:16px;stroke-width:2.6}
-.ds-st.no .ds-ic{background:color-mix(in srgb, var(--warn) 16%, transparent);color:var(--warn)}
-.ds-list .btn.sm{flex:0 0 auto;height:34px;padding:0 12px;font-size:13px;width:auto}
-.ds-r.on{background:color-mix(in srgb, var(--good) 8%, transparent)}
-.ds-conf{padding:4px 2px 12px;border-bottom:1px solid var(--line)}.ds-conf p{margin:4px 0 10px;font-size:14px;line-height:1.4}
-.ds-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ds-btns .btn{height:42px;min-width:0}
-.ds-rec{margin:0 0 14px;padding:14px;border-radius:16px;background:color-mix(in srgb, var(--warn) 12%, var(--surface));box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--warn) 40%, transparent)}
-.ds-rec p{margin:6px 0 12px;font-size:14px;line-height:1.45}
+.ds-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ds-btns .btn{height:42px;min-width:0}.ds-btns.one{grid-template-columns:1fr}
+.ds-rec{margin:0 0 14px;padding:14px;border-radius:16px;background:color-mix(in srgb, var(--warn) 12%, var(--surface));box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--warn) 40%, transparent);animation:dzIn .35s ease both}
+.ds-rec p{margin:6px 0 12px;font-size:14px;line-height:1.45}.ds-later{display:block;margin:10px auto 0;font-size:14px;color:var(--muted)}
+/* Your data: phone → account → backups */
+.dz-flow{position:relative;display:grid;grid-template-columns:repeat(3,1fr);margin:2px 0 0;padding:18px 6px 16px;background:var(--surface);border-radius:20px}
+.dz-flow .dz-l{position:absolute;top:42px;height:2px;width:calc((100% - 12px) / 3 - 56px);border-radius:2px;background:var(--line)}
+.dz-flow .dz-l:nth-of-type(1){left:calc(6px + (100% - 12px) / 6 + 28px)}.dz-flow .dz-l:nth-of-type(2){left:calc(6px + (100% - 12px) / 2 + 28px)}
+.dz-l.on{background:repeating-linear-gradient(90deg, var(--good) 0 5px, transparent 5px 10px);background-size:10px 2px;animation:dzFlow .8s linear infinite;opacity:.9}
+.dz-flow.busy .dz-l.on{animation-duration:.35s}
+@keyframes dzFlow{to{background-position:10px 0}}
+.dz-n{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1px;min-width:0}
+.dz-i{position:relative;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;margin-bottom:8px;color:var(--k);background:color-mix(in srgb, var(--k) 15%, var(--surface-2))}
+.dz-i>svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.dz-n.off .dz-i{color:var(--faint);background:var(--surface-2)}
+.dz-b{position:absolute;right:-3px;bottom:-3px;width:19px;height:19px;border-radius:50%;display:grid;place-items:center;background:var(--good);color:var(--on-c);box-shadow:0 0 0 2.5px var(--surface)}
+.dz-b svg{width:12px;height:12px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.dz-n.warn .dz-b{background:var(--warn)}.dz-n.off .dz-b{background:var(--faint)}
+.dz-n.busy .dz-b{background:var(--surface-2);box-shadow:0 0 0 2.5px var(--surface),inset 0 0 0 2px var(--good)}.dz-n.busy .dz-b svg{opacity:0}
+.dz-n.busy .dz-b::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid transparent;border-top-color:var(--good);animation:dzSpin .8s linear infinite}
+.dz-n b{font-size:13.5px;font-weight:600;line-height:1.2}.dz-n small{font-size:12.5px;color:var(--muted);line-height:1.25}
+.dz-n.warn small{color:var(--warn)}
+.dz-say{margin:12px 4px 0;font-size:14px;line-height:1.5;color:var(--muted)}.dz-say.warn{color:var(--warn)}
+.dz-cta{margin-top:14px}
+.dz-fix{margin:14px 0 0;padding:14px;border-radius:16px;background:var(--surface);box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--warn) 45%, transparent)}
+.dz-fix>b{font-size:15px}.dz-fix ol{margin:8px 0 12px;padding-left:20px;font-size:14px;line-height:1.5}.dz-fix li{margin:3px 0}.dz-fix p{margin:6px 0 12px;font-size:14px;line-height:1.45;color:var(--muted)}
+.dz-h{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin:24px 4px 10px}
+.dz-h>span{display:flex;flex-direction:column;gap:2px;min-width:0}.dz-h b{font-size:17px;font-weight:650}.dz-h small{font-size:12.5px;color:var(--muted);line-height:1.3}
+.dz-now{flex-shrink:0;display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 13px;border-radius:17px;border:0;font:inherit;font-size:13.5px;font-weight:600;color:var(--good);background:color-mix(in srgb, var(--good) 14%, var(--surface));transition:transform .15s}
+.dz-now:active{transform:scale(.95)}.dz-now svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.dz-now.done{color:var(--on-c);background:var(--good);animation:dzPop .35s ease}.dz-now:disabled{opacity:.75}
+.dz-tl{position:relative;background:var(--surface);border-radius:18px;padding:4px 0}
+.dz-tl::before{content:"";position:absolute;left:23px;top:22px;bottom:22px;width:2px;border-radius:1px;background:var(--line)}
+.dz-item{position:relative}
+.dz-r{display:flex;align-items:center;gap:12px;width:100%;min-height:58px;padding:9px 12px 9px 17px;border:0;background:none;font:inherit;color:inherit;text-align:left}
+.dz-r:active{background:color-mix(in srgb, var(--fg) 5%, transparent)}
+.dz-dot{position:relative;z-index:1;flex-shrink:0;width:14px;height:14px;border-radius:50%;background:var(--surface);box-shadow:inset 0 0 0 2.5px var(--good)}
+.dz-item:first-child .dz-dot{background:var(--good);box-shadow:0 0 0 4px color-mix(in srgb, var(--good) 22%, transparent)}
+.dz-item.wk .dz-dot{width:10px;height:10px;margin:0 2px;box-shadow:inset 0 0 0 2px var(--faint)}
+.dz-tl.ph .dz-dot{box-shadow:inset 0 0 0 2.5px var(--pull)}.dz-tl.ph .dz-item:first-child .dz-dot{background:var(--pull);box-shadow:0 0 0 4px color-mix(in srgb, var(--pull) 22%, transparent)}
+.dz-rt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}.dz-rt b{font-size:15px;font-weight:600;font-variant-numeric:tabular-nums}.dz-rt small{font-size:12.5px;color:var(--muted)}
+.dz-r>.i{width:16px;height:16px;flex-shrink:0;color:var(--faint);transition:transform .25s}
+.dz-item.on .dz-r>.i{transform:rotate(90deg)}
+.dz-tag{flex-shrink:0;font-size:11.5px;font-weight:600;padding:3px 8px;border-radius:10px;color:var(--muted);background:var(--surface-2);white-space:nowrap}
+.dz-tag.warn{color:var(--warn);background:color-mix(in srgb, var(--warn) 15%, transparent)}
+.dz-x{margin:0 12px 10px 44px;padding:12px;border-radius:14px;background:var(--surface-2);animation:dzIn .25s ease both}
+.dz-msg{margin:0 0 10px;font-size:14px;line-height:1.45}
+.dz-same{display:flex;gap:9px;align-items:flex-start;margin:0;font-size:14px;line-height:1.45}.dz-same svg{flex-shrink:0;width:20px;height:20px;margin-top:0;padding:3px;border-radius:50%;background:var(--good);color:var(--on-c);fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.dz-wait{display:flex;align-items:center;gap:9px;margin:0;padding:12px 16px;font-size:14px;color:var(--muted)}.dz-x .dz-wait{padding:0}
+.dz-spin{flex-shrink:0;width:15px;height:15px;border-radius:50%;border:2px solid color-mix(in srgb, currentColor 25%, transparent);border-top-color:currentColor;animation:dzSpin .8s linear infinite}
+@keyframes dzSpin{to{transform:rotate(360deg)}}
+.dz-days{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.dz-day{display:grid;grid-template-columns:22px 1fr;grid-template-rows:auto auto;column-gap:11px;row-gap:1px;align-items:center;width:100%;padding:10px 12px 10px 11px;border:0;border-radius:12px;background:var(--surface);font:inherit;color:inherit;text-align:left;transition:box-shadow .15s}
+.dz-day .dz-cb{grid-row:1 / 3}.dz-day b{font-size:14.5px;font-weight:600}.dz-day small{font-size:13px;line-height:1.35;color:var(--muted);min-width:0}
+.dz-cb{width:22px;height:22px;border-radius:7px;display:grid;place-items:center;box-shadow:inset 0 0 0 2px var(--line);color:transparent;transition:background .15s}
+.dz-cb svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.dz-day.on{box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--good) 55%, transparent)}.dz-day.on .dz-cb{background:var(--good);box-shadow:none;color:var(--on-c)}
+.dz-all{align-self:flex-start;font-size:14px;margin:2px 2px 0}
+.dz-x .ds-btns{grid-template-columns:auto 1fr}.dz-x .ds-btns .btn{white-space:nowrap;padding:0 16px;font-size:15px}
+.dz-lost{list-style:none;margin:0 0 12px;padding:0;display:flex;flex-direction:column;gap:6px}
+.dz-lost li{display:flex;flex-direction:column;gap:1px;padding:8px 11px;border-radius:11px;background:color-mix(in srgb, var(--surface) 75%, transparent)}
+.dz-lost b{font-size:14px;font-weight:600}.dz-lost small{font-size:13px;line-height:1.35;color:var(--muted)}.dz-lost li.more{padding:2px 11px;background:none;font-size:13px;color:var(--muted)}
+.ds-rec p{margin:6px 0 10px}
+.dz-foot{margin:10px 2px 0;font-size:12.5px;line-height:1.4;color:var(--muted)}
+.dz-more{display:flex;align-items:center;gap:10px;width:100%;margin:20px 0 10px;padding:4px 4px;border:0;background:none;font:inherit;color:inherit;text-align:left}
+.dz-more>span{flex:1;display:flex;flex-direction:column;gap:2px}.dz-more b{font-size:17px;font-weight:650}.dz-more small{font-size:12.5px;color:var(--muted)}
+.dz-more>.i{width:18px;height:18px;color:var(--faint);transition:transform .25s}.dz-more.on>.i{transform:rotate(90deg)}
+.dz-txt{display:block;margin:18px auto 26px;font-size:14px}
+@keyframes dzIn{from{opacity:0;transform:translateY(-4px)}}
+@keyframes dzPop{50%{transform:scale(1.07)}}
+@media (prefers-reduced-motion: reduce){.dz-l.on,.dz-spin,.dz-n.busy .dz-b::after{animation:none}.dz-x,.ds-rec,.dz-now.done{animation:none}}
+.rm .dz-l.on,.rm .dz-x,.rm .ds-rec,.rm .dz-now.done{animation:none}
+@media (max-width:350px){.dz-n b{font-size:12.5px}.dz-n small{font-size:11.5px}.dz-i{width:44px;height:44px}.dz-flow .dz-l{top:40px}.dz-tag{font-size:10.5px;padding:3px 6px}.dz-r{gap:10px;padding-left:14px}.dz-tl::before{left:20px}.dz-x{margin-left:12px}}
 .ds-safari{background:color-mix(in srgb, var(--warn) 13%, var(--surface));line-height:1.4}
+.hset{grid-template-columns:28px minmax(0,1fr) 44px!important}
+.hts{display:grid;grid-template-columns:1fr;gap:8px;min-width:0}.hts.two{grid-template-columns:1fr 1fr}
+.ht{position:relative;display:flex;align-items:center;gap:9px;min-width:0;height:50px;padding:0 10px;border-radius:14px;overflow:hidden;font:inherit;color:var(--fg);text-align:left;
+  background:var(--surface-2);transition:background .25s,box-shadow .25s}
+.ht::before{content:"";position:absolute;inset:0;width:calc(var(--p, 0) * 100%);background:color-mix(in srgb, var(--c) 26%, transparent);transition:width .2s linear}
+.ht>*{position:relative}
+.ht-ic{width:30px;height:30px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:var(--c);color:#fff;font-weight:700;font-size:13px}
+.ht-ic svg{width:12px;height:12px;fill:#fff;margin-left:2px}
+.ht-t{display:flex;flex-direction:column;min-width:0;line-height:1.1}
+.ht-t b{font-size:16px;font-weight:700;white-space:nowrap}.ht-t small{font-size:11.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ht.run{box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--c) 60%, transparent)}
+.ht.run b{font-family:var(--display);font-size:24px;letter-spacing:.02em}
+.ht.run .ht-ic{background:transparent;box-shadow:inset 0 0 0 2px var(--c)}
+.ht.run .ht-ic i{width:10px;height:10px;border-radius:2px;background:var(--c)}
+.ht.run:not(.hit) .ht-ic{animation:htPulse 1s ease-in-out infinite}
+@keyframes htPulse{50%{box-shadow:inset 0 0 0 2px var(--c),0 0 0 5px color-mix(in srgb, var(--c) 22%, transparent)}}
+.ht.hit{--c:var(--good)}.ht.hit small{color:var(--good);font-weight:700}
+.ht.rec{--c:#F0AE2E;box-shadow:inset 0 0 0 1.5px #F0AE2E,0 0 18px color-mix(in srgb, #F0AE2E 35%, transparent)}.ht.rec small{color:#F0AE2E}
+.ht.cd{box-shadow:inset 0 0 0 1.5px dashed var(--c)}.ht.cd b{font-family:var(--display);font-size:24px;color:var(--c)}
+.ht.done .ht-ic{background:color-mix(in srgb, var(--c) 18%, transparent);color:var(--c)}.ht.done .ht-ic svg{width:15px;height:15px;fill:none;margin:0;stroke:currentColor}
+.ht.done b{font-family:var(--display);font-size:21px}.ht.done small.up{color:var(--good);font-weight:600}
+.ht.done.ed{box-shadow:inset 0 0 0 1.5px var(--c)}
+.hts.two .ht{padding:0 8px;gap:7px}.hts.two .ht-ic{width:26px;height:26px}.hts.two .ht.run b,.hts.two .ht.cd b{font-size:21px}
+.ht-ed{display:flex;align-items:center;flex-wrap:wrap;gap:6px 14px;padding:4px 4px 10px 40px}
+.ht-ed label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}.ht-ed .in{width:64px;height:36px;font-size:16px}
+.ht-ed .linkb{--c:var(--pull);font-size:14px}
 .lb-signin{text-align:center;padding:26px 20px}.lb-signin p{margin:6px 0 16px}
 .lb-hero{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:color-mix(in srgb, var(--c) 16%, transparent);color:var(--c)}.lb-hero svg{width:30px;height:30px}
 .lb-wrap{display:flex;flex-direction:column;gap:14px}
@@ -1929,7 +2016,7 @@ function cleanDoc(id, v) {
   for (const k in v.ex) {
     if (!Array.isArray(v.ex[k])) { delete v.ex[k]; continue; }
     v.ex[k] = v.ex[k].map(q => isO(q) ? q : null);
-    for (const q of v.ex[k]) if (q) { if ("w" in q) q.w = N(q.w); if ("r" in q) q.r = N(q.r); }
+    for (const q of v.ex[k]) if (q) { if ("w" in q) q.w = N(q.w); if ("r" in q) q.r = N(q.r); for (const f of ["t", "t2"]) if (f in q) { q[f] = N(q[f]); if (q[f] == null) delete q[f]; } }
   }
   for (const k of ["skip", "keep", "order"]) if (k in v && !Array.isArray(v[k])) delete v[k];
   for (const k of ["swap", "xs", "pain", "wind", "rate", "wu", "plw", "food"]) if (k in v && !isO(v[k])) delete v[k];
@@ -1940,7 +2027,7 @@ function cleanDoc(id, v) {
   return v;
 }
 // a set with anything in it (ticked, or a weight / reps typed)
-const setHas = q => !!q && typeof q === "object" && (!!q.ok || q.w != null || q.r != null);
+const setHas = q => !!q && typeof q === "object" && (!!q.ok || q.w != null || q.r != null || q.t != null || q.t2 != null);
 // Everything in B that A doesn't have is added to A; where both have something, A's stays. Nothing of A is ever removed.
 function addMerge(id, A, B) {
   const cp = x => JSON.parse(JSON.stringify(x)), isO = x => !!x && typeof x === "object" && !Array.isArray(x);
@@ -1999,6 +2086,8 @@ async function idbDo(mode, fn) {
 const idbGet = k => idbDo("readonly", st => st.get(k)), idbSet = (k, v) => idbDo("readwrite", st => st.put(v, k)), idbDel = k => idbDo("readwrite", st => st.delete(k)), idbKeys = () => idbDo("readonly", st => st.getAllKeys());
 const nDays = docs => Object.keys(docs || {}).filter(k => /^d\d{4}-\d\d-\d\d$/.test(k)).length;
 let BKDAY = "", SAVEWARN = 0, LASTSAVE = 0;
+// online backups: the index of what the account holds, and when the "most recent" one was last refreshed
+const BK = { idx: null, uid: "", at: 0, latestAt: 0, tm: 0, busy: false, chk: 0 };
 async function idbSave(txt) {
   if (!(await idbSet("main", txt))) return;
   const t = today(); if (BKDAY === t) return; BKDAY = t;
@@ -2021,7 +2110,7 @@ const saveNow = () => { clearTimeout(saveT); saveT = 0; const txt = JSON.stringi
   catch (e) { if (Date.now() - SAVEWARN > 60000) { SAVEWARN = Date.now(); toast("This phone couldn't save. Your backup copy still has everything."); } try { logErr("save: " + e); } catch (x) {} }
   idbSave(txt); };
 const saveLocal = () => { if (!saveT) saveT = setTimeout(saveNow, 300); };
-document.addEventListener("visibilitychange", () => { if (document.hidden && saveT) saveNow(); });
+document.addEventListener("visibilitychange", () => { if (document.hidden && saveT) saveNow(); if (document.hidden && BK.tm) { clearTimeout(BK.tm); BK.tm = 0; bkLatest(); } });
 addEventListener("pagehide", () => { if (saveT) saveNow(); });
 // the main copy lost days the second copy still has (iOS cleared it, a failed write): bring them back, adding only
 idbGet("main").then(txt => {
@@ -2041,6 +2130,7 @@ function touch(id) {
   if (S.docs[id] && typeof S.docs[id] === "object") S.docs[id]._t = Math.max(Date.now(), (S.docs[id]._t || 0) + 1); // never older than the version it replaces, even if this phone's clock is behind
   dataChanged(); saveLocal(); dirty.add(id); if (!LVRAF) LVRAF = requestAnimationFrame(() => { LVRAF = 0; checkQuest(); syncLevelBadge(); syncStw(); checkMuscleRanks(); if (FB.user && S.mode === "cloud") fbPushProfile(); });
   clearTimeout(timers[id]); timers[id] = setTimeout(() => flush(id), 600);
+  bkSoon();
 }
 async function flush(id) {
   if (!col || !S.docs[id]) return;
@@ -2185,7 +2275,7 @@ async function fbMerge(uid, snap) {
   for (const id of up) { dirty.add(id); flush(id); }
   dataChanged(); saveLocal(); if (got) fbBaseline(); applySettings(); softRender(); fbUI(); fbPushProfile(true);
   setTimeout(() => fbLoadSocial().then(lbUpdate), 2500); // the Friends board, ready before you open it
-  setTimeout(fbBackup, 5000); // once a day, a full backup in the account too
+  setTimeout(bkCheck, 5000); // the online backups: today's, and a look at whether the newest one holds anything this phone lost
   if (S.obWait) setTimeout(obResume, 60);
 }
 async function packDocs(docs) {
@@ -2202,22 +2292,13 @@ async function unpackDocs(o) {
   const bin = atob(o.z), buf = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
   return JSON.parse(await new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"))).text());
 }
-async function fbBackup(force) {
-  const m = fbMods, u = m && m.auth.currentUser, t = today(); if (!u || S.mode !== "cloud" || !nDays(S.docs)) return;
-  if (!force && lsGet("aub.cbk") === u.uid + "|" + t) return;
-  try {
-    const p = await packDocs(S.docs); if (p.z.length > 950000) { FB.bk = "big"; return; }
-    await m.F.setDoc(m.F.doc(m.db, "users", u.uid, "backups", t), { t: Date.now(), days: nDays(S.docs), ...p });
-    lsSet("aub.cbk", u.uid + "|" + t); FB.bk = "ok";
-    for (let j = 14; j < 21; j++) { try { await m.F.deleteDoc(m.F.doc(m.db, "users", u.uid, "backups", addD(t, -j))); } catch (e) {} }
-  } catch (e) { FB.bk = e && e.code === "permission-denied" ? "rules" : "fail"; }
-}
 function fbBaseline() {
   try { const v = levelNow(); localStorage.setItem("aub.lvl", v.L); if (+(localStorage.getItem("aub.lvx") || 0) < v.L) localStorage.setItem("aub.lvx", v.L);
     const R = muscleRanks(), now = {}; for (const m in R) now[m] = R[m].L; localStorage.setItem("aub.mr", JSON.stringify(now));
     if (perfectNow()) localStorage.setItem("aub.pw", mondayOf(today())); } catch (e) {}
 }
 async function fbOut() {
+  BK.idx = null; BK.uid = ""; clearTimeout(BK.tm); BK.tm = 0;
   Object.assign(FBS, { last: "", code: null, list: null, prof: {}, reqIn: [], reqOut: {}, at: 0, msg: "", photoSent: undefined, vs: null, inv: false, mng: false });
   try { localStorage.removeItem("aub.fbsoc"); } catch (e) {}
   fbUnlink(); try { await fbMods.U.signOut(fbMods.auth); } catch (e) {}
@@ -2953,54 +3034,267 @@ function bfAct(a, b) {
 }
 
 
+/* ---------- online backups ----------
+   The account holds a full snapshot of everything: one a day (kept 2 weeks, then one a week for 2 months), plus a
+   "most recent" one that follows you through the day, a couple of minutes after you change something.
+   A small index lists them with how much each day held, so the app can tell without opening them whether a backup
+   holds something this phone no longer has. A backup that does is kept (never pruned, never overwritten) until you decide. */
+function dayItems(v) {
+  if (!v || typeof v !== "object") return 0; let n = 0;
+  for (const k in v.ex || {}) if (Array.isArray(v.ex[k])) n += v.ex[k].filter(setHas).length;
+  if (v.sleep && v.sleep.bed && v.sleep.wake) n++; if (v.bw != null) n++; n += (((v.food || {}).log) || []).length; if (v.done) n++;
+  return n;
+}
+function digest(docs) {
+  const dc = {}; let wk = 0, n = 0;
+  for (const id in docs) if (/^d\d{4}-\d\d-\d\d$/.test(id)) { const c = dayItems(docs[id]); if (c) { dc[id.slice(1)] = c; n += c; } if (docs[id] && docs[id].done) wk++; }
+  return { dc, days: Object.keys(dc).length, wk, n };
+}
+const curDigest = () => memo("bkdig", () => digest(S.docs));
+// days on which a backup holds more than the phone does now (days before today: today's own edits are yours to make)
+function bkMore(e, all) {
+  const cur = curDigest().dc, t = today(), out = [];
+  for (const d in (e && e.dc) || {}) if ((all || d < t) && e.dc[d] > (cur[d] || 0)) out.push(d);
+  return out.sort();
+}
+const bkOn = () => !window.claude && !!(FB.user && fbMods && fbMods.auth.currentUser) && S.mode === "cloud";
+const bkRef = id => fbMods.F.doc(fbMods.db, "users", fbMods.auth.currentUser.uid, "backups", id);
+const bkErr = e => { FB.bk = e && e.code === "permission-denied" ? "rules" : navigator.onLine === false ? "offline" : "fail"; };
+async function bkIndex(fresh) {
+  const m = fbMods, u = m && m.auth.currentUser; if (!u) return null;
+  if (BK.idx && BK.uid === u.uid && !fresh) return BK.idx;
+  const s = await m.F.getDoc(bkRef("index")), d = s.exists() ? s.data() : null;
+  let list = d && Array.isArray(d.list) ? d.list : null;
+  if (!list) { // the first time (or the index was lost): build it from the backups themselves
+    list = []; const all = await m.F.getDocs(m.F.collection(m.db, "users", u.uid, "backups"));
+    for (const x of all.docs) { if (x.id === "index") continue;
+      try { const v = x.data(), docs = await unpackDocs(v); if (docs) list.push({ id: x.id, t: v.t || 0, ...digest(cleanAll(docs)) }); } catch (e) {} }
+    if (list.length) await m.F.setDoc(bkRef("index"), { list });
+  }
+  BK.uid = u.uid; BK.idx = list.filter(e => e && typeof e.id === "string" && typeof e.t === "number"); BK.at = Date.now();
+  if (FB.bk !== "big") FB.bk = "ok"; return BK.idx;
+}
+// one a day for 14 days, then the newest of each week until 10 weeks; "most recent" and anything kept for you always stay
+function bkPrune(list) {
+  const keep = [], wk = {}, t = today();
+  for (const e of [...list].sort((a, b) => b.t - a.t)) {
+    if (e.id === "latest" || e.pin) { keep.push(e); continue; }
+    if (!/^\d{4}-\d\d-\d\d$/.test(e.id)) continue;
+    const age = diffD(e.id, t);
+    if (age < 14) keep.push(e); else if (age < 70 && !wk[mondayOf(e.id)]) { wk[mondayOf(e.id)] = 1; keep.push(e); }
+  }
+  return keep;
+}
+async function bkWrite(id) {
+  const m = fbMods, u = m && m.auth.currentUser; if (!u || !bkOn() || !nDays(S.docs)) return false;
+  const list = await bkIndex(true); if (!list) return false; // always the account's own index: nothing another copy wrote is lost
+  if ((list.find(e => e.id === id) || {}).pin) return false; // holds something you haven't decided about: never written over
+  const p = await packDocs(S.docs); if (p.z.length > 950000) { FB.bk = "big"; return false; }
+  const dg = digest(S.docs), t = Date.now(), e = { id, t, days: dg.days, wk: dg.wk, n: dg.n, dc: dg.dc };
+  const next = bkPrune([e, ...list.filter(x => x.id !== id)]), gone = list.filter(x => x.id !== id && !next.some(y => y.id === x.id));
+  const b = m.F.writeBatch(m.db);
+  b.set(bkRef(id), { t, days: dg.days, wk: dg.wk, ...p });
+  for (const g of gone) b.delete(bkRef(g.id));
+  b.set(bkRef("index"), { list: next });
+  await b.commit();
+  BK.idx = next; FB.bk = "ok"; if (id === "latest") BK.latestAt = t; else lsSet("aub.cbk", u.uid + "|" + today());
+  return true;
+}
+async function bkLoad(id) {
+  const s = await fbMods.F.getDoc(bkRef(id)); if (!s.exists()) throw new Error("gone");
+  return cleanAll(await unpackDocs(s.data()) || {});
+}
+async function bkPin(id, on) {
+  const list = BK.idx || [], e = list.find(x => x.id === id); if (!e || !!e.pin === on) return;
+  const next = list.map(x => x.id === id ? { ...x, pin: on ? 1 : 0 } : x);
+  try { await fbMods.F.setDoc(bkRef("index"), { list: next }); BK.idx = next; } catch (e) {}
+}
+const daysBefore = (docs, t) => { const o = {}; for (const id in docs) if (/^d\d{4}-\d\d-\d\d$/.test(id) && id.slice(1) < t) o[id] = docs[id]; return o; };
+// when the app opens (and again after a while away): does the newest backup hold anything this phone lost? then today's backup
+async function bkCheck() {
+  if (!bkOn() || BK.busy) return; BK.busy = true; BK.chk = Date.now();
+  try {
+    const list = await bkIndex(true), t = today(), newest = [...list].sort((a, b) => b.t - a.t)[0];
+    let offer = null;
+    for (const e of [...list.filter(x => x.pin), ...(newest && !newest.pin ? [newest] : [])]) {
+      const ack = lsGet("aub.recC") === e.id + "@" + e.t;
+      if (ack || !bkMore(e).length) { if (e.pin) await bkPin(e.id, false); continue; }
+      const docs = daysBefore(await bkLoad(e.id), t), cnt = addCount(S.docs, docs);
+      if (!cnt.total) { if (e.pin) await bkPin(e.id, false); continue; }
+      if (!e.pin) await bkPin(e.id, true);
+      offer = offer || { src: "online", e, docs, cnt };
+    }
+    if (!list.some(e => e.id === t)) await bkWrite(t);
+    if (offer && lsGet("aub.recL") !== t) dsOffer(offer);
+  } catch (e) { bkErr(e); }
+  BK.busy = false; dsRedraw();
+}
+// a change: the "most recent" backup follows two minutes later (at most every 10 minutes)
+function bkSoon() {
+  try { if (!bkOn()) return; clearTimeout(BK.tm); BK.tm = setTimeout(() => { BK.tm = 0; bkLatest(); }, Math.max(120000, 600000 - (Date.now() - BK.latestAt))); } catch (e) {}
+}
+async function bkLatest(now) {
+  if (!bkOn()) return false; if (BK.busy) { if (!now) bkSoon(); return false; }
+  BK.busy = true; let ok = false;
+  try { const list = await bkIndex(), cur = list.find(e => e.id === "latest");
+    // the phone holds less than the last backup on an older day: keep that backup as it is, and ask next time the app opens
+    const id = cur && (cur.pin || bkMore(cur).length) ? (now ? today() : null) : "latest";
+    if (id) ok = await bkWrite(id);
+  } catch (e) { bkErr(e); }
+  BK.busy = false; dsRedraw(); return ok;
+}
+const FB_RULES = `rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function me() { return request.auth.uid; }
+    match /users/{uid}/docs/{doc} { allow read, write: if signedIn() && me() == uid; }
+    match /users/{uid}/backups/{b} { allow read, write: if signedIn() && me() == uid; }
+    match /profiles/{uid} {
+      allow get: if signedIn() && (me() == uid || exists(/databases/$(database)/documents/profiles/$(uid)/friends/$(me())));
+      allow list: if false;
+      allow create, update: if signedIn() && me() == uid && request.resource.data.name is string && request.resource.data.name.size() <= 40 && request.resource.data.keys().size() <= 20;
+      allow delete: if signedIn() && me() == uid;
+      match /friends/{fid} {
+        allow get: if signedIn() && (me() == uid || me() == fid);
+        allow list: if signedIn() && me() == uid;
+        allow create, update, delete: if signedIn() && me() == uid && fid != uid;
+      }
+    }
+    match /codes/{code} {
+      allow get: if signedIn();
+      allow list: if false;
+      allow create: if signedIn() && request.resource.data.uid == me() && code.size() == 6;
+      allow update: if signedIn() && resource.data.uid == me() && request.resource.data.uid == me();
+      allow delete: if signedIn() && resource.data.uid == me();
+    }
+    match /requests/{rid} {
+      allow get, delete: if signedIn() && (resource == null || resource.data.from == me() || resource.data.to == me());
+      allow list: if signedIn() && (resource.data.to == me() || resource.data.from == me());
+      allow create, update: if signedIn() && request.resource.data.from == me() && request.resource.data.to is string && request.resource.data.to != me() && rid == me() + "_" + request.resource.data.to;
+    }
+  }
+}`;
+
 /* ---------- Settings → Your data: where it's saved, and every backup you can bring back ---------- */
 const IN_SAFARI = !window.claude && /iPhone|iPad|iPod/.test(navigator.userAgent) && navigator.standalone === false;
 const fmtWhen = t => new Date(t).toLocaleString("en-GB", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-// every older copy this phone and the account hold, newest first
-async function dsSources() {
+function whenLabel(t, low) { const d = ymd(new Date(t)), g = diffD(d, today()), w = g === 0 ? "Today" : g === 1 ? "Yesterday" : fShort(d); return `${low && g < 2 ? w.toLowerCase() : w}, ${hhmm(t)}`; }
+// the older copies kept on this phone, newest first
+async function dsPhone() {
   const out = [], keys = ((await idbKeys()) || []).sort().reverse();
-  for (const k of keys.filter(k => /^bk-/.test(k))) out.push({ id: "l:" + k, label: `This phone, ${fDM(k.slice(3))}`, sub: "Daily backup", t: parse(k.slice(3)).getTime(),
+  for (const k of keys.filter(k => /^bk-/.test(k))) out.push({ id: "l:" + k, t: parse(k.slice(3)).getTime(), title: `${fShort(k.slice(3))}, start of the day`, sub: "Daily copy",
     load: async () => JSON.parse((await idbGet(k)) || "{}") });
-  for (const k of keys.filter(k => /^pre-/.test(k))) out.push({ id: "l:" + k, label: `This phone, ${fmtWhen(+k.slice(4))}`, sub: "Before an account update", t: +k.slice(4),
+  for (const k of keys.filter(k => /^pre-/.test(k))) out.push({ id: "l:" + k, t: +k.slice(4), title: whenLabel(+k.slice(4)), sub: "Before your account changed something",
     load: async () => (JSON.parse((await idbGet(k)) || "{}").docs || {}) });
   for (const [k, sub] of [["aub.safe.first", "Before your account was linked"], ["aub.safe.last", "Before the last account update"]]) {
-    try { const o = JSON.parse(lsGet(k) || "null"); if (o && o.docs && nDays(o.docs)) out.push({ id: "s:" + k, label: `This phone, ${fmtWhen(o.t)}`, sub, t: o.t, load: async () => o.docs }); } catch (e) {} }
-  const m = fbMods, u = FB.user && m && m.auth.currentUser;
-  if (u) { try { const bk = await m.F.getDocs(m.F.collection(m.db, "users", u.uid, "backups"));
-    for (const d of bk.docs) { const v = d.data(); out.push({ id: "c:" + d.id, label: `Your account, ${fDM(d.id)}`, sub: `Daily backup · ${v.days || "?"} days`, t: v.t || 0, load: async () => unpackDocs(v) }); }
-  } catch (e) { if (e && e.code === "permission-denied") FB.bk = "rules"; } }
+    try { const o = JSON.parse(lsGet(k) || "null"); if (o && o.docs && nDays(o.docs)) out.push({ id: "s:" + k, t: o.t, title: whenLabel(o.t), sub, load: async () => o.docs }); } catch (e) {} }
   return out.sort((a, b) => b.t - a.t);
 }
-const DS = { list: null, pick: null, cnt: null, busy: false, rec: false };
+const DS = { phone: null, showPhone: false, open: null, x: null, rec: null, now: "" };
+const dayWords = c => (c.days ? "The whole day: " : "") + (addWords({ ...c, days: 0 }) || "workout done");
+function dsDiff(docs) {
+  const out = [];
+  for (const id in docs) { if (!/^d\d{4}-\d\d-\d\d$/.test(id)) continue; const c = addCount(S.docs, { [id]: docs[id] }); if (c.total) out.push({ d: id.slice(1), c, on: true }); }
+  return out.sort((a, b) => a.d < b.d ? 1 : -1);
+}
+const DZI = {
+  phone: '<svg viewBox="0 0 24 24"><rect x="6.5" y="2.8" width="11" height="18.4" rx="2.6"/><path d="M10.6 18.2h2.8"/></svg>',
+  cloud: '<svg viewBox="0 0 24 24"><path d="M7.4 18.6h9.9a3.9 3.9 0 0 0 .5-7.8 5.6 5.6 0 0 0-10.8-1.1 4.5 4.5 0 0 0 .4 8.9z"/></svg>',
+  stack: '<svg viewBox="0 0 24 24"><path d="M12 3.5l8.5 4.3-8.5 4.3-8.5-4.3z"/><path d="M3.5 12l8.5 4.3 8.5-4.3"/><path d="M3.5 16.2l8.5 4.3 8.5-4.3"/></svg>',
+  ok: '<svg viewBox="0 0 24 24"><path d="M5.5 12.5l4 4 9-9"/></svg>', warn: '<svg viewBox="0 0 24 24"><path d="M12 6.5v7M12 17.5v.2"/></svg>', off: '<svg viewBox="0 0 24 24"><path d="M7 12h10"/></svg>',
+  chev: '<svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>', back: '<svg viewBox="0 0 24 24"><path d="M12 19V7M6.5 12.5L12 7l5.5 5.5"/></svg>'
+};
+// what the screen says about each copy: ok, warn (needs you), off (not set up), busy
+function dsState() {
+  const n = curDigest().days;
+  const acc = window.claude ? "claude" : !fbOK() ? "none" : !(FB.user && fbMods) ? "out" : S.mode !== "cloud" ? "away" : (dirty.size || inflight.size) ? "sending" : "ok";
+  const live = acc === "ok" || acc === "sending";
+  const bk = !live ? "off" : FB.bk === "rules" ? "rules" : FB.bk === "big" ? "big" : FB.bk === "fail" || FB.bk === "offline" ? "fail" : BK.idx ? "ok" : "load";
+  const list = live && BK.idx ? [...BK.idx].sort((a, b) => b.t - a.t) : [];
+  return { n, acc, live, bk, list, last: list[0] ? list[0].t : 0 };
+}
+// the Settings row
+function dataLine() {
+  const st = dsState();
+  if (st.acc === "claude") return `${st.n} days, saved in your Claude account`;
+  if (st.bk === "ok" && st.last) return `${st.n} days · backed up online ${whenLabel(st.last, true)}`;
+  if (st.live) return `${st.n} days on this phone and in your account`;
+  return `${st.n} days on this phone · not backed up online yet`;
+}
+function dsRow(x, live) {
+  const on = DS.open === x.id, more = live && x.e ? bkMore(x.e, true).length : 0;
+  const tag = more ? `<span class="dz-tag warn">More on ${more} day${more > 1 ? "s" : ""}</span>` : x.tag ? `<span class="dz-tag">${x.tag}</span>` : "";
+  return `<div class="dz-item${on ? " on" : ""}${x.week ? " wk" : ""}"><button class="dz-r" data-act="dsopen" data-v="${escH(x.id)}" aria-expanded="${on}"><span class="dz-dot"></span>
+    <span class="dz-rt"><b>${escH(x.title)}</b><small>${escH(x.sub)}</small></span>${tag}${DZI.chev}</button>${on ? dsPanel(x) : ""}</div>`;
+}
+function dsPanel(x) {
+  const X = DS.x && DS.x.id === x.id ? DS.x : null;
+  let h;
+  if (!X || X.st === "load") h = `<p class="dz-wait"><span class="dz-spin"></span>Comparing with your phone…</p>`;
+  else if (X.st === "err") h = `<p class="dz-msg">This backup couldn't be opened. Check your connection and try again.</p>`;
+  else if (X.st === "done") h = `<p class="dz-same">${DZI.ok}<span>Brought back: <b>${escH(addWords(X.got))}</b>. Everything else stayed as it was.</span></p>`;
+  else if (!X.days.length) h = `<p class="dz-same">${DZI.ok}<span>Your phone already has everything in this backup.</span></p>`;
+  else {
+    const sel = X.days.filter(q => q.on), shown = X.all ? X.days : X.days.slice(0, 6);
+    h = `<p class="dz-msg">This backup has things your phone doesn't. Choose what to bring back:</p>
+      <div class="dz-days">${shown.map(q => `<button class="dz-day${q.on ? " on" : ""}" data-act="dsday" data-v="${q.d}" aria-pressed="${q.on}"><span class="dz-cb">${DZI.ok}</span><b>${fShort(q.d)}</b><small>${escH(dayWords(q.c))}</small></button>`).join("")}
+      ${X.days.length > shown.length ? `<button class="linkb dz-all" data-act="dsall">Show all ${X.days.length} days</button>` : ""}</div>
+      <div class="ds-btns"><button class="btn ghost" data-act="dsopen" data-v="${escH(x.id)}">Cancel</button><button class="btn" data-act="dsgo" style="--c:var(--good)" ${sel.length ? "" : "disabled"}>${sel.length ? `Bring back ${sel.length} day${sel.length > 1 ? "s" : ""}` : "Choose a day"}</button></div>
+      <p class="dz-foot">Only adds what's missing. Nothing on your phone is changed or removed.</p>`;
+  }
+  return `<div class="dz-x">${h}</div>`;
+}
+function dsSources(st) {
+  const today_ = today();
+  const online = st.list.map(e => ({ id: "c:" + e.id, e, t: e.t, title: whenLabel(e.t), sub: `${e.days} day${e.days === 1 ? "" : "s"} · ${e.wk} workout${e.wk === 1 ? "" : "s"}`,
+    tag: e.id === "latest" ? "Most recent" : diffD(e.id, today_) >= 14 ? "Weekly" : "", week: e.id !== "latest" && diffD(e.id, today_) >= 14,
+    load: () => bkLoad(e.id) }));
+  return online.concat(DS.phone || []);
+}
 function openData(keep) {
-  const sh = $("#sheet"), y = keep ? sh.scrollTop : 0, signed = !!(FB.user && fbMods), cloudOn = S.mode === "cloud";
+  const sh = $("#sheet"), y = keep ? sh.scrollTop : 0, st = dsState(), R = DS.rec;
   sh.classList.add("full"); sh.style.setProperty("--c", "var(--good)");
-  const ok = '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>', warn = '<svg class="i" viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>';
-  const row = (good, title, sub) => `<div class="ds-st ${good ? "ok" : "no"}"><span class="ds-ic">${good ? ok : warn}</span><span><b>${title}</b><small>${sub}</small></span></div>`;
-  const bkLine = FB.bk === "rules" ? "Daily account backups need the updated Firebase rules (see below)." : FB.bk === "big" ? "Your data is too big for one account backup; every day is still saved in your account." : lsGet("aub.cbk") && fbMods && FB.user && lsGet("aub.cbk") === FB.user.uid + "|" + today() ? "Today's account backup is done." : "A full backup is added to your account once a day.";
-  const L = DS.list;
+  const node = (k, ic, title, sub, kc) => `<div class="dz-n ${k}" style="--k:${kc}"><span class="dz-i">${DZI[ic]}<span class="dz-b">${DZI[k === "ok" || k === "busy" ? "ok" : k === "warn" ? "warn" : "off"]}</span></span><b>${title}</b><small>${sub}</small></div>`;
+  const accSub = { claude: "Claude account", none: "Not set up", out: "No account", away: "Offline", sending: "Sending…", ok: "Up to date" }[st.acc];
+  const bkSub = { off: "Off", rules: "Needs a rule", big: "Too big", fail: "Can't reach", load: "Checking…", ok: st.list.length ? `${st.list.length} saved` : "First one soon" }[st.bk];
+  const say = st.acc === "claude" ? "This page saves to your Claude account. It's separate from the app on your home screen."
+    : !st.live && (st.acc === "out" || st.acc === "none") ? "Right now your data is only on this phone. With a free account, everything is also copied online and backed up every day."
+    : st.acc === "away" ? "Your account can't be reached right now. Everything is safe on this phone and will be sent when you're back online."
+    : st.bk === "rules" ? "Your changes reach your account, but daily backups can't be saved yet: Firebase needs one more rule."
+    : "Your phone keeps the main copy. Every change reaches your account within seconds, and a full backup is saved online every day. If something ever goes missing, open a backup below to bring it back.";
+  const L = dsSources(st);
+  const online = L.filter(x => x.id[0] === "c"), phone = L.filter(x => x.id[0] !== "c");
   sh.innerHTML = `<div class="grab" style="margin-top:8px"></div><div class="sheet-h" style="padding-top:2px"><button class="linkb g-back" data-act="dsback" style="--c:var(--pull)"><svg class="i" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Settings</button></div>
     <h2 class="g-title">Your data</h2>
-    ${DS.rec ? `<section class="ds-rec"><b>Some of your data may be missing</b><p>Older copies on this phone have things your app doesn't have now: <b>${addWords(DS.cnt)}</b>${DS.cnt.dates.length ? `, on ${DS.cnt.dates.slice(0, 6).map(fDM).join(", ")}${DS.cnt.dates.length > 6 ? "…" : ""}` : ""}. Adding them back changes nothing you have now.</p>
-      <div class="ds-btns"><button class="btn ghost" data-act="dsrecno">Not now</button><button class="btn" data-act="dsrecyes" style="--c:var(--good)">Add them back</button></div></section>` : ""}
-    <div class="ds-card">
-      ${row(true, "Saved on this phone", `${nDays(S.docs)} days${LASTSAVE ? ` · last saved ${fmtWhen(LASTSAVE)}` : ""}. This is the main copy, kept twice on the phone.`)}
-      ${window.claude ? row(true, "Saved in your Claude account", "This copy is separate from the app on your home screen.")
-        : signed ? row(cloudOn, cloudOn ? "Copied to your account" : "Account not reachable right now", cloudOn ? `Every change is sent within a second. ${bkLine}` : "Everything is still saved on the phone and will be sent when you're back online.")
-        : row(false, "Not copied online yet", "Create an account in Settings → Account to keep a copy online.")}
-      ${IN_SAFARI ? row(false, "You're in Safari", "Safari and the app on your home screen keep separate data. Use the home screen app.") : ""}
-    </div>
-    <div class="lbl" style="margin:18px 4px 6px">Backups you can bring back</div>
-    <p class="small muted" style="margin:0 4px 10px">Bringing one back only adds what's missing. Nothing you have now is changed or removed.</p>
-    <div class="sbox ds-list">${L === null ? `<div class="srow"><span class="muted">Looking for backups…</span></div>` : !L.length ? `<div class="srow"><span class="muted">No backups yet. The first one is made today.</span></div>`
-      : L.map(x => `<div class="srow ds-r${DS.pick === x.id ? " on" : ""}"><span>${escH(x.label)}<small>${escH(x.sub)}</small></span><button class="btn ghost sm" data-act="dspick" data-v="${x.id}" ${DS.busy ? "disabled" : ""}>Check</button></div>
-        ${DS.pick === x.id && DS.cnt ? `<div class="ds-conf">${DS.cnt.total ? `<p>This backup adds back <b>${addWords(DS.cnt)}</b>${DS.cnt.dates.length ? ` (${DS.cnt.dates.slice(0, 8).map(fDM).join(", ")}${DS.cnt.dates.length > 8 ? "…" : ""})` : ""}.</p>
-          <div class="ds-btns"><button class="btn ghost" data-act="dsno">Cancel</button><button class="btn" data-act="dsyes" style="--c:var(--good)">Add them back</button></div>` : `<p>Nothing missing: you already have everything in this backup.</p>`}</div>` : ""}`).join("")}</div>
-    ${FB.bk === "rules" ? `<p class="small muted" style="margin:12px 4px 0">To turn on account backups, add this to your Firestore rules (inside <code>match /databases/{database}/documents</code>): <code>match /users/{uid}/backups/{b} { allow read, write: if request.auth != null &amp;&amp; request.auth.uid == uid; }</code></p>` : ""}
-    <p class="small muted" style="margin:14px 4px 22px">You can also copy everything as text in Settings → Backup and keep it in Notes.</p>`;
+    ${R ? `<section class="ds-rec"><b>Some of your data may be missing</b><p>${R.src === "online" ? `Your online backup from ${escH(whenLabel(R.e.t, true))}` : "An older copy on this phone"} has things this phone doesn't:</p>
+      <ul class="dz-lost">${(R.list = R.list || dsDiff(R.docs)).slice(0, 4).map(q => `<li><b>${fShort(q.d)}</b><small>${escH(dayWords(q.c))}</small></li>`).join("")}${R.list.length > 4 ? `<li class="more">and ${R.list.length - 4} more day${R.list.length > 5 ? "s" : ""}</li>` : ""}</ul>
+      <div class="ds-btns"><button class="btn ghost" data-act="dsrecno">Keep as is</button><button class="btn" data-act="dsrecyes" style="--c:var(--good)">Bring it back</button></div>
+      <button class="linkb ds-later" data-act="dsreclater">Decide later</button></section>` : ""}
+    <section class="dz-flow${st.acc === "sending" ? " busy" : ""}">
+      ${node("ok", "phone", "This phone", `${st.n} day${st.n === 1 ? "" : "s"}`, "var(--pull)")}
+      <i class="dz-l${st.live ? " on" : ""}"></i>
+      ${node(st.acc === "ok" || st.acc === "claude" ? "ok" : st.acc === "sending" ? "busy" : st.acc === "away" ? "warn" : "off", "cloud", "Your account", accSub, "var(--core)")}
+      <i class="dz-l${st.bk === "ok" ? " on" : ""}"></i>
+      ${node(st.bk === "ok" ? "ok" : st.bk === "load" ? "busy" : st.bk === "off" ? "off" : "warn", "stack", "Backups", bkSub, "var(--good)")}
+    </section>
+    <p class="dz-say">${say}</p>
+    ${IN_SAFARI ? `<p class="dz-say warn">You're in Safari: it keeps its own data, separate from the app on your home screen. Open the app from your home screen.</p>` : ""}
+    ${!st.live && (st.acc === "out" || st.acc === "none") && fbOK() ? `<button class="btn dz-cta" data-act="account" style="--c:var(--core)">Create an account or sign in</button>` : ""}
+    ${st.bk === "rules" ? `<section class="dz-fix"><b>Turn on online backups</b><ol><li>Tap <b>Copy the rules</b>.</li><li>In the Firebase console, open <b>Firestore Database → Rules</b>, select everything, paste, then tap <b>Publish</b>.</li><li>Come back and tap <b>Check again</b>.</li></ol>
+      <div class="ds-btns"><button class="btn ghost" data-act="bkrules">Copy the rules</button><button class="btn" data-act="bkretry" style="--c:var(--good)">Check again</button></div></section>` : ""}
+    ${st.bk === "fail" ? `<section class="dz-fix"><b>Backups couldn't be reached</b><p>Your data is safe on this phone and in your account. The backups load again when the connection is back.</p><div class="ds-btns one"><button class="btn ghost" data-act="bkretry">Try again</button></div></section>` : ""}
+    ${st.bk === "big" ? `<p class="dz-say warn">Your data is too big for one online backup. Every day is still copied to your account.</p>` : ""}
+    ${st.live && st.bk !== "rules" ? `<div class="dz-h"><span><b>Online backups</b><small>One a day for 2 weeks, then one a week for 2 months</small></span>
+      ${st.bk === "ok" ? `<button class="dz-now${DS.now ? " " + DS.now : ""}" data-act="bknow" ${DS.now === "busy" ? "disabled" : ""}>${DS.now === "done" ? DZI.ok + "Backed up" : DS.now === "busy" ? `<span class="dz-spin"></span>Saving` : DZI.back + "Back up now"}</button>` : ""}</div>
+      <div class="dz-tl">${st.bk === "load" ? `<p class="dz-wait"><span class="dz-spin"></span>Loading your backups…</p>` : online.length ? online.map(x => dsRow(x, true)).join("") : st.bk === "ok" ? `<p class="dz-wait">The first backup is being made. It shows up here in a moment.</p>` : ""}</div>` : ""}
+    <button class="dz-more${DS.showPhone ? " on" : ""}" data-act="dsphone" aria-expanded="${DS.showPhone}"><span><b>Copies on this phone</b><small>${!DS.phone ? "…" : phone.length ? `${phone.length} kept` : "None yet"} · kept even without an account</small></span>${DZI.chev}</button>
+    ${DS.showPhone ? `<div class="dz-tl ph">${phone.length ? phone.map(x => dsRow(x, false)).join("") : `<p class="dz-wait">No copies yet. The first one is made tomorrow.</p>`}</div>` : ""}
+    <button class="linkb dz-txt" data-act="backup">Copy everything as text</button>`;
   sh.scrollTop = y; if (!sh.classList.contains("show")) showSheet();
-  if (L === null) dsSources().then(list => { DS.list = list; if ($("#sheet .ds-list")) openData(true); });
 }
+const dsShown = () => !!$("#sheet.show .dz-flow");
+function dsRedraw() { try { if (dsShown()) openData(true); } catch (e) {} }
 async function dsApply(docs, why) {
   const inc = cleanAll(JSON.parse(JSON.stringify(docs || {}))), c = addCount(S.docs, inc);
   if (!c.total) return c;
@@ -3011,32 +3305,185 @@ async function dsApply(docs, why) {
 }
 // all the older copies on this phone, merged: what would they bring back?
 async function recoverable() {
-  const all = {}, srcs = (await dsSources()).filter(x => x.id[0] !== "c");
+  const all = {}, srcs = await dsPhone();
   for (const x of srcs.reverse()) { try { const d = cleanAll(await x.load()); for (const id in d) if (/^d\d{4}-\d\d-\d\d$/.test(id)) all[id] = addMerge(id, all[id], d[id]); } catch (e) {} }
   return { docs: all, cnt: addCount(S.docs, all) };
 }
-async function dsAct(a, b) {
-  if (a === "datasafe") { Object.assign(DS, { list: null, pick: null, cnt: null }); return openData(); }
-  if (a === "dsback") { DS.rec = false; return openSheet(); }
-  if (a === "dspick") { const x = (DS.list || []).find(x => x.id === b.dataset.v); if (!x) return; DS.busy = true; openData(true);
-    try { DS.pick = x.id; DS.cnt = addCount(S.docs, cleanAll(await x.load())); } catch (e) { DS.pick = null; toast("This backup couldn't be read"); }
-    DS.busy = false; return openData(true); }
-  if (a === "dsno") { DS.pick = null; DS.cnt = null; return openData(true); }
-  if (a === "dsyes") { const x = (DS.list || []).find(x => x.id === DS.pick); if (!x) return;
-    const c = await dsApply(await x.load(), "restore " + x.id); DS.pick = null; DS.cnt = null; openData(true);
-    return toast(c.total ? `Added back: ${addWords(c)}` : "Nothing was missing"); }
-  if (a === "dsrecno") { lsSet("aub.rec1", "later"); DS.rec = false; return openData(true); }
-  if (a === "dsrecyes") { const r = await recoverable(); const c = await dsApply(r.docs, "recover"); lsSet("aub.rec1", "done"); DS.rec = false; openData(true);
-    return toast(c.total ? `Added back: ${addWords(c)}` : "Nothing was missing"); }
+// show the "may be missing" question as soon as nothing else is on screen
+function dsOffer(rec) {
+  const go = () => { if (dsShown()) { DS.rec = rec; return openData(true); }
+    if ($("#sheet").classList.contains("show") || $("#ob") || $("#tour") || $("#crop") || $(".lv-up")) return setTimeout(go, 3000);
+    DS.rec = rec; dsOpen(); };
+  go();
 }
-// once, after this update: if older copies on the phone hold sets that are missing now, offer to bring them back
+function dsOpen() {
+  Object.assign(DS, { open: null, x: null, now: "" }); openData();
+  dsPhone().then(l => { DS.phone = l; dsRedraw(); });
+  if (bkOn() && (!BK.idx || Date.now() - BK.at > 60000 || FB.bk !== "ok")) bkIndex(true).then(dsRedraw, e => { bkErr(e); dsRedraw(); });
+}
+async function dsAct(a, b) {
+  if (a === "datasafe") return dsOpen();
+  if (a === "dsback") { DS.rec = null; return openSheet(); }
+  if (a === "dsphone") { DS.showPhone = !DS.showPhone; return openData(true); }
+  if (a === "dsall") { if (DS.x) DS.x.all = true; return openData(true); }
+  if (a === "dsopen") {
+    const id = b.dataset.v; if (DS.open === id) { DS.open = null; DS.x = null; return openData(true); }
+    const x = dsSources(dsState()).find(q => q.id === id); if (!x) return;
+    DS.open = id; DS.x = { id, st: "load" }; openData(true);
+    try { const docs = cleanAll(await x.load()); if (DS.open !== id) return; DS.x = { id, st: "ready", docs, days: dsDiff(docs) }; }
+    catch (e) { if (DS.open === id) DS.x = { id, st: "err" }; }
+    return openData(true);
+  }
+  if (a === "dsday") { const q = DS.x && DS.x.days && DS.x.days.find(q => q.d === b.dataset.v); if (q) q.on = !q.on; return openData(true); }
+  if (a === "dsgo") {
+    const X = DS.x; if (!X || !X.days) return; const pick = {}; for (const q of X.days) if (q.on) pick["d" + q.d] = X.docs["d" + q.d];
+    const got = await dsApply(pick, "restore " + X.id); DS.x = { id: X.id, st: "done", got };
+    if (X.id.startsWith("c:") && !bkMore((BK.idx || []).find(e => "c:" + e.id === X.id) || {}).length) await bkPin(X.id.slice(2), false);
+    openData(true); toast(got.total ? `Brought back: ${addWords(got)}` : "Nothing was missing");
+    return setTimeout(() => bkLatest(), 4000);
+  }
+  if (a === "bknow") { DS.now = "busy"; openData(true); const ok = await bkLatest(true); DS.now = ok ? "done" : ""; dsRedraw();
+    if (!ok) toast(FB.bk === "rules" ? "Online backups need one more Firebase rule" : "The backup couldn't be saved. Try again in a moment.");
+    else setTimeout(() => { if (DS.now === "done") { DS.now = ""; dsRedraw(); } }, 4000); return; }
+  if (a === "bkrules") { try { navigator.clipboard.writeText(FB_RULES).then(() => toast("Rules copied. Paste them in Firebase."), () => toast("Copy isn't allowed here")); } catch (e) { toast("Copy isn't allowed here"); } return; }
+  if (a === "bkretry") { FB.bk = undefined; BK.idx = null; openData(true); await bkCheck(); return dsRedraw(); }
+  if (a === "dsreclater") { lsSet("aub.recL", today()); DS.rec = null; return openData(true); }
+  if (a === "dsrecno") { const R = DS.rec; DS.rec = null;
+    if (R && R.src === "online") { lsSet("aub.recC", R.e.id + "@" + R.e.t); await bkPin(R.e.id, false); } else lsSet("aub.rec1", "kept");
+    toast("Kept as it is"); return openData(true); }
+  if (a === "dsrecyes") { const R = DS.rec; if (!R) return; DS.rec = null;
+    const c = await dsApply(R.docs, R.src === "online" ? "restore c:" + R.e.id : "recover");
+    if (R.src === "online") await bkPin(R.e.id, false); else lsSet("aub.rec1", "done");
+    openData(true); toast(c.total ? `Brought back: ${addWords(c)}` : "Nothing was missing");
+    return setTimeout(() => bkLatest(), 4000); }
+}
+// once, after an update: if older copies on the phone hold sets that are missing now, offer to bring them back
 setTimeout(async () => {
-  if (lsGet("aub.rec1") || !nDays(S.docs)) return;
-  try { const r = await recoverable(); if (!r.cnt.total) { lsSet("aub.rec1", "none"); return; }
-    const go = () => { if ($("#sheet").classList.contains("show") || $("#ob") || $("#tour") || $("#crop")) return setTimeout(go, 3000);
-      DS.rec = true; DS.cnt = r.cnt; DS.list = null; openData(); };
-    go(); } catch (e) {}
+  if (lsGet("aub.rec1") || lsGet("aub.recL") === today() || !nDays(S.docs)) return;
+  try { const r = await recoverable(); if (!r.cnt.total) { lsSet("aub.rec1", "none"); return; } dsOffer({ src: "phone", docs: r.docs, cnt: r.cnt }); } catch (e) {}
 }, 4000);
+
+
+/* ================= holds: plank, side plank, suitcase hold (and timed stretches) =================
+   A hold is timed, not counted. Each set has its own little timer: start it, hold as long as you can, tap to stop.
+   The time is saved with the set ({ t } or, per side, { t, t2 }), the next target comes from your last session,
+   and beating your best is a record like any other. Stretches use the same timer with a fixed 30 s. */
+const HOLD = { plk: { base: 30, max: 240 }, spl: { base: 30, max: 150 }, sch: { base: 30, max: 120 },
+  lst: { fixed: 30 }, hfs: { fixed: 30 }, cst: { fixed: 30 }, chp: { fixed: 30 } };
+const holdOf = ex => ex && ex.chk && HOLD[ex.id] ? HOLD[ex.id] : null;
+const holdSides = ex => ex.per === "/side" ? 2 : 1;
+const holdScore = (st, sides) => !st ? 0 : sides === 2 ? (st.t != null && st.t2 != null ? Math.min(st.t, st.t2) : 0) : (st.t || 0);
+const fmtS = sec => sec >= 60 ? `${Math.floor(sec / 60)}:${String(Math.round(sec % 60)).padStart(2, "0")}` : `${Math.round(sec)} s`;
+const fmtClock = sec => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, "0")}`;
+// your last session and your best ever on a hold, before day d
+function holdHist(id, d, sides) {
+  return memo("hh|" + id + "|" + d + "|" + sides, () => {
+    let last = null, best = 0;
+    for (const x of Object.values(S.docs)) {
+      if (!x || !x.date || x.date >= d || !x.ex) continue;
+      const sc = []; for (const k in x.ex) if (k.split("@")[0] === id) for (const q of x.ex[k] || []) { const v = holdScore(q, sides); if (v > 0) sc.push(v); }
+      if (!sc.length) continue;
+      best = Math.max(best, ...sc); if (!last || x.date > last.date) last = { date: x.date, sets: sc };
+    }
+    return { last, best };
+  });
+}
+// today's target: a little more than your best last time (the same in easy weeks); fixed for stretches
+function holdTarget(d, ex) {
+  const h = holdOf(ex); if (!h) return 0; if (h.fixed) return h.fixed;
+  const H = holdHist(ex.id, d, holdSides(ex)); if (!H.last) return beginner() ? 20 : h.base;
+  const lb = Math.max(...H.last.sets), easy = ["deload", "re", "pre"].includes(phase(d).key);
+  return Math.min(h.max, Math.max(10, easy ? lb : lb + (lb < 60 ? 5 : 10)));
+}
+let HT = null, HTI = 0; // the hold timer that's running: { d, k, j, s (side), t0, tg, best, cd (switch countdown end) }
+const htId = (k, j, sd) => `ht-${k.replace(/[^\w-]/g, "_")}-${j}-${sd}`;
+function holdRow(d, ex, k, j, st, tg, nx, n) {
+  const sides = holdSides(ex), lab = ["Left", "Right"];
+  const pill = sd => {
+    const v = st[sd ? "t2" : "t"], run = HT && HT.d === d && HT.k === k && HT.j === j && HT.s === sd, id = htId(k, j, sd);
+    if (run && HT.cd) return `<button class="ht cd" id="${id}" data-act="hstop" data-v="${k}" data-i="${j}" data-s="${sd}" aria-label="${lab[sd]} side starts soon. Tap to start now"><span class="ht-ic">${lab[sd][0]}</span><span class="ht-t"><b class="num">${Math.max(1, Math.ceil((HT.cd - Date.now()) / 1000))}</b><small>${lab[sd]} side next</small></span></button>`;
+    if (run) { const sec = (Date.now() - HT.t0) / 1000;
+      return `<button class="ht run${sec >= HT.tg ? " hit" : ""}" id="${id}" data-act="hstop" data-v="${k}" data-i="${j}" data-s="${sd}" style="--p:${Math.min(1, sec / HT.tg)}" aria-label="Holding. Tap to stop"><span class="ht-ic"><i></i></span><span class="ht-t"><b class="num">${fmtClock(sec)}</b><small>${sec >= HT.tg ? "Target! Keep going" : `Goal ${fmtS(HT.tg)}${sides === 2 ? " · " + lab[sd] : ""} · tap to stop`}</small></span></button>`; }
+    if (v != null) { const diff = Math.round(v - tg), ed = S.holdEdit === `${k}|${j}|${sd}`;
+      return `<button class="ht done${ed ? " ed" : ""}" data-act="hed" data-v="${k}" data-i="${j}" data-s="${sd}" aria-label="${sides === 2 ? lab[sd] + ": " : ""}${fmtS(v)}. Tap to change"><span class="ht-ic">${sides === 2 ? lab[sd][0] : IC.check}</span><span class="ht-t"><b class="num">${fmtS(v)}</b><small class="${diff >= 0 ? "up" : ""}">${HOLD[ex.id].fixed ? (sides === 2 ? lab[sd] : "Done") : diff >= 0 ? `+${diff} s on goal` : `${-diff} s short`}</small></span></button>`; }
+    return `<button class="ht idle" data-act="hstart" data-v="${k}" data-i="${j}" data-s="${sd}" aria-label="Start the ${sides === 2 ? lab[sd].toLowerCase() + " side " : ""}timer"><span class="ht-ic"><svg viewBox="0 0 10 10"><path d="M2.6 1.4v7.2l6-3.6z"/></svg></span><span class="ht-t"><b>${sides === 2 ? lab[sd] : "Start"}</b><small>Goal ${fmtS(tg)}</small></span></button>`;
+  };
+  const ed = S.holdEdit && S.holdEdit.startsWith(k + "|" + j + "|") ? +S.holdEdit.split("|")[2] : -1;
+  return `<div class="set hset ${st.ok ? "ok" : ""} ${st.pr ? "pr" : ""} ${j >= n - nx ? "xset" : ""}" data-ex="${k}" data-i="${j}"><span class="sn">${st.pr ? "PR" : j + 1}</span>
+    <div class="hts${sides === 2 ? " two" : ""}">${Array.from({ length: sides }, (_, sd) => pill(sd)).join("")}</div>
+    <button class="chk" data-act="chk" aria-label="Set ${j + 1} done" aria-pressed="${!!st.ok}">${IC.check}</button></div>
+    ${ed >= 0 ? `<div class="ht-ed"><label>${sides === 2 ? ["Left", "Right"][ed] + " side" : "Time"}<input class="in" inputmode="numeric" data-hed="${k}|${j}|${ed}" value="${st[ed ? "t2" : "t"] ?? ""}" aria-label="Seconds"><span>s</span></label>
+      <button class="linkb" data-act="hagain" data-v="${k}" data-i="${j}" data-s="${ed}">Time it again</button><button class="linkb" data-act="hedone">Done</button></div>` : ""}`;
+}
+function holdFoot(d, ex) {
+  const h = holdOf(ex), H = holdHist(ex.id, d, holdSides(ex)), tg = holdTarget(d, ex), per = holdSides(ex) === 2 ? " per side" : "";
+  if (h.fixed) return `<span class="hint">Tap a set to time it: ${fmtS(h.fixed)}${per}, relaxed and breathing slowly.</span>`;
+  if (!H.last) return `<span>First time: start the timer and hold as long as you can with good form${per}. Aim for about ${fmtS(tg)}.</span>`;
+  const lb = Math.max(...H.last.sets), easy = ["deload", "re", "pre"].includes(phase(d).key);
+  return `<span>Last (${fDM(H.last.date)}): <span class="num">${H.last.sets.map(fmtS).join(", ")}</span>${H.best > lb ? ` · record ${fmtS(H.best)}` : ""}</span>
+    <span class="hint">${easy ? `Easy week: hold ${fmtS(tg)}${per}, the same as last time` : `Goal ${fmtS(tg)}${per}: ${tg - lb} s more than your best last time. Keep going past it if you can.`}</span>`;
+}
+// the live timer: only the running pill is repainted
+function htLoop() { clearInterval(HTI); if (HT) { HTI = setInterval(htPaint, 200); htPaint(); } }
+function htPaint() {
+  if (!HT) return clearInterval(HTI);
+  const el = document.getElementById(htId(HT.k, HT.j, HT.s)), now = Date.now();
+  if (HT.cd) {
+    if (now >= HT.cd) { HT.cd = 0; HT.t0 = now; SND.tick(); if (el) replaceCard(HT.k) || refreshToday(); }
+    else if (el) el.querySelector("b").textContent = Math.ceil((HT.cd - now) / 1000);
+    return;
+  }
+  if (!el) return; const sec = (now - HT.t0) / 1000;
+  el.querySelector("b").textContent = fmtClock(sec); el.style.setProperty("--p", Math.min(1, sec / HT.tg));
+  const sm = el.querySelector("small");
+  if (!HT.hit && sec >= HT.tg) { HT.hit = true; el.classList.add("hit"); SND.tick(); try { navigator.vibrate && navigator.vibrate(40); } catch (e) {} if (sm) sm.textContent = "Target! Keep going"; }
+  if (HT.best && !HT.rec && sec > HT.best && sec >= HT.tg) { HT.rec = true; el.classList.add("rec"); if (sm) sm.textContent = "New best! Keep going"; }
+}
+function hStart(k, j, sd) {
+  const d = S.sel, ex = slotEx(d, +k.split("@")[1]); if (!holdOf(ex)) return;
+  if (HT && !(HT.k === k && HT.j === j && HT.s === sd)) hStop(true); // one hold at a time
+  T = null; clearInterval(tIv); $("#timer").classList.remove("show", "over"); // no rest countdown over a hold
+  unlockAudio(); const doc = ensureDay(d); liveTick(doc, d); touch("d" + d);
+  HT = { d, k, j, s: sd, t0: Date.now(), tg: holdTarget(d, ex), best: holdOf(ex).fixed ? 0 : holdHist(ex.id, d, holdSides(ex)).best };
+  S.holdEdit = null; SND.tick(); replaceCard(k) || refreshToday(); htLoop();
+}
+function hStop(quiet) {
+  if (!HT) return; const H = HT, d = H.d, ex = slotEx(d, +H.k.split("@")[1]), sides = holdSides(ex);
+  if (H.cd) { H.cd = 0; H.t0 = Date.now(); SND.tick(); replaceCard(H.k) || refreshToday(); return; } // tapped during the switch: start the other side now
+  const sec = Math.round((Date.now() - H.t0) / 1000); HT = null; clearInterval(HTI);
+  if (sec < 2) { if (!quiet) toast("Too short to save. Tap Start to try again"); replaceCard(H.k) || refreshToday(); return; }
+  const doc = ensureDay(d), arr = doc.ex[H.k] || (doc.ex[H.k] = []); while (arr.length <= H.j) arr.push(null);
+  const st = arr[H.j] || (arr[H.j] = {}); st[H.s ? "t2" : "t"] = sec;
+  const full = sides === 1 || (st.t != null && st.t2 != null);
+  if (!full) { // one side done: the other starts after a 5 s switch
+    touch("d" + d);
+    if (!quiet) { HT = { ...H, s: H.s ? 0 : 1, cd: Date.now() + 5000, hit: false, rec: false, t0: 0 }; SND.tick(); }
+    replaceCard(H.k) || refreshToday(); if (HT) htLoop(); return;
+  }
+  const sc = holdScore(st, sides), prev = H.best, others = arr.filter((x, i) => x && i !== H.j).map(x => holdScore(x, sides));
+  if (!holdOf(ex).fixed && prev > 0 && sc > prev && sc > Math.max(0, ...others)) { st.pr = true; setTimeout(() => { SND.pr(); toast(`New record: ${ex.n.toLowerCase()} for ${fmtS(sc)}`); }, 350); }
+  if (st.ok) { touch("d" + d); replaceCard(H.k) || refreshToday(); return; }
+  replaceCard(H.k) || refreshToday();
+  const btn = view.querySelector(`.ex[data-card="${H.k}"] .set[data-i="${H.j}"] .chk`);
+  if (btn && S.sel === d) toggleSet(btn); else { st.ok = true; touch("d" + d); refreshToday(); }
+}
+function hAct(a, b) {
+  const k = b && b.dataset.v, j = b ? +b.dataset.i : 0, sd = b ? +b.dataset.s : 0;
+  if (a === "hstart") return hStart(k, j, sd);
+  if (a === "hstop") return hStop();
+  if (a === "hed") { S.holdEdit = S.holdEdit === `${k}|${j}|${sd}` ? null : `${k}|${j}|${sd}`; replaceCard(k) || refreshToday(); setTimeout(() => { const i = document.querySelector(`[data-hed="${k}|${j}|${sd}"]`); if (i) i.focus(); }, 60); return; }
+  if (a === "hagain") { S.holdEdit = null; return hStart(k, j, sd); }
+  if (a === "hedone") { const kk = (S.holdEdit || "").split("|")[0]; S.holdEdit = null; return replaceCard(kk) || refreshToday(); }
+}
+// typing a time by hand
+document.addEventListener("change", e => {
+  const el = e.target; if (!el || !el.dataset || !el.dataset.hed) return;
+  const [k, j, sd] = el.dataset.hed.split("|"), d = S.sel, doc = ensureDay(d), arr = doc.ex[k] || (doc.ex[k] = []), ex = slotEx(d, +k.split("@")[1]);
+  while (arr.length <= +j) arr.push(null); const st = arr[+j] || (arr[+j] = {}), v = num(el.value);
+  if (v == null || v <= 0) delete st[+sd ? "t2" : "t"]; else st[+sd ? "t2" : "t"] = Math.min(3600, Math.round(v));
+  if (!st.ok && (holdSides(ex) === 1 ? st.t != null : st.t != null && st.t2 != null)) st.ok = true;
+  touch("d" + d); refreshToday();
+});
 
 /* ================= settings ================= */
 const DEFSET = { theme: "auto", palette: "classic", custom: "#FF6A2B", motion: "system",
@@ -4514,8 +4961,12 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22g";
+const APP_VER = "2026-11-22h";
 const NEWS = [
+  { v: "2026-11-22h", d: "22 Nov", items: [
+    ["var(--core)", "Timed holds", "Plank, side plank and suitcase hold are timed now: tap Start on a set, hold as long as you can, tap to stop. The goal is a little more than your best last time, and beating your best is a record. Per-side holds switch sides by themselves after 5 s."],
+    ["var(--pull)", "Stretches too", "Stretches get the same timer with a fixed 30 s."],
+    ["var(--good)", "Backups you can see", "Settings → Your data shows where your data is and every online backup. Open one to see what it has that your phone doesn't, then bring it back in one tap. Backups now happen by themselves, a couple of minutes after you log something."]] },
   { v: "2026-11-22g", d: "22 Nov", items: [
     ["var(--good)", "Your data is safe", "The phone is the main copy, saved twice on the phone. Syncing with your account can only add to it: nothing you logged is ever replaced or removed by another copy."],
     ["var(--pull)", "Backups you can bring back", "A full backup every day on the phone and in your account (14 days kept). Settings → Your data and backups: check any of them and add back what's missing."]] },
@@ -4786,7 +5237,8 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   {
     const n0 = setsFor(d, ex, k), a0 = ((doc && doc.ex && doc.ex[k]) || []).slice(0, n0);
     if (!it.skip && a0.filter(x => x && x.ok).length === n0 && !S.open.has(k)) {
-      const sum = ex.chk ? `${n0} × ${ex.r}${ex.per ? " " + ex.per : ""}` : a0.map(x => x.w != null || x.r != null ? `${x.w ? kg(x.w) + "×" : ""}${x.r ?? "–"}${x.pr ? " ★" : ""}` : "✓").join(" · ");
+      const sum = holdOf(ex) ? a0.map(x => x && (x.t != null || x.t2 != null) ? (holdSides(ex) === 2 ? `${fmtS(x.t || 0)} / ${fmtS(x.t2 || 0)}` : fmtS(x.t)) : "✓").join(" · ") + (a0.some(x => x && x.pr) ? " ★" : "")
+        : ex.chk ? `${n0} × ${ex.r}${ex.per ? " " + ex.per : ""}` : a0.map(x => x.w != null || x.r != null ? `${x.w ? kg(x.w) + "×" : ""}${x.r ?? "–"}${x.pr ? " ★" : ""}` : "✓").join(" · ");
       return `<article class="ex fold" style="--c:${col}" data-card="${k}" data-act="expand" data-v="${k}" role="button" aria-label="Edit ${ex.n}"><header class="ex-h">
         <button class="thumb" data-act="demo" data-w="${wkKey(d)}" data-v="${it.i}" aria-label="Show how to do ${ex.n}" ${SET().ui.figs ? "" : "hidden"}>${figSVG(ex.id)}</button>
         <div class="ex-t"><h3>${ex.n}</h3><p class="ex-m num">${sum}</p></div>
@@ -4805,9 +5257,11 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   const lw = ex.injL ? lightW(ex, last) : null, ph = phase(d), reOld = reFrom(ex, d, last);
   const pl = d === today() && ok < n && !wk.light && pw == null && ["build", "push"].includes(phase(d).key) ? plateauOf(ex, d) : null;
   let rows = "";
+  const hx = holdOf(ex), hTg = hx ? holdTarget(d, ex) : 0;
   for (let j = 0; j < n; j++) {
     const st = arr[j] || {}, ls = last ? (last.sets[j] || last.sets[last.sets.length - 1]) : null;
-    if (ex.chk) {
+    if (hx) rows += holdRow(d, ex, k, j, st, hTg, nx, n);
+    else if (ex.chk) {
       rows += `<div class="set ${st.ok ? "ok" : ""} ${j >= n - nx ? "xset" : ""}" data-ex="${k}" data-i="${j}"><span class="sn">${j + 1}</span>
         <span class="chk-txt">${ex.r}${ex.per ? " " + ex.per : ""}</span>
         <button class="chk" data-act="chk" aria-label="Set ${j + 1} done" aria-pressed="${!!st.ok}">${IC.check}</button></div>`;
@@ -4833,7 +5287,8 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
         : reOld ? `<span class="hint">Re-entry: about 70% of that${ex.bw ? "" : `, so around ${kg(reW(ex, last.top.w))} kg`}</span>`
         : ph.key === "re" ? `<span class="hint">Easy weeks: stop 3–4 reps before failure</span>`
         : ex.plr ? `<span class="hint">Heavier than usual, ${ex.r} reps</span>` : hit ? `<span class="hint">Top of range hit. Add ${ex.bw ? "weight" : step} today</span>` : rr && !pl ? `<span class="hint">Aim for 1 more rep than last time</span>` : ""}`;
-  } else if (!ex.chk) foot = ex.bw ? `<span>First time: do clean reps with your body weight, up to ${range(ex.r) ? range(ex.r)[1] : ex.r}, at ${eff}.</span>`
+  } else if (hx) foot = holdFoot(d, ex);
+  else if (!ex.chk) foot = ex.bw ? `<span>First time: do clean reps with your body weight, up to ${range(ex.r) ? range(ex.r)[1] : ex.r}, at ${eff}.</span>`
     : `<span>First time: pick a weight you can do for ${range(ex.r) ? range(ex.r)[0] : ex.r} reps at ${eff}.</span>`;
   // warm-up checkbox (only where it helps), plates for barbell lifts, personal note
   let extra = "", wuHTML = "";
@@ -4883,7 +5338,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   const ss = mate ? `<div class="ss">Superset with ${mate.ex.n.split(" (")[0].toLowerCase()}</div>` : "";
   return `<article class="ex ${ok === n ? "all" : ""} ${isCur ? "cur" : ""}" style="--c:${col}" data-card="${k}">
     <header class="ex-h${ok === n && S.open.has(k) ? " tapfold" : ""}"${ok === n && S.open.has(k) ? ` data-act="fold" data-v="${k}" role="button" aria-label="Close ${ex.n}"` : ""}>${SET().ui.figs ? "" : `<button class="ex-n" data-act="demo" data-w="${wkKey(d)}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${i + 1}</button>`}<button class="thumb" ${SET().ui.figs ? "" : "hidden"} data-act="demo" data-w="${wkKey(d)}" data-v="${it.i}" aria-label="Show how to do ${ex.n}">${figSVG(ex.id)}<span class="ex-n">${i + 1}</span><span class="play"><svg viewBox="0 0 10 10"><path d="M2.5 1.5v7l6-3.5z"/></svg></span></button><div class="ex-t">${isCur ? `<div class="upnext">Up next</div>` : ""}<h3>${ex.n}</h3>
-      <p class="ex-m">${n} × ${ex.r}${ex.per ? " " + ex.per : ""} · ${eff}${ex.rest ? " · rest " + ex.restL : ""}</p>${ss}${slotTag(ex)}</div>
+      <p class="ex-m">${n} × ${hx ? fmtS(hTg) : ex.r}${ex.per ? " " + ex.per : ""} · ${eff}${ex.rest ? " · rest " + ex.restL : ""}</p>${ss}${slotTag(ex)}</div>
       <span class="ex-c num" data-cnt="${k}">${ok}/${n}</span>${ok === n && S.open.has(k) ? `<span class="foldi" aria-hidden="true"><svg class="i" viewBox="0 0 24 24"><path d="M6 14.5l6-6 6 6"/></svg></span>` : ""}</header>
     ${wuHTML}
     ${ex.chk ? "" : `<div class="sets"><div class="set-h"><span>Set</span><span style="text-align:center">${ex.bw ? "+kg" : "kg"}</span><span style="text-align:center">Reps</span><span></span></div>${rows}</div>`}
@@ -5820,7 +6275,7 @@ function openSheet() {
       <div class="srow stack"><span>Week 1 starts on<small>Re-entry, build, push and deload weeks count from this Monday</small></span><input type="date" id="start" value="${getStart()}"></div>
     </div></div>
     <div class="sgroup"><div class="lbl">Your data</div><div class="sbox">
-      <button class="srow g-open" data-act="datasafe"><span>Your data and backups<small>${nDays(S.docs)} days on this phone${S.mode === "cloud" && !window.claude ? ", copied to your account" : window.claude ? ", saved in your Claude account" : ""} · daily backups you can bring back</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+      <button class="srow g-open" data-act="datasafe"><span>Your data and backups<small>${escH(dataLine())}</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="srow"><span>Backup<small>Copies all your logs as text</small></span><button class="btn ghost" data-act="backup" style="width:auto;height:38px;padding:0 14px;font-size:14px">Copy</button></div>
       <div class="srow"><span>Restore a backup<small>Paste a backup copied from this app. It only adds what's missing</small></span><button class="btn ghost" data-act="importopen" style="width:auto;height:38px;padding:0 14px;font-size:14px">Import</button></div>
       ${S.importing ? `<div class="srow stack"><textarea id="importtxt" rows="4" placeholder="Paste the backup text here" style="width:100%;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);padding:10px;font:inherit;font-size:14px"></textarea>
@@ -6150,7 +6605,7 @@ document.addEventListener("click", e => {
   if (a === "friends" || /^lb/.test(a)) return lbAct(a, b);
   if (a === "progedit" || /^pe/.test(a)) return peAct(a, b);
   if (a === "bodyedit" || a === "bfback" || a === "bfsave") return bfAct(a, b);
-  if (a === "datasafe" || /^ds/.test(a)) return dsAct(a, b);
+  if (a === "datasafe" || /^ds/.test(a) || /^bk(now|rules|retry)$/.test(a)) return dsAct(a, b);
   if (a === "keepslot") { const d = S.sel, doc = ensureDay(d), s = new Set(doc.keep || []); s.add(+b.dataset.v); doc.keep = [...s]; touch("d" + d); flipList(); refreshToday(); return; }
   if (a === "travel") return toggleTravel(b.dataset.v === "set");
   if (a === "injopen") { const c = injCur(); S.injDraft = { area: b.dataset.a || (c ? c.area : null), days: c && c.to >= today() ? Math.min(14, Math.max(3, diffD(today(), c.to) + 1)) : 7 }; return openInjury(); }
@@ -6178,7 +6633,12 @@ document.addEventListener("click", e => {
     if (on) { burst(b); SND.tick(); row.classList.add("just"); setTimeout(() => row.classList.remove("just"), 700); liveTick(doc, d); startTimer(60, "after warm-up", TYPES[wkOf(d).type], { id: k.split("@")[0], d }); }
     touch("d" + d); return;
   }
-  if (a === "chk") return toggleSet(b);
+  if (a === "chk") { const r0 = b.closest(".set");
+    if (HT && !HT.cd && r0 && r0.dataset.ex === HT.k && +r0.dataset.i === HT.j) { // ticking the set that's being timed: stop the timer and keep the time
+      const k = HT.k, j = HT.j; hStop(true); const st = (((dayDoc(S.sel) || {}).ex || {})[k] || [])[j]; if (st && st.ok) return;
+      const nb = view.querySelector(`.ex[data-card="${k}"] .set[data-i="${j}"] .chk`); return nb ? toggleSet(nb) : undefined; }
+    return toggleSet(b); }
+  if (/^h(start|stop|ed|again|edone)$/.test(a)) return hAct(a, b);
   if (a === "fin") return toggleFinish();
   if (a === "meal" || a === "habit") return toggleFood(a, b);
   if (/^f(add|again|edit|done|size|tag|del)$/.test(a)) return foodAct(a, b);
@@ -6617,6 +7077,7 @@ function onResume() {
     if (today() !== lastDay && wkDay() !== lastDay) { if (S.sel === lastDay) S.sel = today(); if (S.night === lastDay) S.night = today(); lastDay = today(); S.open.clear(); render(false); }
     else if (S.tab === "today") { const bm = $("#bmeta"); if (bm) bm.textContent = bannerMeta(S.sel); }
     if (T) { clearInterval(tIv); tIv = setInterval(tick, 200); tick(); }
+    if (bkOn() && Date.now() - BK.chk > 30 * 60000) bkCheck();
   } catch (e) { logErr("resume: " + ((e && e.stack) || e)); }
 }
 document.addEventListener("visibilitychange", () => { if (!document.hidden) onResume(); });
