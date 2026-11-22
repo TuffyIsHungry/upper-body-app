@@ -905,6 +905,18 @@ button.row{color:inherit}
 .pe-add{position:relative;color:var(--c);font-weight:600}.pe-add select{position:absolute;inset:0;opacity:0;width:100%;font-size:16px}
 .pe-newday{margin-top:6px}
 .rest-ring{display:grid;place-items:center;color:var(--core)}.rest-ring svg{width:38px;height:38px;opacity:.85}
+.ds-card{display:flex;flex-direction:column;gap:2px;background:var(--surface);border-radius:16px;padding:6px 14px}
+.ds-st{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line)}.ds-st:first-child{border-top:0}
+.ds-st>span:last-child{display:flex;flex-direction:column;gap:2px}.ds-st b{font-weight:600}.ds-st small{color:var(--muted);font-size:13px;line-height:1.35}
+.ds-ic{width:26px;height:26px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb, var(--good) 16%, transparent);color:var(--good)}.ds-ic svg{width:16px;height:16px;stroke-width:2.6}
+.ds-st.no .ds-ic{background:color-mix(in srgb, var(--warn) 16%, transparent);color:var(--warn)}
+.ds-list .btn.sm{flex:0 0 auto;height:34px;padding:0 12px;font-size:13px;width:auto}
+.ds-r.on{background:color-mix(in srgb, var(--good) 8%, transparent)}
+.ds-conf{padding:4px 2px 12px;border-bottom:1px solid var(--line)}.ds-conf p{margin:4px 0 10px;font-size:14px;line-height:1.4}
+.ds-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ds-btns .btn{height:42px;min-width:0}
+.ds-rec{margin:0 0 14px;padding:14px;border-radius:16px;background:color-mix(in srgb, var(--warn) 12%, var(--surface));box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--warn) 40%, transparent)}
+.ds-rec p{margin:6px 0 12px;font-size:14px;line-height:1.45}
+.ds-safari{background:color-mix(in srgb, var(--warn) 13%, var(--surface));line-height:1.4}
 .lb-signin{text-align:center;padding:26px 20px}.lb-signin p{margin:6px 0 16px}
 .lb-hero{width:58px;height:58px;border-radius:50%;display:grid;place-items:center;margin:0 auto 12px;background:color-mix(in srgb, var(--c) 16%, transparent);color:var(--c)}.lb-hero svg{width:30px;height:30px}
 .lb-wrap{display:flex;flex-direction:column;gap:14px}
@@ -1891,6 +1903,7 @@ const WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const LS = "aub.v1";
 const S = { open: new Set(), docs: {}, tab: "today", sel: today(), weekOff: 0, exSel: null, metric: "w", night: today(), mode: "loading" };
 try { const j = JSON.parse(localStorage.getItem(LS) || "{}"); if (j && typeof j === "object" && !Array.isArray(j)) S.docs = cleanAll(j); } catch (e) {}
+
 // damaged or foreign data (an odd backup, a half-written value) is tidied on the way in, so no screen can break on it
 function cleanAll(o) { for (const k of Object.keys(o)) { const c = cleanDoc(k, o[k]); if (c) o[k] = c; else delete o[k]; } return o; }
 function cleanDoc(id, v) {
@@ -1926,16 +1939,99 @@ function cleanDoc(id, v) {
   for (const k of ["start", "end", "last", "pz", "pms"]) if (k in v && !(typeof v[k] === "number" && isFinite(v[k]))) delete v[k]; // workout clock
   return v;
 }
+// a set with anything in it (ticked, or a weight / reps typed)
+const setHas = q => !!q && typeof q === "object" && (!!q.ok || q.w != null || q.r != null);
+// Everything in B that A doesn't have is added to A; where both have something, A's stays. Nothing of A is ever removed.
+function addMerge(id, A, B) {
+  const cp = x => JSON.parse(JSON.stringify(x)), isO = x => !!x && typeof x === "object" && !Array.isArray(x);
+  if (!isO(A)) return isO(B) ? cp(B) : A;
+  const R = cp(A); if (!isO(B) || id === "settings") return R;
+  const fill = (a, b) => { for (const k in b) if (k !== "_t" && (a[k] === undefined || a[k] === null || a[k] === "")) a[k] = cp(b[k]); };
+  if (!/^d\d{4}-\d\d-\d\d$/.test(id)) { fill(R, B); return R; }
+  const done = { ex: 1, food: 1, xs: 1, done: 1, _t: 1, sleep: 1 };
+  if (isO(B.ex)) { if (!isO(R.ex)) R.ex = {};
+    for (const k in B.ex) { const a = R.ex[k], b = B.ex[k]; if (!Array.isArray(b)) continue;
+      if (!Array.isArray(a)) { if (b.some(setHas)) R.ex[k] = cp(b); continue; }
+      for (let i = 0; i < b.length; i++) if (!setHas(a[i]) && setHas(b[i])) a[i] = cp(b[i]); } }
+  if (isO(B.food)) { if (!isO(R.food)) R.food = {};
+    if (Array.isArray(B.food.log)) { const log = Array.isArray(R.food.log) ? R.food.log : (R.food.log = []), ids = new Set(log.map(e => e && e.id));
+      for (const e of B.food.log) if (isO(e) && e.id && !ids.has(e.id)) log.push(cp(e)); }
+    for (const k in B.food) if (k !== "log" && R.food[k] === undefined) R.food[k] = cp(B.food[k]); }
+  if (isO(B.xs)) { if (!isO(R.xs)) R.xs = {}; for (const k in B.xs) R.xs[k] = Math.max(+R.xs[k] || 0, +B.xs[k] || 0); }
+  if (isO(B.sleep) && !(isO(R.sleep) && R.sleep.bed && R.sleep.wake)) R.sleep = { ...cp(B.sleep), ...(isO(R.sleep) ? R.sleep : {}) };
+  if (B.done && !R.done) R.done = true;
+  for (const k in B) if (!done[k]) { if (isO(B[k]) && isO(R[k])) fill(R[k], B[k]); else if (R[k] === undefined || R[k] === null || R[k] === "") R[k] = cp(B[k]); }
+  R._t = Math.max(+A._t || 0, +B._t || 0);
+  return R;
+}
+// what a merge would bring back, in words people understand
+function addCount(docs, from) {
+  const c = { days: 0, sets: 0, nights: 0, weights: 0, meals: 0, dates: [] };
+  for (const id in from) { if (!/^d\d{4}-\d\d-\d\d$/.test(id)) continue;
+    const a = docs[id], m = addMerge(id, a, from[id]), had = (a && a.ex) || {}; let any = false;
+    const sets = Object.keys(m.ex || {}).reduce((n, k) => n + (m.ex[k] || []).filter((q, i) => setHas(q) && !setHas((had[k] || [])[i])).length, 0);
+    if (!a && (sets || m.sleep || m.bw != null || m.done)) { c.days++; any = true; }
+    if (sets) { c.sets += sets; any = true; }
+    if (m.sleep && m.sleep.bed && !(a && a.sleep && a.sleep.bed)) { c.nights++; any = true; }
+    if (m.bw != null && (!a || a.bw == null)) { c.weights++; any = true; }
+    const ml = ((m.food || {}).log || []).length - (((a || {}).food || {}).log || []).length; if (ml > 0) { c.meals += ml; any = true; }
+    if (any) c.dates.push(id.slice(1)); }
+  c.total = c.sets + c.nights + c.weights + c.meals + c.days; return c;
+}
+const addWords = c => [c.days && `${c.days} day${c.days > 1 ? "s" : ""}`, c.sets && `${c.sets} set${c.sets > 1 ? "s" : ""}`, c.nights && `${c.nights} night${c.nights > 1 ? "s" : ""} of sleep`,
+  c.weights && `${c.weights} weigh-in${c.weights > 1 ? "s" : ""}`, c.meals && `${c.meals} meal${c.meals > 1 ? "s" : ""}`].filter(Boolean).join(", ");
 const stableStr = v => v === undefined ? "u" : JSON.stringify(v, (k, x) => x && typeof x === "object" && !Array.isArray(x) ? Object.keys(x).sort().reduce((o, q) => (o[q] = x[q], o), {}) : x);
 let DV = 0; const MEMO = new Map();
 function dataChanged() { DV++; MEMO.clear(); }
 function memo(key, f) { if (MEMO.has(key)) return MEMO.get(key); const v = f(); MEMO.set(key, v); return v; }
+/* ---------- keeping your data safe ----------
+   The phone is the main copy. It's written twice (localStorage and IndexedDB), a full backup is kept for each of the last
+   14 days, and a snapshot is taken before anything from the account changes a day you already have. Syncing only ever
+   ADDS to this phone: a set, a night, a weight or a meal you have here is never replaced or removed by the account. */
+const IDB = {};
+function idbOpen() {
+  return IDB.p || (IDB.p = new Promise(res => { try { const r = indexedDB.open("aub", 1); r.onupgradeneeded = () => r.result.createObjectStore("kv"); r.onsuccess = () => res(r.result); r.onerror = r.onblocked = () => res(null); } catch (e) { res(null); } }));
+}
+async function idbDo(mode, fn) {
+  const db = await idbOpen(); if (!db) return null;
+  return new Promise(res => { try { const tx = db.transaction("kv", mode), q = fn(tx.objectStore("kv")); tx.oncomplete = () => res(q && "result" in q ? q.result : true); tx.onerror = tx.onabort = () => res(null); } catch (e) { res(null); } });
+}
+const idbGet = k => idbDo("readonly", st => st.get(k)), idbSet = (k, v) => idbDo("readwrite", st => st.put(v, k)), idbDel = k => idbDo("readwrite", st => st.delete(k)), idbKeys = () => idbDo("readonly", st => st.getAllKeys());
+const nDays = docs => Object.keys(docs || {}).filter(k => /^d\d{4}-\d\d-\d\d$/.test(k)).length;
+let BKDAY = "", SAVEWARN = 0, LASTSAVE = 0;
+async function idbSave(txt) {
+  if (!(await idbSet("main", txt))) return;
+  const t = today(); if (BKDAY === t) return; BKDAY = t;
+  const keys = ((await idbKeys()) || []).filter(k => /^bk-/.test(k)).sort();
+  if (!keys.includes("bk-" + t) && nDays(S.docs)) await idbSet("bk-" + t, txt); // the first save of the day: yesterday's data, safe
+  for (const k of keys.slice(0, Math.max(0, keys.length - 14))) await idbDel(k);
+}
+// before the account changes days this phone already has: a snapshot (the last 5 are kept)
+async function idbSnap(why) {
+  const txt = JSON.stringify({ why, docs: S.docs }), key = "pre-" + Date.now(); // taken now, before anything changes
+  const keys = ((await idbKeys()) || []).filter(k => /^pre-/.test(k)).sort();
+  await idbSet(key, txt);
+  for (const k of keys.slice(0, Math.max(0, keys.length - 4))) await idbDel(k);
+}
+try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
 // saving to the phone is batched: one write shortly after you stop typing, and always before the app goes to the background
 let saveT = 0;
-const saveNow = () => { clearTimeout(saveT); saveT = 0; try { localStorage.setItem(LS, JSON.stringify(S.docs)); } catch (e) {} };
+const saveNow = () => { clearTimeout(saveT); saveT = 0; const txt = JSON.stringify(S.docs);
+  try { localStorage.setItem(LS, txt); LASTSAVE = Date.now(); }
+  catch (e) { if (Date.now() - SAVEWARN > 60000) { SAVEWARN = Date.now(); toast("This phone couldn't save. Your backup copy still has everything."); } try { logErr("save: " + e); } catch (x) {} }
+  idbSave(txt); };
 const saveLocal = () => { if (!saveT) saveT = setTimeout(saveNow, 300); };
 document.addEventListener("visibilitychange", () => { if (document.hidden && saveT) saveNow(); });
 addEventListener("pagehide", () => { if (saveT) saveNow(); });
+// the main copy lost days the second copy still has (iOS cleared it, a failed write): bring them back, adding only
+idbGet("main").then(txt => {
+  if (!txt) return; let j; try { j = JSON.parse(txt); } catch (e) { return; } if (!j || typeof j !== "object") return;
+  j = cleanAll(j); const c = addCount(S.docs, j); if (!c.total) return;
+  for (const id in j) S.docs[id] = addMerge(id, S.docs[id], j[id]);
+  dataChanged(); saveNow(); if (typeof applySettings === "function") { applySettings(); if (typeof BOOTED !== "undefined" && BOOTED) render(false); }
+  const ob = document.getElementById("ob"); if (ob && nDays(S.docs)) { ob.remove(); lsSet("aub.ob", "1"); lsSet("aub.tour", "1"); }
+  setTimeout(() => toast(`Restored from this phone's backup copy: ${addWords(c)}`), 1500);
+});
 
 let col = null;
 const dirty = new Set(), inflight = new Set(), again = new Set(), timers = {};
@@ -2040,12 +2136,17 @@ function fbLink(u) {
     if (initial) { if (snap.metadata && snap.metadata.fromCache) return; initial = false; fbMerge(uid, snap); return; }
     if (S.mode !== "cloud") return;
     let changed = false;
+    let snapped = false;
     for (const ch of snap.docChanges()) {
       if (ch.type === "removed") continue;
       const id = ch.doc.id; if (dirty.has(id) || inflight.has(id)) continue;
       const v = cleanDoc(id, JSON.parse(JSON.stringify(ch.doc.data() || null))); if (!v) continue;
       const loc = S.docs[id]; if (loc && (loc._t || 0) >= (v._t || 0)) continue; // ours is as new or newer
-      S.docs[id] = v; changed = true;
+      if (id === "settings" && loc) continue; // this phone's settings stay this phone's
+      // another copy saved this day: take what it adds, keep everything this phone has
+      const m = addMerge(id, loc, v);
+      if (stableStr(m) !== stableStr(loc)) { if (loc && !snapped) { idbSnap("account update"); snapped = true; } S.docs[id] = m; changed = true; }
+      if (loc && addCount({ [id]: v }, { [id]: m }).total) { S.docs[id]._t = Math.max(Date.now(), (v._t || 0) + 1); dirty.add(id); flush(id); } // the account was missing some of it: send it back
     }
     if (changed) { dataChanged(); saveLocal(); fbBaseline(); applySettings(); softRender(); }
   }, err => { FB.err = (err && err.code) || "sync"; fbUnlink(); setSync("error", "Offline?"); fbUI(); });
@@ -2066,11 +2167,17 @@ async function fbMerge(uid, snap) {
   let over = false, got = 0;
   for (const id in cloud) {
     const loc = S.docs[id], v = cloud[id];
-    if (!loc) { S.docs[id] = v; got++; continue; }
+    if (!loc) { S.docs[id] = v; got++; continue; } // missing on this phone: restored from the account
     if (stableStr(loc) === stableStr(v)) continue;
-    if ((v._t || 0) > (loc._t || 0) || (id === "settings" && first && !nL && nC)) { if (!over) { fbSafeCopy(uid, "last"); over = true; } S.docs[id] = v; got++; }
-    else up.push(id);
+    if (id === "settings") { if (first && !nL && nC) { S.docs[id] = v; got++; } else up.push(id); continue; } // a new phone takes the account's settings; otherwise this phone's
+    if ((v._t || 0) > (loc._t || 0)) { // the account's copy is newer: add what it has, never remove what this phone has
+      const m = addMerge(id, loc, v);
+      if (stableStr(m) !== stableStr(loc)) { if (!over) { fbSafeCopy(uid, "last"); idbSnap("account merge"); over = true; } S.docs[id] = m; got++; }
+      if (addCount({ [id]: v }, { [id]: m }).total) { S.docs[id]._t = Math.max(Date.now(), (v._t || 0) + 1); up.push(id); }
+    }
+    else up.push(id); // this phone's copy is newer: it goes to the account as it is
   }
+  FB.nC = nC;
   for (const id of Object.keys(S.docs)) if (!(id in cloud) && S.docs[id] && typeof S.docs[id] === "object") up.push(id);
   lsSet("aub.fb.uid", uid);
   col = { doc: id => ({ set: body => fbMods.F.setDoc(fbMods.F.doc(fbMods.db, "users", uid, "docs", id), body) }) };
@@ -2078,7 +2185,32 @@ async function fbMerge(uid, snap) {
   for (const id of up) { dirty.add(id); flush(id); }
   dataChanged(); saveLocal(); if (got) fbBaseline(); applySettings(); softRender(); fbUI(); fbPushProfile(true);
   setTimeout(() => fbLoadSocial().then(lbUpdate), 2500); // the Friends board, ready before you open it
+  setTimeout(fbBackup, 5000); // once a day, a full backup in the account too
   if (S.obWait) setTimeout(obResume, 60);
+}
+async function packDocs(docs) {
+  const txt = JSON.stringify(docs);
+  if (typeof CompressionStream === "function") { try {
+    const buf = new Uint8Array(await new Response(new Blob([txt]).stream().pipeThrough(new CompressionStream("gzip"))).arrayBuffer());
+    let bin = ""; for (let i = 0; i < buf.length; i += 0x8000) bin += String.fromCharCode.apply(null, buf.subarray(i, i + 0x8000));
+    return { enc: "gz64", z: btoa(bin) }; } catch (e) {} }
+  return { enc: "json", z: txt };
+}
+async function unpackDocs(o) {
+  if (!o || typeof o.z !== "string") return null;
+  if (o.enc === "json") return JSON.parse(o.z);
+  const bin = atob(o.z), buf = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) buf[i] = bin.charCodeAt(i);
+  return JSON.parse(await new Response(new Blob([buf]).stream().pipeThrough(new DecompressionStream("gzip"))).text());
+}
+async function fbBackup(force) {
+  const m = fbMods, u = m && m.auth.currentUser, t = today(); if (!u || S.mode !== "cloud" || !nDays(S.docs)) return;
+  if (!force && lsGet("aub.cbk") === u.uid + "|" + t) return;
+  try {
+    const p = await packDocs(S.docs); if (p.z.length > 950000) { FB.bk = "big"; return; }
+    await m.F.setDoc(m.F.doc(m.db, "users", u.uid, "backups", t), { t: Date.now(), days: nDays(S.docs), ...p });
+    lsSet("aub.cbk", u.uid + "|" + t); FB.bk = "ok";
+    for (let j = 14; j < 21; j++) { try { await m.F.deleteDoc(m.F.doc(m.db, "users", u.uid, "backups", addD(t, -j))); } catch (e) {} }
+  } catch (e) { FB.bk = e && e.code === "permission-denied" ? "rules" : "fail"; }
 }
 function fbBaseline() {
   try { const v = levelNow(); localStorage.setItem("aub.lvl", v.L); if (+(localStorage.getItem("aub.lvx") || 0) < v.L) localStorage.setItem("aub.lvx", v.L);
@@ -2296,7 +2428,8 @@ async function fbRemove(fid) {
 }
 // when the account is deleted: the card, the code, the friends list and open requests go too
 async function fbDropSocial(uid) {
-  const m = fbMods; try { localStorage.removeItem("aub.fbsoc"); } catch (e) {} const del = async ref => { try { await m.F.deleteDoc(ref); } catch (e) {} };
+  const m = fbMods; try { localStorage.removeItem("aub.fbsoc"); } catch (e) {}
+  try { const bk = await m.F.getDocs(m.F.collection(m.db, "users", uid, "backups")); for (const d of bk.docs) { try { await m.F.deleteDoc(d.ref); } catch (e) {} } } catch (e) {} const del = async ref => { try { await m.F.deleteDoc(ref); } catch (e) {} };
   try { const fr = await m.F.getDocs(m.F.collection(m.db, "profiles", uid, "friends")); for (const d of fr.docs) await del(d.ref); } catch (e) {}
   try { const p = await m.F.getDoc(m.F.doc(m.db, "profiles", uid)); if (p.exists() && p.data().code) await del(m.F.doc(m.db, "codes", p.data().code)); } catch (e) {}
   for (const f of ["from", "to"]) { try { const q = await m.F.getDocs(m.F.query(m.F.collection(m.db, "requests"), m.F.where(f, "==", uid))); for (const d of q.docs) await del(d.ref); } catch (e) {} }
@@ -2818,6 +2951,92 @@ function bfAct(a, b) {
   if (a === "bf-sex" || a === "bf-goal") { S.bf[a.slice(3)] = b.dataset.v; return openBody(); }
   if (a === "bfsave") { if (!bodyOK(S.bf)) return; setPath("body", bodyClean(S.bf)); S.bf = null; openSheet(); render(false); toast("Targets updated"); }
 }
+
+
+/* ---------- Settings → Your data: where it's saved, and every backup you can bring back ---------- */
+const IN_SAFARI = !window.claude && /iPhone|iPad|iPod/.test(navigator.userAgent) && navigator.standalone === false;
+const fmtWhen = t => new Date(t).toLocaleString("en-GB", { weekday: "short", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+// every older copy this phone and the account hold, newest first
+async function dsSources() {
+  const out = [], keys = ((await idbKeys()) || []).sort().reverse();
+  for (const k of keys.filter(k => /^bk-/.test(k))) out.push({ id: "l:" + k, label: `This phone, ${fDM(k.slice(3))}`, sub: "Daily backup", t: parse(k.slice(3)).getTime(),
+    load: async () => JSON.parse((await idbGet(k)) || "{}") });
+  for (const k of keys.filter(k => /^pre-/.test(k))) out.push({ id: "l:" + k, label: `This phone, ${fmtWhen(+k.slice(4))}`, sub: "Before an account update", t: +k.slice(4),
+    load: async () => (JSON.parse((await idbGet(k)) || "{}").docs || {}) });
+  for (const [k, sub] of [["aub.safe.first", "Before your account was linked"], ["aub.safe.last", "Before the last account update"]]) {
+    try { const o = JSON.parse(lsGet(k) || "null"); if (o && o.docs && nDays(o.docs)) out.push({ id: "s:" + k, label: `This phone, ${fmtWhen(o.t)}`, sub, t: o.t, load: async () => o.docs }); } catch (e) {} }
+  const m = fbMods, u = FB.user && m && m.auth.currentUser;
+  if (u) { try { const bk = await m.F.getDocs(m.F.collection(m.db, "users", u.uid, "backups"));
+    for (const d of bk.docs) { const v = d.data(); out.push({ id: "c:" + d.id, label: `Your account, ${fDM(d.id)}`, sub: `Daily backup · ${v.days || "?"} days`, t: v.t || 0, load: async () => unpackDocs(v) }); }
+  } catch (e) { if (e && e.code === "permission-denied") FB.bk = "rules"; } }
+  return out.sort((a, b) => b.t - a.t);
+}
+const DS = { list: null, pick: null, cnt: null, busy: false, rec: false };
+function openData(keep) {
+  const sh = $("#sheet"), y = keep ? sh.scrollTop : 0, signed = !!(FB.user && fbMods), cloudOn = S.mode === "cloud";
+  sh.classList.add("full"); sh.style.setProperty("--c", "var(--good)");
+  const ok = '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>', warn = '<svg class="i" viewBox="0 0 24 24"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg>';
+  const row = (good, title, sub) => `<div class="ds-st ${good ? "ok" : "no"}"><span class="ds-ic">${good ? ok : warn}</span><span><b>${title}</b><small>${sub}</small></span></div>`;
+  const bkLine = FB.bk === "rules" ? "Daily account backups need the updated Firebase rules (see below)." : FB.bk === "big" ? "Your data is too big for one account backup; every day is still saved in your account." : lsGet("aub.cbk") && fbMods && FB.user && lsGet("aub.cbk") === FB.user.uid + "|" + today() ? "Today's account backup is done." : "A full backup is added to your account once a day.";
+  const L = DS.list;
+  sh.innerHTML = `<div class="grab" style="margin-top:8px"></div><div class="sheet-h" style="padding-top:2px"><button class="linkb g-back" data-act="dsback" style="--c:var(--pull)"><svg class="i" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>Settings</button></div>
+    <h2 class="g-title">Your data</h2>
+    ${DS.rec ? `<section class="ds-rec"><b>Some of your data may be missing</b><p>Older copies on this phone have things your app doesn't have now: <b>${addWords(DS.cnt)}</b>${DS.cnt.dates.length ? `, on ${DS.cnt.dates.slice(0, 6).map(fDM).join(", ")}${DS.cnt.dates.length > 6 ? "…" : ""}` : ""}. Adding them back changes nothing you have now.</p>
+      <div class="ds-btns"><button class="btn ghost" data-act="dsrecno">Not now</button><button class="btn" data-act="dsrecyes" style="--c:var(--good)">Add them back</button></div></section>` : ""}
+    <div class="ds-card">
+      ${row(true, "Saved on this phone", `${nDays(S.docs)} days${LASTSAVE ? ` · last saved ${fmtWhen(LASTSAVE)}` : ""}. This is the main copy, kept twice on the phone.`)}
+      ${window.claude ? row(true, "Saved in your Claude account", "This copy is separate from the app on your home screen.")
+        : signed ? row(cloudOn, cloudOn ? "Copied to your account" : "Account not reachable right now", cloudOn ? `Every change is sent within a second. ${bkLine}` : "Everything is still saved on the phone and will be sent when you're back online.")
+        : row(false, "Not copied online yet", "Create an account in Settings → Account to keep a copy online.")}
+      ${IN_SAFARI ? row(false, "You're in Safari", "Safari and the app on your home screen keep separate data. Use the home screen app.") : ""}
+    </div>
+    <div class="lbl" style="margin:18px 4px 6px">Backups you can bring back</div>
+    <p class="small muted" style="margin:0 4px 10px">Bringing one back only adds what's missing. Nothing you have now is changed or removed.</p>
+    <div class="sbox ds-list">${L === null ? `<div class="srow"><span class="muted">Looking for backups…</span></div>` : !L.length ? `<div class="srow"><span class="muted">No backups yet. The first one is made today.</span></div>`
+      : L.map(x => `<div class="srow ds-r${DS.pick === x.id ? " on" : ""}"><span>${escH(x.label)}<small>${escH(x.sub)}</small></span><button class="btn ghost sm" data-act="dspick" data-v="${x.id}" ${DS.busy ? "disabled" : ""}>Check</button></div>
+        ${DS.pick === x.id && DS.cnt ? `<div class="ds-conf">${DS.cnt.total ? `<p>This backup adds back <b>${addWords(DS.cnt)}</b>${DS.cnt.dates.length ? ` (${DS.cnt.dates.slice(0, 8).map(fDM).join(", ")}${DS.cnt.dates.length > 8 ? "…" : ""})` : ""}.</p>
+          <div class="ds-btns"><button class="btn ghost" data-act="dsno">Cancel</button><button class="btn" data-act="dsyes" style="--c:var(--good)">Add them back</button></div>` : `<p>Nothing missing: you already have everything in this backup.</p>`}</div>` : ""}`).join("")}</div>
+    ${FB.bk === "rules" ? `<p class="small muted" style="margin:12px 4px 0">To turn on account backups, add this to your Firestore rules (inside <code>match /databases/{database}/documents</code>): <code>match /users/{uid}/backups/{b} { allow read, write: if request.auth != null &amp;&amp; request.auth.uid == uid; }</code></p>` : ""}
+    <p class="small muted" style="margin:14px 4px 22px">You can also copy everything as text in Settings → Backup and keep it in Notes.</p>`;
+  sh.scrollTop = y; if (!sh.classList.contains("show")) showSheet();
+  if (L === null) dsSources().then(list => { DS.list = list; if ($("#sheet .ds-list")) openData(true); });
+}
+async function dsApply(docs, why) {
+  const inc = cleanAll(JSON.parse(JSON.stringify(docs || {}))), c = addCount(S.docs, inc);
+  if (!c.total) return c;
+  await idbSnap(why);
+  for (const id in inc) { if (!/^d\d{4}-\d\d-\d\d$/.test(id)) continue; const m = addMerge(id, S.docs[id], inc[id]); if (stableStr(m) !== stableStr(S.docs[id])) { S.docs[id] = m; touch(id); } }
+  dataChanged(); saveNow(); applySettings(); render(false);
+  return c;
+}
+// all the older copies on this phone, merged: what would they bring back?
+async function recoverable() {
+  const all = {}, srcs = (await dsSources()).filter(x => x.id[0] !== "c");
+  for (const x of srcs.reverse()) { try { const d = cleanAll(await x.load()); for (const id in d) if (/^d\d{4}-\d\d-\d\d$/.test(id)) all[id] = addMerge(id, all[id], d[id]); } catch (e) {} }
+  return { docs: all, cnt: addCount(S.docs, all) };
+}
+async function dsAct(a, b) {
+  if (a === "datasafe") { Object.assign(DS, { list: null, pick: null, cnt: null }); return openData(); }
+  if (a === "dsback") { DS.rec = false; return openSheet(); }
+  if (a === "dspick") { const x = (DS.list || []).find(x => x.id === b.dataset.v); if (!x) return; DS.busy = true; openData(true);
+    try { DS.pick = x.id; DS.cnt = addCount(S.docs, cleanAll(await x.load())); } catch (e) { DS.pick = null; toast("This backup couldn't be read"); }
+    DS.busy = false; return openData(true); }
+  if (a === "dsno") { DS.pick = null; DS.cnt = null; return openData(true); }
+  if (a === "dsyes") { const x = (DS.list || []).find(x => x.id === DS.pick); if (!x) return;
+    const c = await dsApply(await x.load(), "restore " + x.id); DS.pick = null; DS.cnt = null; openData(true);
+    return toast(c.total ? `Added back: ${addWords(c)}` : "Nothing was missing"); }
+  if (a === "dsrecno") { lsSet("aub.rec1", "later"); DS.rec = false; return openData(true); }
+  if (a === "dsrecyes") { const r = await recoverable(); const c = await dsApply(r.docs, "recover"); lsSet("aub.rec1", "done"); DS.rec = false; openData(true);
+    return toast(c.total ? `Added back: ${addWords(c)}` : "Nothing was missing"); }
+}
+// once, after this update: if older copies on the phone hold sets that are missing now, offer to bring them back
+setTimeout(async () => {
+  if (lsGet("aub.rec1") || !nDays(S.docs)) return;
+  try { const r = await recoverable(); if (!r.cnt.total) { lsSet("aub.rec1", "none"); return; }
+    const go = () => { if ($("#sheet").classList.contains("show") || $("#ob") || $("#tour") || $("#crop")) return setTimeout(go, 3000);
+      DS.rec = true; DS.cnt = r.cnt; DS.list = null; openData(); };
+    go(); } catch (e) {}
+}, 4000);
 
 /* ================= settings ================= */
 const DEFSET = { theme: "auto", palette: "classic", custom: "#FF6A2B", motion: "system",
@@ -3881,7 +4100,8 @@ function vHome() {
   setHeader(hr < 5 ? "Good night" : hr < 12 ? "Good morning" : hr < 18 ? "Good afternoon" : "Good evening", fShort(t));
   const tap = (tab, extra = "") => TABS.includes(tab) ? `data-act="gotab" data-v="${tab}" ${extra}` : "";
   const T2 = (tab, col, inner) => TABS.includes(tab) ? `<button class="tile tap" ${tap(tab)} style="--c:${col}">${inner}</button>` : `<div class="tile" style="--c:${col}">${inner}</div>`;
-  let h = `<section class="banner" style="--c:${col}"><div class="bt">
+  let h = IN_SAFARI ? `<section class="card ds-safari small"><b>This is Safari, not your app.</b> Data here is separate from the app on your home screen. Open the app from your home screen to see your workouts.</section>` : "";
+  h += `<section class="banner" style="--c:${col}"><div class="bt">
       <div class="lbl">${ph.w >= 1 ? "Week " + ph.w + " · " + (wk.rest ? "Rest" : wk.light ? "Optional" : ph.label.split(" · ")[0]) : "Before week 1"}</div>
       <h2>${wk.name}</h2><div class="focus">${wk.focus}</div>
       <div class="meta">${bannerMeta(t)}</div></div>${wk.rest ? restRing() : ring(c.ok, c.tot)}
@@ -4294,8 +4514,11 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22f";
+const APP_VER = "2026-11-22g";
 const NEWS = [
+  { v: "2026-11-22g", d: "22 Nov", items: [
+    ["var(--good)", "Your data is safe", "The phone is the main copy, saved twice on the phone. Syncing with your account can only add to it: nothing you logged is ever replaced or removed by another copy."],
+    ["var(--pull)", "Backups you can bring back", "A full backup every day on the phone and in your account (14 days kept). Settings → Your data and backups: check any of them and add back what's missing."]] },
   { v: "2026-11-22f", d: "22 Nov", items: [
     ["var(--push)", "Player cards", "This week's top three are dealt as cards, face down, then flipped: the leader lands last, gets the crown and the shine. Tap a card to turn it over for streak, regularity and records."],
     ["var(--pull)", "Opens once, smoothly", "The Friends tab no longer draws itself twice: it opens with your last board, waits a moment for fresh numbers, then deals the cards once."],
@@ -5597,9 +5820,9 @@ function openSheet() {
       <div class="srow stack"><span>Week 1 starts on<small>Re-entry, build, push and deload weeks count from this Monday</small></span><input type="date" id="start" value="${getStart()}"></div>
     </div></div>
     <div class="sgroup"><div class="lbl">Your data</div><div class="sbox">
-      <div class="srow"><span><small style="margin:0;color:var(--fg);font-size:14px">${store}</small></span></div>
+      <button class="srow g-open" data-act="datasafe"><span>Your data and backups<small>${nDays(S.docs)} days on this phone${S.mode === "cloud" && !window.claude ? ", copied to your account" : window.claude ? ", saved in your Claude account" : ""} · daily backups you can bring back</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
       <div class="srow"><span>Backup<small>Copies all your logs as text</small></span><button class="btn ghost" data-act="backup" style="width:auto;height:38px;padding:0 14px;font-size:14px">Copy</button></div>
-      <div class="srow"><span>Restore a backup<small>Paste a backup copied from this app</small></span><button class="btn ghost" data-act="importopen" style="width:auto;height:38px;padding:0 14px;font-size:14px">Import</button></div>
+      <div class="srow"><span>Restore a backup<small>Paste a backup copied from this app. It only adds what's missing</small></span><button class="btn ghost" data-act="importopen" style="width:auto;height:38px;padding:0 14px;font-size:14px">Import</button></div>
       ${S.importing ? `<div class="srow stack"><textarea id="importtxt" rows="4" placeholder="Paste the backup text here" style="width:100%;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--fg);padding:10px;font:inherit;font-size:14px"></textarea>
         <div style="display:flex;gap:8px"><button class="btn ghost" data-act="importcancel" style="height:42px">Cancel</button><button class="btn" data-act="importgo" style="height:42px;--c:var(--good)">Import</button></div></div>` : ""}
       <div class="srow"><span>Problem log<small>${errLog().length ? errLog().length + " problem" + (errLog().length > 1 ? "s" : "") + " recorded (errors and freezes), last " + new Date(errLog().slice(-1)[0].t).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }) : "No errors or freezes recorded"}</small></span><button class="btn ghost" data-act="copyerr" style="width:auto;height:38px;padding:0 14px;font-size:14px" ${errLog().length ? "" : "disabled"}>Copy</button></div>
@@ -5895,9 +6118,11 @@ document.addEventListener("click", e => {
     let data; try { data = JSON.parse(($("#importtxt").value || "").trim()); } catch (e) { toast("That text isn't a backup from this app"); return; }
     const keys = data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data).filter(k => k === "settings" || k === "notes" || /^d\d{4}-\d{2}-\d{2}$/.test(k)) : [];
     if (!keys.length) { toast("No workouts found in that text"); return; }
-    for (const k of keys) { const c = cleanDoc(k, data[k]); if (c) { S.docs[k] = c; touch(k); } }
+    const inc = {}; for (const k of keys) { const c = cleanDoc(k, data[k]); if (c) inc[k] = c; }
+    const cnt = addCount(S.docs, inc); idbSnap("import");
+    for (const k in inc) { if (k === "settings" && S.docs.settings) continue; const m = addMerge(k, S.docs[k], inc[k]); if (stableStr(m) !== stableStr(S.docs[k])) { S.docs[k] = m; touch(k); } }
     S.importing = false; applySettings(); openSheet(); render(false);
-    const nd = keys.filter(k => k[0] === "d").length; toast(`Imported ${nd} ${nd === 1 ? "day" : "days"}`); return;
+    toast(cnt.total ? `Added back: ${addWords(cnt)}. Nothing you had was changed.` : "Nothing new in that backup: you already have all of it"); return;
   }
   if (a === "testsnd") { SND.unlock(); SND.timer(true); return; }
   if (a === "backup") {
@@ -5925,6 +6150,7 @@ document.addEventListener("click", e => {
   if (a === "friends" || /^lb/.test(a)) return lbAct(a, b);
   if (a === "progedit" || /^pe/.test(a)) return peAct(a, b);
   if (a === "bodyedit" || a === "bfback" || a === "bfsave") return bfAct(a, b);
+  if (a === "datasafe" || /^ds/.test(a)) return dsAct(a, b);
   if (a === "keepslot") { const d = S.sel, doc = ensureDay(d), s = new Set(doc.keep || []); s.add(+b.dataset.v); doc.keep = [...s]; touch("d" + d); flipList(); refreshToday(); return; }
   if (a === "travel") return toggleTravel(b.dataset.v === "set");
   if (a === "injopen") { const c = injCur(); S.injDraft = { area: b.dataset.a || (c ? c.area : null), days: c && c.to >= today() ? Math.min(14, Math.max(3, diffD(today(), c.to) + 1)) : 7 }; return openInjury(); }
