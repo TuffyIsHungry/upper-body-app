@@ -18,6 +18,11 @@
 <link rel="apple-touch-startup-image" media="screen and (device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1290x2796.png">
 <link rel="apple-touch-startup-image" media="screen and (device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1170x2532.png">
 <link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1125x2436.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 420px) and (device-height: 912px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1260x2736.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1284x2778.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" href="splash-1242x2688.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="splash-828x1792.png">
+<link rel="apple-touch-startup-image" media="screen and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" href="splash-750x1334.png">
 <meta name="theme-color" content="#0C0F14" media="(prefers-color-scheme: dark)">
 <meta name="theme-color" content="#F2F3F6" media="(prefers-color-scheme: light)">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui}img{max-width:100%}[hidden]{display:none!important}html{-webkit-text-size-adjust:100%}html,body{background:#06080C}</style>
@@ -39,7 +44,7 @@
 #boot .b-eb{position:absolute;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 11vh);text-align:center;font-weight:700;font-size:3.6vw;letter-spacing:.6em;padding-left:.6em;text-transform:uppercase;opacity:.7;animation:bFade .3s ease calc(var(--t1) + .22s) both}
 #boot .b-up,#boot .b-dn{position:absolute;left:0;right:0;display:flex;justify-content:center;font-weight:900;font-size:25vw;line-height:.86;letter-spacing:-.02em}
 #boot .b-up{top:calc(env(safe-area-inset-top,0px) + 16vh)}
-#boot .b-dn{top:61vh}
+#boot .b-dn{top:max(61vh,calc(50% + 31vw))}
 #boot .h.d .b-dn span{color:var(--bfg);text-shadow:0 8px 34px color-mix(in srgb,var(--ba) 40%,transparent)}
 #boot .b-up span{display:inline-block;animation:bDrop .32s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--t1) + .2s + var(--i) * 22ms)}
 #boot .b-dn span{display:inline-block;animation:bRise .32s cubic-bezier(.2,1.3,.4,1) both;animation-delay:calc(var(--t1) + .2s + var(--i) * 22ms)}
@@ -93,6 +98,7 @@ html.booting .app,html.booting .tabs{transition:transform .55s cubic-bezier(.2,.
 @keyframes bSpk{0%{opacity:1;transform:rotate(var(--a)) translateX(0)}100%{opacity:0;transform:rotate(var(--a)) translateX(var(--d))}}
 @keyframes bFlash{0%{opacity:0}15%{opacity:.5}100%{opacity:0}}
 @media (prefers-reduced-motion: reduce){#boot *,#boot *::before{animation:none!important}#boot .seam{opacity:.35}#boot.gone{opacity:0;transition:opacity .3s}}
+@media (min-aspect-ratio: 10/19){#boot .b-dbw{left:14vw;right:14vw}#boot .b-dn{top:max(61vh,calc(50% + 25vw))}#boot .b-tg{top:86vh}#boot .b-tk{top:calc(86vh + 7vw)}}
 </style>
 <div id="boot" role="status" aria-label="Loading Upper Body"><div class="b-stage">
   <div class="h d"><div class="b-art">
@@ -779,7 +785,7 @@ table.t tr.hl td{color:var(--c);font-weight:600}
 .sl-done .linkb{--c:var(--core)}
 .sl-src{flex-shrink:0;margin-top:2px}
 .big-h small{font-size:26px;color:var(--muted);font-weight:600;margin:0 4px}
-.times{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.times{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.times label{min-width:0}
 .times label{display:flex;flex-direction:column;gap:6px;font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .times input{height:48px;border-radius:12px;border:1.5px solid transparent;background:var(--surface-2);font-size:20px;font-weight:600;text-align:center;padding:0 8px;width:100%;min-width:0}
 .times input:focus{outline:none;border-color:var(--c)}
@@ -875,7 +881,7 @@ button.row{color:inherit}
 .habits .meal.on{background:color-mix(in srgb, var(--c) 14%, var(--surface))}
 .habits .mx b{font-size:14.5px;line-height:1.25}
 .fl-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.fl-goal{display:flex;align-items:center;gap:10px;margin:10px 0 12px;white-space:nowrap}
+.fl-goal{display:flex;align-items:center;flex-wrap:wrap;gap:4px 10px;margin:10px 0 12px;white-space:nowrap}
 .fl-dots{display:flex;gap:5px}
 .fl-dots i{width:18px;height:9px;border-radius:5px;background:var(--surface-2);transition:background .25s}
 .fl-dots i.on{background:var(--c)}
@@ -1280,6 +1286,22 @@ button.row{transition:opacity .15s} button.row:active{opacity:.6}
 .daybar{width:4px;border-radius:4px;background:linear-gradient(180deg, color-mix(in srgb, var(--c) 70%, #fff), var(--c))}
 .wk-head h2{font-size:30px}
 .meal,.fl-row,.wu-row{box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--fg) 4%, transparent)}
+/* very narrow screens (Display Zoom on small iPhones, about 320 px): titles, banners and tiles stay readable on one line */
+@media (max-width:350px){
+  .top h1{font-size:26px}
+  .top:has(.stw:not([hidden])) h1{font-size:21px}
+  .banner h2{font-size:38px}
+  .tmr{gap:8px;padding:10px 8px 10px 10px}
+  .tmr-top b{font-size:25px}
+  .mg-c{gap:8px;padding:9px 8px}
+  .mg-lv{width:30px;height:30px;font-size:14px}
+  .mg-n{font-size:13px;white-space:normal;line-height:1.15}
+  .ss-v{white-space:normal}
+  .top .eyebrow{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stw{padding:0 10px;gap:0}.stw .stw-i{display:none}.stw.dim{display:none}
+  .banner .bt>.lbl{white-space:normal}
+  .times input{font-size:17px;padding:0 4px}
+}
 </style>
 
 <div id="glow" aria-hidden="true"></div>
@@ -1441,7 +1463,39 @@ const WD = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 /* ================= state + storage ================= */
 const LS = "aub.v1";
 const S = { open: new Set(), docs: {}, tab: "today", sel: today(), weekOff: 0, exSel: null, metric: "w", night: today(), mode: "loading" };
-try { const j = JSON.parse(localStorage.getItem(LS) || "{}"); if (j && typeof j === "object") S.docs = j; } catch (e) {}
+try { const j = JSON.parse(localStorage.getItem(LS) || "{}"); if (j && typeof j === "object" && !Array.isArray(j)) S.docs = cleanAll(j); } catch (e) {}
+// damaged or foreign data (an odd backup, a half-written value) is tidied on the way in, so no screen can break on it
+function cleanAll(o) { for (const k of Object.keys(o)) { const c = cleanDoc(k, o[k]); if (c) o[k] = c; else delete o[k]; } return o; }
+function cleanDoc(id, v) {
+  const isO = x => !!x && typeof x === "object" && !Array.isArray(x), HM = x => typeof x === "string" && /^\d{1,2}:\d{2}$/.test(x), DS = x => typeof x === "string" && /^\d{4}-\d\d-\d\d$/.test(x);
+  const N = x => { if (x == null || x === "") return null; const n = typeof x === "number" ? x : Number(String(x).replace(",", ".")); return isFinite(n) ? n : null; };
+  if (!isO(v)) return null;
+  if (id === "settings") {
+    for (const k of ["trav", "inj", "expressWeeks"]) if (k in v && !Array.isArray(v[k])) delete v[k];
+    if (v.trav) v.trav = v.trav.filter(p => isO(p) && DS(p.from) && (p.to == null || DS(p.to)));
+    if (v.inj) v.inj = v.inj.filter(p => isO(p) && DS(p.from) && DS(p.to) && ["Shoulder", "Elbow", "Wrist", "Lower back", "Knee"].includes(p.area));
+    if (v.expressWeeks) v.expressWeeks = v.expressWeeks.filter(DS);
+    for (const k of ["plFix", "swaps", "ui", "snd", "rest"]) if (k in v && !isO(v[k])) delete v[k];
+    if ("start" in v && !DS(v.start)) delete v.start;
+    if ("wake" in v && !HM(v.wake)) delete v.wake;
+    return v;
+  }
+  if (!/^d\d{4}-\d\d-\d\d$/.test(id)) return v; // notes and anything else: kept as they are
+  v.date = id.slice(1);
+  if (!isO(v.ex)) v.ex = {};
+  for (const k in v.ex) {
+    if (!Array.isArray(v.ex[k])) { delete v.ex[k]; continue; }
+    v.ex[k] = v.ex[k].map(q => isO(q) ? q : null);
+    for (const q of v.ex[k]) if (q) { if ("w" in q) q.w = N(q.w); if ("r" in q) q.r = N(q.r); }
+  }
+  for (const k of ["skip", "keep", "order"]) if (k in v && !Array.isArray(v[k])) delete v[k];
+  for (const k of ["swap", "xs", "pain", "wind", "rate", "wu", "plw", "food"]) if (k in v && !isO(v[k])) delete v[k];
+  if (v.food) { for (const k of ["log", "meals"]) if (k in v.food && !Array.isArray(v.food[k])) delete v.food[k]; if (v.food.log) v.food.log = v.food.log.filter(e => isO(e) && typeof e.id === "string"); }
+  if ("sleep" in v && !(isO(v.sleep) && (v.sleep.bed == null || HM(v.sleep.bed)) && (v.sleep.wake == null || HM(v.sleep.wake)))) delete v.sleep;
+  if ("bw" in v) { v.bw = N(v.bw); if (v.bw == null) delete v.bw; }
+  for (const k of ["start", "end", "last", "pz", "pms"]) if (k in v && !(typeof v[k] === "number" && isFinite(v[k]))) delete v[k]; // workout clock
+  return v;
+}
 const stableStr = v => v === undefined ? "u" : JSON.stringify(v, (k, x) => x && typeof x === "object" && !Array.isArray(x) ? Object.keys(x).sort().reduce((o, q) => (o[q] = x[q], o), {}) : x);
 let DV = 0; const MEMO = new Map();
 function dataChanged() { DV++; MEMO.clear(); }
@@ -1502,7 +1556,7 @@ async function connect() {
     let changed = false;
     for (const d of snap.docs) {
       if (dirty.has(d.id)) continue;
-      const v = d.data(); if (!v) continue;
+      const v = cleanDoc(d.id, JSON.parse(JSON.stringify(d.data() || null))); if (!v) continue;
       if (stableStr(S.docs[d.id]) !== stableStr(v)) { S.docs[d.id] = JSON.parse(JSON.stringify(v)); changed = true; }
     }
     if (first && !snap.metadata.fromCache) {
@@ -2471,14 +2525,14 @@ function vToday() {
   setHeader(d === t ? "Today" : (d < t ? "Looking back" : "Coming up"), fShort(d));
   let h = strip(d);
   h += `<section class="banner" style="--c:${col}"><div class="bt">
-      <div class="lbl">${ph.w >= 1 ? "Week " + ph.w : "Before week 1"} · ${wk.light ? "Optional" : ph.label}</div>
+      <div class="lbl">${ph.w >= 1 ? "Week " + ph.w : "Before week 1"} · ${wk.light ? "Optional" : ph.label.split(" · ")[0]}</div>
       <h2>${wk.name}</h2><div class="focus">${wk.focus}</div>
       <div class="meta" id="bmeta">${bannerMeta(d)}</div></div>${ring(c.ok, c.tot)}
       ${tmrHTML(d)}
       <p class="bnote">${wk.light ? wk.tip : ph.note}</p></section>`;
   h += injCard(d) + questCard(d);
   const sl = sleepH(doc && doc.sleep);
-  if (d === t && sl != null && sl < 6.5 && !wk.light) h += `<section class="card ready" style="--c:var(--warn)"><span class="pill">Short night · ${fH(sl)}</span><p class="small" style="margin-top:8px">Keep every set at the easy end of today's RIR and skip the to-failure sets. Recovery beats one hard session.</p></section>`;
+  if (d === t && sl != null && sl < 6 && !wk.light) h += `<section class="card ready" style="--c:var(--warn)"><span class="pill">Short night · ${fH(sl)}</span><p class="small" style="margin-top:8px">Keep every set at the easy end of today's RIR and skip the to-failure sets. Recovery beats one hard session.</p></section>`;
   const exp = isExpress(d), weekExp = expWeeks().includes(mondayOf(d)), trav = travelOn(d);
   h += `<div class="tbar mode" style="--c:${col}"><div class="seg" role="group" aria-label="Workout length">
         <button data-act="mode" data-v="full" aria-pressed="${!exp}">Full</button><button data-act="mode" data-v="express" aria-pressed="${exp}">Express</button></div>
@@ -2494,7 +2548,7 @@ function vToday() {
   const avg = weekAvgBW(mondayOf(d));
   h += `<section class="card"><div class="field"><div><div class="sec-t" style="margin:0">Morning weight</div>
       <div class="small muted">After the toilet, before eating${avg ? ` · week avg <b class="num">${avg.toFixed(1)}</b> kg` : ""}</div></div>
-      <div style="display:flex;align-items:center"><input class="in" id="bw" data-f="bw" inputmode="decimal" placeholder="84.0" value="${doc && doc.bw != null ? kg(doc.bw) : ""}" aria-label="Body weight in kg"><span class="unit">kg</span></div></div></section>`;
+      <div style="display:flex;align-items:center"><input class="in" id="bw" data-f="bw" inputmode="decimal" placeholder="${(() => { const pv = bwSeries().filter(x => x.date < d).pop(); return pv ? kg(pv.v) : "kg"; })()}" value="${doc && doc.bw != null ? kg(doc.bw) : ""}" aria-label="Body weight in kg"><span class="unit">kg</span></div></div></section>`;
   h += `<div id="finwrap">${finBtn(d)}</div>`;
   if (MQ.matches && motionPref() === "system") h = `<section class="card motion-note" style="--c:var(--pull)"><p class="small">Your iPhone has <b>Reduce Motion</b> on, so the exercise animations and effects are paused.</p><button class="btn" data-act="motion" data-v="on" style="width:auto;padding:0 16px;height:42px;font-size:14px">Turn on</button></section>` + h;
   return h;
@@ -2541,7 +2595,7 @@ function vHome() {
   const tap = (tab, extra = "") => TABS.includes(tab) ? `data-act="gotab" data-v="${tab}" ${extra}` : "";
   const T2 = (tab, col, inner) => TABS.includes(tab) ? `<button class="tile tap" ${tap(tab)} style="--c:${col}">${inner}</button>` : `<div class="tile" style="--c:${col}">${inner}</div>`;
   let h = `<section class="banner" style="--c:${col}"><div class="bt">
-      <div class="lbl">${ph.w >= 1 ? "Week " + ph.w + " · " + (wk.light ? "Optional" : ph.label) : "Before week 1"}</div>
+      <div class="lbl">${ph.w >= 1 ? "Week " + ph.w + " · " + (wk.light ? "Optional" : ph.label.split(" · ")[0]) : "Before week 1"}</div>
       <h2>${wk.name}</h2><div class="focus">${wk.focus}</div>
       <div class="meta">${bannerMeta(t)}</div></div>${ring(c.ok, c.tot)}
       ${TABS.includes("today") ? `<button class="btn home-btn ${done ? "ghost" : ""}" ${!done && !c.ok && !(doc && doc.start) ? `data-act="startwk"` : tap("today")}>${done ? `<span class="done-note">${IC.ok} ${wk.light ? "Session" : "Workout"} complete</span>` : c.ok >= c.tot ? "All sets done · finish the workout" : c.ok ? `Continue · ${c.ok} of ${c.tot} sets done` : doc && doc.start ? "Continue workout" : `${SW_PLAY}${wk.light ? "Start the core session" : "Start workout"}`}</button>` : ""}</section>`;
@@ -2573,11 +2627,12 @@ function coachNote() {
   if (isDone(t) && weekDone() >= 6) return W("var(--good)", "star", "Perfect week: 6 of 6. That's exactly how the plan is meant to run.");
   if (isDone(t)) return W("var(--good)", "ok", wk.light ? "Core session done. Rest well, tomorrow starts a new week." : "Done for today. A protein-rich meal in the next 1–2 hours locks it in.");
   const sl = sleepH(doc && doc.sleep);
-  if (sl != null && sl < SLEEP_T - 1) return W("var(--warn)", "moon", `Short night (${fH(sl)}). Keep today's sets 1–2 reps short of failure, and get to bed early.`);
+  if (sl != null && sl < 6) return W("var(--warn)", "moon", `Short night (${fH(sl)}). Keep today's sets at the easy end of the RIR range, and get to bed early.`);
+  if (sl != null && sl < 7 && !wk.light) return W("var(--orng)", "moon", `A bit short last night (${fH(sl)}). Train as planned, and aim for lights out 30–45 min earlier tonight.`);
   // pain flagged in the last 2 weeks on something you do today
   const ids = new Set(wk.light ? [] : plan(t).map(x => x.ex.id));
-  for (let i = 1; i <= 14; i++) { const d = addD(t, -i), x = dayDoc(d); if (!x || !x.pain) continue;
-    for (const k in x.pain) { const id = k.split("@")[0]; if (ids.has(id)) return W("var(--warn)", "warn", `You flagged ${painName(x.pain[k]).toLowerCase()} on ${(EXBY[id] || { n: "an exercise" }).n.split(" (")[0].toLowerCase()} on ${fDM(d)}. If it comes back today, tap Swap.`); } }
+  if (!injOn(t)) for (let i = 1; i <= 14; i++) { const d = addD(t, -i), x = dayDoc(d); if (!x || !x.pain) continue;
+    for (const k in x.pain) { const id = k.split("@")[0]; if (ids.has(id)) return W("var(--warn)", "warn", `You flagged ${painName(x.pain[k]).toLowerCase()} on ${(EXBY[id] || { n: "an exercise" }).n.split(" (")[0].toLowerCase()} on ${fDM(d)}. If it comes back today, ${ALT[id] ? "tap Swap or" : "go lighter or"} use injury mode.`); } }
   if (ph.key === "deload") return W("var(--core)", "info", "Deload week: half the sets, same weights. Your body catches up and comes back stronger.");
   if (ph.key === "re") return W("var(--pull)", "info", "Re-entry weeks: about 70% of your old weights. Easy now means no injuries later.");
   const M = [3, 5, 7, 10, 14, 21, 30, 40, 50, 75, 100];
@@ -2768,8 +2823,10 @@ function xpParts() {
 const QUEST_PTS = 25;
 function questFor(d) {
   const wk = wkOf(d), t = today(); if (wk.light || d > t) return null;
-  const doc = dayDoc(d), p = plan(d).filter(it => !it.skip && !it.ex.chk), C = [];
-  for (const it of p) {
+  const doc = dayDoc(d), p = plan(d).filter(it => !it.skip && !it.ex.chk), C = [], easy = ["deload", "re", "pre"].includes(phase(d).key);
+  // easy weeks (re-entry, deload): no "more weight / more reps / extra set" quests, a recovery quest instead
+  if (easy) { if (TABS.includes("food")) C.push({ id: "prot", ic: "prot", txt: `Log <b>${PGOAL} protein-rich meals</b> today. Easy weeks are when the muscle actually gets built.`, done: foodEntries(doc).filter(e => (e.g || []).includes("p")).length >= PGOAL }); }
+  else for (const it of p) {
     const ex = it.ex, last = lastBefore(ex.id, d), rr = range(ex.r), n = setsFor(d, ex, it.k), arr = (doc && doc.ex && doc.ex[it.k]) || [];
     if (ex.injL || (doc && doc.plw && doc.plw[it.k] != null)) continue;
     const okSets = arr.slice(0, n).filter(q => q && q.ok);
@@ -2781,18 +2838,18 @@ function questFor(d) {
     }
     if (MUSCLES.some(([m, , pr]) => pr && m === ex.m)) C.push({ id: "xs-" + ex.id, ic: "xs", txt: `<b>${ex.n}</b>: add an <b>extra set</b> and finish it. Your ${ex.m === "Lats" ? "back gets" : ex.m.toLowerCase() + (/s$/.test(ex.m) ? " get" : " gets")} more work today.`, done: xsets(d, it.k) > 0 && !!(arr[n - 1] && arr[n - 1].ok) });
   }
-  const pv = prevTime(d);
+  const pv = easy ? null : prevTime(d);
   if (pv) C.push({ id: "fast", ic: "fast", txt: `Finish today's <b>${wk.name}</b> faster than last time (<b class="num">${fmtDur(pv.ms)}</b>), with every set done.`, done: !!(doc && doc.done && doc.end && sessionMs(doc) < pv.ms) });
   if (!C.length) return null;
   let h = 0; for (const ch of d) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  const q = C[h % C.length]; q.got = !!(doc && doc.qd); return q;
+  const q = (doc && doc.qd && C.find(c => c.id === doc.qd)) || C[h % C.length]; q.got = !!(doc && doc.qd); return q;
 }
 function questCard(d) {
   const q = questFor(d); if (!q) return "";
   const won = q.got || q.done, past = d < today();
-  const IC2 = { rep: '<path d="M7 12h10M12 7v10"/>', top: '<path d="M12 19V6M6.5 11.5 12 6l5.5 5.5"/>', xs: '<path d="M12 5v14M5 12h14"/>', fast: '<circle cx="12" cy="13" r="7"/><path d="M12 13V9.5M10 3h4"/>' };
+  const IC2 = { rep: '<path d="M7 12h10M12 7v10"/>', top: '<path d="M12 19V6M6.5 11.5 12 6l5.5 5.5"/>', xs: '<path d="M12 5v14M5 12h14"/>', fast: '<circle cx="12" cy="13" r="7"/><path d="M12 13V9.5M10 3h4"/>', prot: '<path d="M7 4.5h10l-1.2 15H8.2z"/><path d="M7.6 10h8.8"/>' };
   return `<section class="card quest ${won ? "won" : past ? "miss" : ""}" id="quest"><span class="q-i"><svg class="i" viewBox="0 0 24 24">${won ? '<path d="M5 12.5l4.5 4.5L19 7.5"/>' : IC2[q.ic]}</svg></span>
-    <div class="q-t"><div class="q-h"><span class="lbl">Bonus quest</span><span class="q-p num">${won ? "Done · " : ""}+${QUEST_PTS} pts</span></div><p class="small">${q.txt}</p>${!won && past ? `<span class="small muted">Missed. Tomorrow's is a new one.</span>` : !won ? `<span class="small muted">Optional. It checks itself as you tick sets.</span>` : ""}</div></section>`;
+    <div class="q-t"><div class="q-h"><span class="lbl">Bonus quest</span><span class="q-p num">${won ? "Done · " : ""}+${QUEST_PTS} pts</span></div><p class="small">${q.txt}</p>${!won && past ? `<span class="small muted">Missed. Tomorrow's is a new one.</span>` : !won ? `<span class="small muted">Optional. It checks itself as you ${q.ic === "prot" ? "log meals" : "tick sets"}.</span>` : ""}</div></section>`;
 }
 // a quest finished for the first time: points, a note, and the card turns gold
 function checkQuest() {
@@ -2832,6 +2889,10 @@ let LVK = "";
 let STWR = 0;
 const fmtDur = ms => { const t = Math.floor(ms / 1000), h = Math.floor(t / 3600), m = Math.floor(t / 60) % 60, sec = t % 60; return h ? `${h}:${pad(m)}:${pad(sec)}` : `${m}:${pad(sec)}`; };
 const hhmm = ts => { const d = new Date(ts); return pad(d.getHours()) + ":" + pad(d.getMinutes()); };
+function wkDay() {
+  const t = today(), y = addD(t, -1), yd = dayDoc(y), now = Date.now();
+  return yd && yd.start && !yd.done && yd.last && now - yd.last < 3 * 3600e3 && now - yd.start < 6 * 3600e3 ? y : t;
+}
 function stwState(doc) { if (!doc || !doc.start) return null; if (doc.done) return "fin"; if (doc.pz) return "pause"; if (doc.last && Date.now() - doc.last > IDLE) return "idle"; return "run"; }
 // how long each workout took, to compare with the last time you did the same one (full and Express kept apart)
 const wtKey = d => SCHEDULE[dow(d)] + (isExpress(d) ? "x" : "") + (travelOn(d) ? "t" : "");
@@ -2847,7 +2908,8 @@ function workoutTimes() {
     return out.sort((x, y) => x.d < y.d ? -1 : 1);
   });
 }
-function prevTime(d) { const k = wtKey(d); let pv = null; for (const x of workoutTimes()) { if (x.d >= d) break; if (x.key === k) pv = x; } return pv; }
+const wtCat = d => ["deload", "re", "pre"].includes(phase(d).key) ? "easy" : "normal"; // fewer sets → not comparable with normal weeks
+function prevTime(d) { const k = wtKey(d), c = wtCat(d); let pv = null; for (const x of workoutTimes()) { if (x.d >= d) break; if (x.key === k && wtCat(x.d) === c) pv = x; } return pv; }
 const fMin = ms => { const m = Math.round(ms / 60000); return m >= 60 ? `${Math.floor(m / 60)} h ${pad(m % 60)}` : `${m} min`; };
 function cmpTime(ms, pv) {
   if (!pv) return { t: "First timed one. Next time you'll see the difference.", c: "" };
@@ -2857,7 +2919,7 @@ function cmpTime(ms, pv) {
 }
 // the timer row in the Today banner: big time, pause / reset, and last time to beat
 function tmrState(d) {
-  const t = today(), doc = dayDoc(d);
+  const t = wkDay(), doc = dayDoc(d);
   if (d === t) { const st = stwState(doc); if (st) return st; return isDone(d) ? null : "none"; }
   return doc && doc.done && doc.start && doc.end ? "past" : null;
 }
@@ -2887,13 +2949,13 @@ function patchTmr() {
   const pv = prevTime(d), f = $("#tmr-f"); if (pv && f) { f.style.width = (Math.min(1, ms / pv.ms) * 100).toFixed(1) + "%"; $("#tmr-bar").classList.toggle("over", ms > pv.ms); }
 }
 function syncStw() {
-  const b = $("#stw"); if (!b) return; const doc = dayDoc(today()), st = stwState(doc);
-  const show = st && (st !== "fin" || (S.tab === "today" && S.sel === today()));
+  const b = $("#stw"); if (!b) return; const wd = wkDay(), doc = dayDoc(wd), st = stwState(doc);
+  const show = st && (st !== "fin" || (S.tab === "today" && S.sel === wd));
   patchTmr();
   if (!show) { b.hidden = true; return; }
   // on Today, while the banner's timer row is on screen, the header copy steps back.
   // Measure and set "dim" before un-hiding, so the pill never flashes in and fades out.
-  const row = S.tab === "today" && S.sel === today() && $("#tmr"); let onScreen = false;
+  const row = S.tab === "today" && S.sel === wd && $("#tmr"); let onScreen = false;
   if (row && !row.hidden) { const r = row.getBoundingClientRect(); onScreen = r.bottom > 70 && r.top < innerHeight; }
   const wasHidden = b.hidden;
   if (wasHidden) { b.style.transition = "none"; b.classList.toggle("dim", onScreen); b.hidden = false; void b.offsetWidth; b.style.transition = ""; }
@@ -2905,9 +2967,9 @@ function syncStw() {
   if (wasHidden && !onScreen && !REDUCED && b.animate) b.animate([{ transform: "scale(.6)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], { duration: 420, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 function stwAct(a) {
-  const d = today(), doc = ensureDay(d), now = Date.now();
+  const d = wkDay(), doc = ensureDay(d), now = Date.now();
   if (a === "stw") { // header pill: jump to the timer row on Today
-    if (S.tab !== "today") go("today"); if (S.sel !== d) goToday(); scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
+    if (S.tab !== "today") go("today"); if (S.sel !== d) { S.sel = d; S.edit = false; S.open.clear(); render(false); } scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
     setTimeout(() => { const r = $("#tmr"); if (r) { r.classList.remove("flash"); void r.offsetWidth; r.classList.add("flash"); } }, 350); return;
   }
   if (a === "stwstart") {
@@ -2934,7 +2996,7 @@ setInterval(() => { if (!document.hidden) syncStw(); }, 1000);
 setTimeout(maybeTour, 1400);
 setTimeout(() => maybeNews(), 2200);
 setTimeout(() => { try { checkMuscleRanks(); } catch (e) {} }, 300); // remember today's muscle levels, so the next climb is noticed
-addEventListener("scroll", () => { if (S.tab === "today") { const b = $("#stw"); if (b && !b.hidden) { const row = $("#tmr"); let on = false; if (row && !row.hidden && S.sel === today()) { const r = row.getBoundingClientRect(); on = r.bottom > 70 && r.top < innerHeight; } b.classList.toggle("dim", on); } } }, { passive: true });
+addEventListener("scroll", () => { if (S.tab === "today") { const b = $("#stw"); if (b && !b.hidden) { const row = $("#tmr"); let on = false; if (row && !row.hidden && S.sel === wkDay()) { const r = row.getBoundingClientRect(); on = r.bottom > 70 && r.top < innerHeight; } b.classList.toggle("dim", on); } } }, { passive: true });
 function syncLevelBadge() {
   const b = $("#lvlbtn"); if (!b) return; const v = levelNow(), k = v.L + ":" + v.into;
   if (k === LVK) return; const grew = LVK && +LVK.split(":")[0] < v.L; LVK = k;
@@ -2943,8 +3005,12 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-18e";
+const APP_VER = "2026-11-22a";
 const NEWS = [
+  { v: "2026-11-22a", d: "22 Nov", items: [
+    ["var(--pull)", "Easy weeks make sense", "Re-entry weeks suggest about 70% of your old weights. Deload and re-entry weeks no longer ask for more reps, more weight or extra sets, and their times are only compared with each other."],
+    ["var(--core)", "Sleep advice lines up", "Home, Today and Sleep now use the same limits: under 6 h, ease off; 6 to 7 h, train as planned and go to bed earlier."],
+    ["var(--good)", "Late sessions and small screens", "A workout that goes past midnight stays on its day with its timer. Small screens (Display Zoom) no longer cut titles or slide sideways."]] },
   { v: "2026-11-18e", d: "18 Nov", items: [
     ["var(--good)", "Supersets flow", "After a set of a superset, a 15 s switch to its partner. The full rest comes after the pair."],
     ["var(--pull)", "Timer fixes", "A finished workout keeps its time when you edit sets later, reopening it continues from where it stopped, and travel workouts get their own times."]] },
@@ -3120,8 +3186,12 @@ function workWeight(d, it) {
   if (typed.length) return Math.max(...typed);
   if (doc && doc.plw && doc.plw[it.k] != null) return doc.plw[it.k]; // plateau reset day
   const last = lastBefore(it.ex.id, d); if (it.ex.injL) return lightW(it.ex, last);
+  if (last && last.top.w > 0 && reFrom(it.ex, d, last)) return reW(it.ex, last.top.w);
   return last && last.top.w > 0 ? last.top.w : null;
 }
+// re-entry weeks: the last session is from before the program started → start at about 70% of it
+const reFrom = (ex, d, last) => !!(last && !ex.chk && phase(d).key === "re" && last.date < mondayOf(getStart()));
+const reW = (ex, w) => { const st = /dumbbell/i.test(ex.n) && !BARBELL[ex.id] ? 1 : 2.5; return w > 0 ? Math.max(st, Math.round(w * .7 / st) * st) : w; };
 // injury-light weight: about 60 % of the heaviest set last time
 function lightW(ex, last) {
   const b = last ? Math.max(0, ...last.sets.map(q => q.w || 0)) : 0, st = /dumbbell/i.test(ex.n) && !BARBELL[ex.id] ? 1 : 2.5;
@@ -3137,7 +3207,7 @@ function sessionMs(doc) { if (!doc || !doc.start) return null; return Math.max(0
 function sessionMin(doc) { const ms = sessionMs(doc); return ms == null ? null : Math.max(1, Math.round(ms / 60000)); }
 // a ticked set (or warm-up) on today's unfinished workout: starts the clock if needed, wakes it from a pause
 function liveTick(doc, d) {
-  if (d !== today() || doc.done) return; // a finished workout's time stays as it was, even if you edit sets later
+  if (d !== wkDay() || doc.done) return; // a finished workout's time stays as it was, even if you edit sets later
   const now = Date.now(); if (!doc.start) { doc.start = now; doc.pms = 0; }
   stwWake(doc, now); doc.last = now;
 }
@@ -3148,7 +3218,7 @@ function stwWake(doc, now) {
 }
 function bannerMeta(d) {
   const doc = dayDoc(d), m = tmrState(d) ? null : sessionMin(doc); // the timer row in the banner already shows the time
-  if (m != null && d === today() && !(doc && doc.done)) return doc.pz || (doc.last && Date.now() - doc.last > IDLE) ? `Paused · ${m} min so far` : `In progress · ${m} min`;
+  if (m != null && d === wkDay() && !(doc && doc.done)) return doc.pz || (doc.last && Date.now() - doc.last > IDLE) ? `Paused · ${m} min so far` : `In progress · ${m} min`;
   if (m != null && doc && doc.done && doc.end) return `Finished in ${m} min`;
   const p = plan(d), live = p.filter(x => !x.skip).length, sk = p.length - live, wk = wkOf(d);
   let tm = isExpress(d) ? (wk.light ? "≈ 8 min" : "≈ 25 min") : wk.time;
@@ -3166,7 +3236,7 @@ function exList(d) {
       <div style="display:flex;gap:8px;margin-top:10px"><button class="btn ghost" data-act="resetorder" style="height:44px">Reset order</button><button class="btn" data-act="edit" style="height:44px">Done</button></div></section>`;
   }
   const cur = p.find(it => !it.skip && (((doc && doc.ex && doc.ex[it.k]) || []).slice(0, setsFor(d, it.ex, it.k)).filter(x => x && x.ok).length < setsFor(d, it.ex, it.k)));
-  return p.map((it, j) => exCard(d, wk, it, j, doc, p, it === cur && d === today() && !isDone(d))).join("");
+  return p.map((it, j) => exCard(d, wk, it, j, doc, p, it === cur && d === wkDay() && !isDone(d))).join("");
 }
 const PAIN_AREAS = ["Shoulder", "Elbow", "Wrist", "Lower back", "Knee", "Other"];
 const painName = a => a === "Other" ? "Pain" : a + " pain";
@@ -3198,7 +3268,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   const eff = effFor(d, ex);
   // plateau reset weight for today, or about 60 % of last time on an injury-light exercise
   const pw = doc && doc.plw && doc.plw[k] != null ? doc.plw[k] : null;
-  const lw = ex.injL ? lightW(ex, last) : null;
+  const lw = ex.injL ? lightW(ex, last) : null, ph = phase(d), reOld = reFrom(ex, d, last);
   const pl = d === today() && ok < n && !wk.light && pw == null && ["build", "push"].includes(phase(d).key) ? plateauOf(ex, d) : null;
   let rows = "";
   for (let j = 0; j < n; j++) {
@@ -3208,7 +3278,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
         <span class="chk-txt">${ex.r}${ex.per ? " " + ex.per : ""}</span>
         <button class="chk" data-act="chk" aria-label="Set ${j + 1} done" aria-pressed="${!!st.ok}">${IC.check}</button></div>`;
     } else {
-      const wp = pw != null ? kg(pw) : ex.injL && ex.bw ? "+0" : lw != null ? kg(lw) : ls ? kg(ls.w) : (ex.bw ? "+0" : "kg"), rp = ls && !ex.plr ? String(ls.r) : (range(ex.r) ? range(ex.r)[0] + "+" : "reps");
+      const wp = pw != null ? kg(pw) : ex.injL && ex.bw ? "+0" : lw != null ? kg(lw) : ls && reOld ? kg(reW(ex, ls.w)) : ls ? kg(ls.w) : (ex.bw ? "+0" : "kg"), rp = ls && !ex.plr && !reOld ? String(ls.r) : (range(ex.r) ? range(ex.r)[0] + "+" : "reps");
       rows += `<div class="set ${st.ok ? "ok" : ""} ${st.pr ? "pr" : ""} ${j >= n - nx ? "xset" : ""}" data-ex="${k}" data-i="${j}"><span class="sn">${st.pr ? "PR" : j + 1}</span>
         <input class="in" id="w-${d}-${k}-${j}" data-f="w" inputmode="decimal" placeholder="${wp}" value="${st.w != null ? kg(st.w) : ""}" aria-label="Set ${j + 1} ${ex.bw ? "added weight" : "weight"} in kg">
         <input class="in" id="r-${d}-${k}-${j}" data-f="r" inputmode="numeric" placeholder="${rp}" value="${st.r != null ? st.r : ""}" aria-label="Set ${j + 1} reps">
@@ -3223,10 +3293,14 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
     const rr = range(ex.r);
     const hit = rr && last.sets.length >= n && last.sets.every(s => s.r >= rr[1]);
     const step = /Dumbbell|lateral|curl|fly|Cable|cable|Face|extension|pushdown|crunch/i.test(ex.n) ? "1–2 kg" : "2.5 kg";
-    foot = `<span>Last (${fDM(last.date)}): <span class="num">${last.sets.slice(0, 4).map(s => `${kg(s.w)}×${s.r}`).join(", ")}</span></span>
+    foot = `<span>Last (${fDM(last.date)}): <span class="num">${setsLine(last.sets.slice(0, 4), ex)}</span></span>
       ${pw != null ? `<span class="hint">Reset day: ${kg(pw)} kg on every set, then build back up</span>` : ex.injL ? `<span class="hint">Go light${lw != null ? `: about ${kg(lw)} kg` : ""}. Stop if it hurts</span>`
+        : ph.key === "deload" ? `<span class="hint">Deload: same weight as last time, fewer sets, no grinding</span>`
+        : reOld ? `<span class="hint">Re-entry: about 70% of that${ex.bw ? "" : `, so around ${kg(reW(ex, last.top.w))} kg`}</span>`
+        : ph.key === "re" ? `<span class="hint">Easy weeks: stop 3–4 reps before failure</span>`
         : ex.plr ? `<span class="hint">Heavier than usual, ${ex.r} reps</span>` : hit ? `<span class="hint">Top of range hit. Add ${ex.bw ? "weight" : step} today</span>` : rr && !pl ? `<span class="hint">Aim for 1 more rep than last time</span>` : ""}`;
-  } else if (!ex.chk) foot = `<span>First time: pick a weight you can do for ${range(ex.r) ? range(ex.r)[0] : ex.r} reps at ${eff}.</span>`;
+  } else if (!ex.chk) foot = ex.bw ? `<span>First time: do clean reps with your body weight, up to ${range(ex.r) ? range(ex.r)[1] : ex.r}, at ${eff}.</span>`
+    : `<span>First time: pick a weight you can do for ${range(ex.r) ? range(ex.r)[0] : ex.r} reps at ${eff}.</span>`;
   // warm-up checkbox (only where it helps), plates for barbell lifts, personal note
   let extra = "", wuHTML = "";
   const firstLift = p.find(x => !x.skip && !x.ex.chk), wu = wuText(d, it, firstLift === it);
@@ -3244,7 +3318,7 @@ function exCard(d, wk, it, pos, doc, p, isCur) {
   let painHTML = "";
   if (S.painEdit === k) painHTML = `<div class="pain-ed"><b>Where did it hurt?</b><div class="pain-ch">${PAIN_AREAS.map(a => `<button data-act="painset" data-v="${k}" data-a="${a}">${a}</button>`).join("")}</div><button class="linkb" data-act="paincancel">Cancel</button></div>`;
   else if (pn || prevP.length) {
-    const nT = prevP.length + (pn ? 1 : 0), lastP = prevP[prevP.length - 1], other = ex.travel || ex.injS ? null : ex.sw;
+    const nT = prevP.length + (pn ? 1 : 0), lastP = prevP[prevP.length - 1], other = ex.travel || ex.injS || ex.alt ? null : ex.sw;
     const msg = nT >= 2 ? `<b>Pain flagged ${nT} times in 4 weeks.</b> ${other ? `Switch to the alternative: <b>${other}</b>. ` : ""}If it keeps coming back, get it checked by a physio or doctor.`
       : pn ? `<b>${painName(pn)} flagged today.</b> ${other ? `If it comes back next time, switch to: <b>${other}</b>.` : "Go lighter next time, or use injury mode."}`
       : `You flagged ${painName(lastP.area).toLowerCase()} here on ${fDM(lastP.date)}. ${other ? `If it comes back, switch to: <b>${other}</b>.` : "Stop if it comes back."}`;
@@ -3484,7 +3558,7 @@ function allExercises() {
   // alternatives (Swap) that have been logged at least once
   for (const k of ["pushA", "pullA", "legsA", "pushB", "pullB", "legsB"]) for (const ex of PROGRAM[k].ex) { const a = altOf(ex); if (a && !seen.has(a.id) && exHistory(a.id).length) { seen.add(a.id); out.push({ ...a, wk: k, swapped: true }); } }
   // travel and injury versions that have been logged (they keep their own history)
-  for (const id in EXBY) if (!seen.has(id) && !EXBY[id].chk && exHistory(id).length) { seen.add(id); out.push({ ...EXBY[id], wk: "pushA", swapped: true }); }
+  for (const id in EXBY) if (!seen.has(id) && !EXBY[id].chk && exHistory(id).length) { const o = EXBY[id].orig || id, wk = ["pushA", "pullA", "legsA", "pushB", "pullB", "legsB"].find(k => PROGRAM[k].ex.some(e => e.id === o)) || "pushA"; seen.add(id); out.push({ ...EXBY[id], wk, swapped: true }); }
   return out;
 }
 /* Consistency: planned lifting days (Mon–Sat) that were finished, per month. Today counts once it is done. */
@@ -3515,10 +3589,10 @@ function timesCard() {
   const all = workoutTimes(), t = today();
   if (!all.length) return `<section class="card"><h2 class="sec-t">Workout times</h2><p class="small muted">Your times appear here after your first timed workout. Tap Start workout when you begin.</p></section>`;
   const keys = [...new Set(["pushA", "pullA", "legsA", "pushB", "pullB", "legsB", "core"].flatMap(k => [k, k + "x", k + "t", k + "xt"]))].filter(k => all.some(x => x.key === k));
-  const recent = all.filter(x => x.d > addD(t, -28) && /[AB]$/.test(x.key)); // full gym workouts only
+  const recent = all.filter(x => x.d > addD(t, -28) && /[AB]$/.test(x.key) && wtCat(x.d) === "normal"); // full gym workouts in normal weeks only
   const avg = recent.length ? recent.reduce((a, x) => a + x.ms, 0) / recent.length : null;
   const rows = keys.map(k => {
-    const xs = all.filter(x => x.key === k), last = xs[xs.length - 1], before = xs[xs.length - 2], pk = k.replace(/x?t?$/, ""), col = TYPES[PROGRAM[pk].type];
+    const xs = all.filter(x => x.key === k), last = xs[xs.length - 1], before = xs.slice(0, -1).filter(x => wtCat(x.d) === wtCat(last.d)).pop(), pk = k.replace(/x?t?$/, ""), col = TYPES[PROGRAM[pk].type];
     const c = before ? cmpTime(last.ms, before) : null, six = xs.slice(-6), mx = Math.max(...six.map(x => x.ms));
     const bars = six.map((x, i) => `<i style="height:${Math.max(18, x.ms / mx * 100).toFixed(0)}%" class="${i === six.length - 1 ? "on" : ""}" title="${fShort(x.d)}: ${fMin(x.ms)}"></i>`).join("");
     return `<div class="wt-r" style="--c:${col}"><span class="wt-n"><b>${PROGRAM[pk].name}${/x/.test(k.slice(pk.length)) ? " · Express" : ""}${/t$/.test(k) ? " · Travel" : ""}</b><span class="small muted">${fShort(last.d)}</span></span>
@@ -3778,7 +3852,7 @@ function openBW() {
   const t = today(), doc = dayDoc(t), prev = bwSeries().filter(x => x.date < t).pop(), sh = $("#sheet");
   sh.classList.remove("full"); sh.style.setProperty("--c", "var(--legs)");
   sh.innerHTML = `<div class="grab"></div><h2 class="sec-t" style="margin:4px 2px 2px">Morning weight</h2><p class="small muted" style="margin:0 2px 14px">After the toilet, before eating${prev ? ` · last: <b class="num">${kg(prev.v)} kg</b> (${fShort(prev.date)})` : ""}</p>
-    <div class="bwq"><button class="bwq-s" data-act="bwstep" data-v="-0.1" aria-label="Minus 0.1 kg">−</button><input class="in num" id="bwq" inputmode="decimal" value="${doc && doc.bw != null ? kg(doc.bw) : prev ? kg(prev.v) : ""}" placeholder="84.0" aria-label="Weight in kg"><span class="unit">kg</span><button class="bwq-s" data-act="bwstep" data-v="0.1" aria-label="Plus 0.1 kg">+</button></div>
+    <div class="bwq"><button class="bwq-s" data-act="bwstep" data-v="-0.1" aria-label="Minus 0.1 kg">−</button><input class="in num" id="bwq" inputmode="decimal" value="${doc && doc.bw != null ? kg(doc.bw) : prev ? kg(prev.v) : ""}" placeholder="kg" aria-label="Weight in kg"><span class="unit">kg</span><button class="bwq-s" data-act="bwstep" data-v="0.1" aria-label="Plus 0.1 kg">+</button></div>
     <div class="bwq-b"><button class="btn ghost" data-act="close">Cancel</button><button class="btn" data-act="bwsave" style="--c:var(--legs)">Save</button></div>`;
   showSheet(); setTimeout(() => { const i = $("#bwq"); if (i) i.select(); }, 450);
 }
@@ -3878,12 +3952,12 @@ const SLEEP_T = 8.25, SLEEP_L = "8 h 15";
 /* Sleep debt: hours behind the target a night over the last 7 nights (good nights pay some of it back). */
 function debtInfo(nights) {
   const xs = nights.slice(-7).filter(n => n.h != null);
-  if (!xs.length) return { num: "–", word: "No data", col: "var(--muted)", detail: `<p class="small muted">Log a few nights and this shows how many hours you are behind ${SLEEP_L} a night.</p>` };
+  if (!xs.length) return { num: "–", word: "No data", col: "var(--muted)", detail: `<p class="small muted">Log a few nights and this shows how far behind you are in total, against ${SLEEP_L} a night.</p>` };
   const debt = Math.max(0, xs.reduce((a, n) => a + (SLEEP_T - n.h), 0)), min = Math.round(debt * 60);
   const lvl = min < 30 ? ["None", "var(--good)"] : min < 120 ? ["Low", "var(--good)"] : min < 240 ? ["Building", "var(--warn)"] : ["High", "var(--warn)"];
   const k = Math.min(7, Math.ceil(min / 40));
   const txt = min < 30 ? `You are on track over your last ${xs.length} logged night${xs.length > 1 ? "s" : ""}. Nothing to catch up.`
-    : `Over your last ${xs.length} logged night${xs.length > 1 ? "s" : ""} you are <b class="num">${fH(debt)}</b> behind ${SLEEP_L} a night. To catch up, go to bed 30–45 min earlier for the next ${k >= 7 ? "week" : k + (k > 1 ? " nights" : " night")}. Keep your wake-up time, and don't sleep in more than 1 hour on days off, or your rhythm shifts.`;
+    : `Over your last ${xs.length} logged night${xs.length > 1 ? "s" : ""} you are <b class="num">${fH(debt)}</b> short in total, against ${SLEEP_L} a night. To catch up, go to bed 30–45 min earlier for the next ${k >= 7 ? "week" : k + (k > 1 ? " nights" : " night")}. Keep your wake-up time, and don't sleep in more than 1 hour on days off, or your rhythm shifts.`;
   return { num: `${Math.floor(min / 60)}<small>h</small>${pad(min % 60)}`, word: lvl[0], col: lvl[1],
     detail: `<p class="small">${txt}</p>${xs.length < 7 ? `<p class="small muted" style="margin-top:6px">${xs.length} of the last 7 nights logged. Unlogged nights are left out.</p>` : ""}` };
 }
@@ -4425,7 +4499,7 @@ document.addEventListener("click", e => {
   if (a === "xmore") { const m = b.closest(".xm"), on = !m.classList.contains("open"); m.classList.toggle("open", on); b.setAttribute("aria-expanded", String(on)); return; }
   if (a === "xset" || a === "xsetdel") {
     const k = b.dataset.v, d = S.sel, doc = ensureDay(d); doc.xs = { ...(doc.xs || {}) };
-    if (a === "xset") { doc.xs[k] = (doc.xs[k] || 0) + 1; if (doc.done) { doc.done = false; delete doc.end; } }
+    if (a === "xset") { doc.xs[k] = (doc.xs[k] || 0) + 1; if (doc.done) reopenDay(doc, d); }
     else { const it = plan(d).find(x => x.k === k), n = setsFor(d, it.ex, k), arr = doc.ex && doc.ex[k], lx = arr && arr[n - 1];
       if (lx && lx.ok) return toast("Untick the extra set first"); if (arr && arr.length >= n) arr.length = n - 1; doc.xs[k] = Math.max(0, (doc.xs[k] || 0) - 1); if (!doc.xs[k]) delete doc.xs[k]; }
     touch("d" + d); S.open.add(k); replaceCard(k) || flipList(); refreshToday();
@@ -4500,7 +4574,7 @@ document.addEventListener("click", e => {
     let data; try { data = JSON.parse(($("#importtxt").value || "").trim()); } catch (e) { toast("That text isn't a backup from this app"); return; }
     const keys = data && typeof data === "object" && !Array.isArray(data) ? Object.keys(data).filter(k => k === "settings" || k === "notes" || /^d\d{4}-\d{2}-\d{2}$/.test(k)) : [];
     if (!keys.length) { toast("No workouts found in that text"); return; }
-    for (const k of keys) if (data[k] && typeof data[k] === "object") { S.docs[k] = data[k]; touch(k); }
+    for (const k of keys) { const c = cleanDoc(k, data[k]); if (c) { S.docs[k] = c; touch(k); } }
     S.importing = false; applySettings(); openSheet(); render(false);
     const nd = keys.filter(k => k[0] === "d").length; toast(`Imported ${nd} ${nd === 1 ? "day" : "days"}`); return;
   }
@@ -4511,7 +4585,7 @@ document.addEventListener("click", e => {
     try { navigator.clipboard.writeText(txt).then(done, () => toast("Copy isn't allowed here")); } catch (e) { toast("Copy isn't allowed here"); }
     return;
   }
-  if (a === "resetset") { const keep = S.docs.settings || {}; S.docs.settings = { start: keep.start, wake: keep.wake, expressWeeks: keep.expressWeeks, swaps: keep.swaps }; touch("settings"); applySettings(); openSheet(); render(false); toast("Settings reset"); return; }
+  if (a === "resetset") { const keep = S.docs.settings || {}; S.docs.settings = { start: keep.start, wake: keep.wake, expressWeeks: keep.expressWeeks, swaps: keep.swaps, trav: keep.trav, inj: keep.inj, plFix: keep.plFix }; /* training history stays */ touch("settings"); applySettings(); openSheet(); render(false); toast("Settings reset"); return; }
   if (a === "motion") {
     S.docs.settings = { ...(S.docs.settings || {}), motion: b.dataset.v }; touch("settings"); applyMotion();
     if ($("#sheet").classList.contains("show") && $("#sheet [data-act=motion]") && !view.contains(b)) openSheet();
@@ -4598,7 +4672,7 @@ function toggleSet(btn) {
     const c = counts(d);
     // rest only while you're training today (not when fixing a finished or past workout).
     // In a superset, the partner comes right after: a short 15 s switch, then the full rest after the pair.
-    if (c.ok < c.tot && d === today() && !doc.done) {
+    if (c.ok < c.tot && d === wkDay() && !doc.done) {
       const mate = ex.ss ? plan(d).find(x => x.i === ex.ss - 1 && !x.skip) : null, myOk = arr.slice(0, n).filter(s => s && s.ok).length;
       const mN = mate ? setsFor(d, mate.ex, mate.k) : 0, mOk = mate ? (((doc.ex[mate.k]) || []).slice(0, mN).filter(s => s && s.ok).length) : 0;
       if (mate && mOk < mN && mOk < myOk) startTimer(15, "Superset · now " + mate.ex.n.split(" (")[0].toLowerCase(), TYPES[wk.type], { id: mate.ex.id, d, next: true, fixed: true });
@@ -4649,7 +4723,7 @@ function foldCard(k) {
 }
 function updateCurrent() {
   const d = S.sel, doc = dayDoc(d);
-  const cur = d === today() && !isDone(d) ? plan(d).find(it => !it.skip && (((doc && doc.ex && doc.ex[it.k]) || []).slice(0, setsFor(d, it.ex, it.k)).filter(x => x && x.ok).length < setsFor(d, it.ex, it.k))) : null;
+  const cur = d === wkDay() && !isDone(d) ? plan(d).find(it => !it.skip && (((doc && doc.ex && doc.ex[it.k]) || []).slice(0, setsFor(d, it.ex, it.k)).filter(x => x && x.ok).length < setsFor(d, it.ex, it.k))) : null;
   view.querySelectorAll(".ex.cur").forEach(e => { if (!cur || e.dataset.card !== cur.k) { e.classList.remove("cur"); const u = e.querySelector(".upnext"); if (u) u.remove(); } });
   if (cur) { const el = view.querySelector(`.ex[data-card="${cur.k}"]:not(.fold)`); if (el && !el.classList.contains("cur")) { el.classList.add("cur"); const t = el.querySelector(".ex-t"); if (t && !t.querySelector(".upnext")) t.insertAdjacentHTML("afterbegin", '<div class="upnext">Up next</div>'); } }
 }
@@ -4820,7 +4894,7 @@ function summary(d) {
       <div class="tile"><span class="lbl">Volume</span><b class="num">${vol ? `<span data-count="${Math.round(vol)}">${Math.round(vol)}</span><small>kg</small>` : "–"}</b><span class="muted">weight × reps</span></div>
       <div class="tile"><span class="lbl">Records</span><b class="num"><span data-count="${prs}">${prs}</span></b><span class="muted">${prs ? "new personal bests" : "next time"}</span></div></div>
     ${wk.light ? "" : `<div class="rate" style="padding:2px 2px 4px"><h2 class="sec-t">How did it go?</h2>${rateRows(d)}</div>`}
-    <div class="card" style="background:var(--surface-2);display:flex;gap:12px;align-items:center">${flameHTML(st.cur, "sm")}<p class="small"><b>${st.cur}-day streak.</b> Next up: <b>${next.name}</b> (${next.focus.toLowerCase()}). Eat a proper breakfast with protein in the next 1–2 hours.</p></div>
+    <div class="card" style="background:var(--surface-2);display:flex;gap:12px;align-items:center">${flameHTML(st.cur, "sm")}<p class="small"><b>${st.cur}-day streak.</b> Next up: <b>${next.name}</b> (${next.focus.toLowerCase()}). ${new Date().getHours() < 11 ? "Eat a proper breakfast with protein" : "Have a meal with protein"} in the next 1–2 hours.</p></div>
     ${levelRow(S.lvUp)}
     <button class="btn" data-act="close">Nice</button>`;
   S.lvUp = false;
@@ -4833,12 +4907,13 @@ function celebrate() {
   T = null; clearInterval(tIv); $("#timer").classList.remove("show", "over");
   if (SET().ui.confetti) confetti(); SND.done(); const s = streaks(), up = checkLevel(), pw = checkPerfect();
   S.lvUp = !!up; if (up) lvlFX(up);
-  else toast(pw ? "Perfect week: 6 of 6" : s.cur > 1 ? `Workout done. ${s.cur}-day streak` : "Workout done. Streak started");
+  else { const w = wkOf(S.sel).light ? "Session" : "Workout"; toast(pw ? "Perfect week: 6 of 6" : s.cur > 1 ? `${w} done. ${s.cur}-day streak` : `${w} done. Streak started`); }
 }
+// reopening a finished workout: today's clock waits, paused at the finish time (the next set or Resume carries on)
+function reopenDay(doc, d) { doc.done = false; if (d === wkDay() && doc.start && doc.end) { doc.pz = doc.pz || doc.end; delete doc.end; } }
 function toggleFinish() {
   const d = S.sel, doc = ensureDay(d);
-  doc.done = !doc.done;
-  if (!doc.done && d === today() && doc.start && doc.end) { doc.pz = doc.pz || doc.end; delete doc.end; }
+  if (doc.done) reopenDay(doc, d); else doc.done = true;
   touch("d" + d);
   if (doc.done) celebrate();
   refreshToday();
@@ -4970,7 +5045,7 @@ let HIDDEN_AT = 0;
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) { HIDDEN_AT = Date.now(); return; }
   const away = HIDDEN_AT ? Date.now() - HIDDEN_AT : 0; HIDDEN_AT = 0;
-  const st = stwState(dayDoc(today()));
+  const st = stwState(dayDoc(wkDay()));
   if (!BOOT_HTML || away < 20000 || st === "run" || st === "pause" || document.getElementById("boot")) return;
   playBoot(bootVars());
 });
@@ -4985,7 +5060,8 @@ connect();
 let lastDay = today();
 function onResume() {
   try {
-    if (today() !== lastDay) { if (S.sel === lastDay) S.sel = today(); if (S.night === lastDay) S.night = today(); lastDay = today(); S.open.clear(); render(false); }
+    // a new day: move to it, unless a session started before midnight is still going (checked again on the next resume)
+    if (today() !== lastDay && wkDay() !== lastDay) { if (S.sel === lastDay) S.sel = today(); if (S.night === lastDay) S.night = today(); lastDay = today(); S.open.clear(); render(false); }
     else if (S.tab === "today") { const bm = $("#bmeta"); if (bm) bm.textContent = bannerMeta(S.sel); }
     if (T) { clearInterval(tIv); tIv = setInterval(tick, 200); tick(); }
   } catch (e) { logErr("resume: " + ((e && e.stack) || e)); }
