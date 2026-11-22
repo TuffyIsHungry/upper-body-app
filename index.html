@@ -1047,78 +1047,6 @@ button.row{color:inherit}
 .lb-rq{display:flex;align-items:center;gap:10px;padding:8px 0}
 .req+.req{border-top:1px solid var(--line);margin-top:4px;padding-top:4px}
 .req-b{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:2px 0 6px}.req-b .btn{height:38px;font-size:14px;min-width:0}
-/* the podium: stacks of plates, the leader on top */
-.lb-pod{padding:14px 12px 12px;overflow:hidden;position:relative;
-  background:radial-gradient(70% 55% at 50% 58%, color-mix(in srgb, #F0AE2E 20%, transparent), transparent 70%), var(--surface)}
-.pd-h{display:flex;align-items:baseline;justify-content:space-between;padding:0 4px;position:relative;z-index:2}
-.pd-h b{font-family:var(--display);font-size:21px;font-weight:700}
-.pd-left{font-size:12.5px;font-weight:700;color:var(--push);background:color-mix(in srgb, var(--push) 13%, transparent);padding:3px 9px;border-radius:10px}
-.pd-rule{margin:6px 4px 0;text-align:center;position:relative;z-index:2}
-/* the cards */
-.pc-fan{position:relative;height:266px;margin-top:4px;perspective:900px}
-.pc{position:absolute;left:50%;top:28px;width:150px;height:212px;margin-left:-75px;padding:0;font:inherit;color:#fff;text-align:center;
-  transform:translate(var(--x,0), var(--y,0)) rotate(var(--rz,0)) scale(var(--s,1));transition:transform .5s cubic-bezier(.3,1.3,.5,1);
-  filter:drop-shadow(0 14px 18px rgba(0,0,0,.38));-webkit-tap-highlight-color:transparent}
-.pc.c1{z-index:3;--y:-6px}
-.pc.c2{z-index:2;--x:-71%;--y:24px;--rz:-10deg;--s:.8}
-.pc.c3{z-index:1;--x:71%;--y:24px;--rz:10deg;--s:.8}
-.pc-in{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.3,1.25,.5,1)}
-.pc.flip .pc-in{transform:rotateY(180deg)}
-.pc-f{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;border-radius:20px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-  padding:12px 10px 10px;border:2px solid transparent;
-  background:linear-gradient(165deg, color-mix(in srgb, var(--m2) 42%, #141820), #0F1218 62%) padding-box,
-    linear-gradient(140deg, var(--m1), var(--m2) 35%, var(--m3) 60%, var(--m1) 80%, var(--m2)) border-box}
-.pc-f::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
-  background:repeating-linear-gradient(125deg, transparent 0 14px, color-mix(in srgb, var(--m1) 9%, transparent) 14px 15px)}
-.pc-bk{transform:rotateY(180deg);align-items:stretch;justify-content:center;gap:6px;text-align:left;padding:12px}
-.pc-top{position:relative;width:100%;display:flex;justify-content:space-between;align-items:flex-start}
-.pc-pts{display:flex;flex-direction:column;align-items:flex-start;line-height:.85}
-.pc-pts b{font-family:var(--display);font-weight:700;font-size:40px;color:var(--m1);text-shadow:0 2px 0 color-mix(in srgb, var(--m3) 80%, #000)}
-.pc-pts small{font-size:11px;font-weight:700;color:var(--m1);opacity:.75;margin-top:4px}
-.pc-rk{font-family:var(--display);font-weight:700;font-size:17px;color:var(--m1);opacity:.9}
-.pc-a{position:relative;width:64px;height:64px;font-size:24px;margin-top:-6px;box-shadow:0 0 0 2.5px #0F1218,0 0 0 4.5px var(--m2),0 6px 16px rgba(0,0,0,.45)}
-.pc-nm{position:relative;margin-top:8px;font-size:17px;font-weight:700;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pc.me .pc-nm::after{content:"";display:inline-block;width:6px;height:6px;margin-left:5px;border-radius:50%;background:var(--push);vertical-align:middle}
-.pc-st{position:relative;margin-top:auto;width:100%;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid color-mix(in srgb, var(--m1) 25%, transparent);padding-top:7px}
-.pc-st span{display:flex;flex-direction:column;line-height:1.1}.pc-st span+span{border-left:1px solid color-mix(in srgb, var(--m1) 25%, transparent)}
-.pc-st b{font-family:var(--display);font-size:18px;font-weight:700}.pc-st small{font-size:10.5px;color:rgba(255,255,255,.6)}
-.pc-bh{position:relative;display:flex;align-items:center;gap:8px;margin-bottom:4px}.pc-bh>span{display:flex;flex-direction:column;min-width:0}
-.pc-bh b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pc-bh small{font-size:11.5px;color:var(--m1)}
-.pc-kv{position:relative;display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:rgba(255,255,255,.7);padding:3px 0;border-top:1px solid rgba(255,255,255,.08)}
-.pc-kv b{font-family:var(--display);font-size:17px;color:#fff}
-.pc-empty .pc-f{--m1:var(--line);background:repeating-linear-gradient(135deg, var(--surface-2) 0 10px, color-mix(in srgb, var(--surface-2) 70%, var(--surface)) 10px 20px) padding-box, linear-gradient(var(--line), var(--line)) border-box;
-  color:var(--muted);justify-content:center;gap:4px;border-style:dashed}
-.pc-empty .pc-f::before{display:none}
-.pc-empty{filter:none}
-.pc-plus{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);margin-bottom:4px}.pc-plus svg{width:22px;height:22px}
-.pc-empty b{font-size:15px}.pc-empty small{font-size:12px}
-.pc-shine{position:absolute;inset:-20%;pointer-events:none;background:linear-gradient(110deg, transparent 38%, rgba(255,255,255,.42) 47%, rgba(255,255,255,.08) 53%, transparent 60%);
-  transform:translateX(-90%);animation:shine 6s ease-in-out 1.9s infinite;mix-blend-mode:screen}
-@keyframes shine{0%{transform:translateX(-90%)}18%,100%{transform:translateX(90%)}}
-.pc-crown{position:absolute;left:50%;top:0;z-index:4;width:46px;margin-left:-23px;pointer-events:none}
-.pc-crown .lb-crown{position:static;transform:rotate(-10deg);width:46px;height:32px}
-.pc-spark{position:absolute;left:50%;top:128px;z-index:4;pointer-events:none}
-.pc-spark i{position:absolute;width:6px;height:6px;margin:-3px;border-radius:50%;background:#FFE29A;box-shadow:0 0 8px #F0AE2E;opacity:0}
-.pc-spark i:nth-child(3n){background:#fff;width:4px;height:4px}
-/* the deal: cards fly in face down, flip, fan out; the leader lands last, then crown, sparks and shine */
-.lb-anim .pc{animation:deal .7s cubic-bezier(.25,1.2,.45,1) both}
-.lb-anim .pc.c3{animation-delay:.1s}.lb-anim .pc.c2{animation-delay:.28s}.lb-anim .pc.c1{animation-delay:.5s}
-.lb-anim .pc-in{animation:faceUp .75s cubic-bezier(.3,1.25,.5,1) both}
-.lb-anim .pc.c3 .pc-in{animation-delay:.42s}.lb-anim .pc.c2 .pc-in{animation-delay:.6s}.lb-anim .pc.c1 .pc-in{animation-delay:.86s}
-.lb-anim .pc-empty .pc-in{animation:none}
-.lb-anim .pc-bk>*{animation:hideBk 1.7s step-end both} /* while the cards fly in, their backs are plain */
-@keyframes hideBk{0%{opacity:0}100%{opacity:1}}
-@keyframes deal{from{transform:translate(0, 150px) rotate(0) scale(.55);opacity:0}}
-@keyframes faceUp{from{transform:rotateY(180deg)}}
-.lb-anim .pc-crown{animation:crownIn .7s cubic-bezier(.3,1.7,.5,1) 1.35s both}
-@keyframes crownIn{from{transform:translateY(-40px) rotate(-35deg) scale(.3);opacity:0}}
-.lb-anim .pc-spark i{animation:spark .9s cubic-bezier(.2,.8,.3,1) 1.4s both}
-@keyframes spark{0%{transform:rotate(var(--a)) translateY(0) scale(.3);opacity:0}25%{opacity:1}100%{transform:rotate(var(--a)) translateY(calc(var(--r) * -1)) scale(1);opacity:0}}
-.lb-anim .lb-pod{animation:podGlow 1.6s ease .9s both}
-@keyframes podGlow{0%{background-size:100% 100%}40%{box-shadow:inset 0 0 0 1.5px color-mix(in srgb, #F0AE2E 45%, transparent)}100%{box-shadow:none}}
-@media (max-width:350px){.pc-fan{height:236px}.pc{width:128px;height:184px;margin-left:-64px}.pc.c2{--x:-60%;--s:.74}.pc.c3{--x:60%;--s:.74}.pc-pts b{font-size:34px}.pc-a{width:52px;height:52px;font-size:20px}.pc-nm{font-size:15px}.pc-spark{top:112px}}
-@media (prefers-reduced-motion: reduce){.pc-shine{animation:none;display:none}}
-html.rm .pc-shine{display:none}
 .lb-crown{display:block;width:34px;height:24px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
 /* framing your photo */
 .crop{position:fixed;inset:0;z-index:80;background:#05070A;color:#fff;display:flex;flex-direction:column;animation:crIn .25s ease both;touch-action:none;
@@ -1138,81 +1066,93 @@ html.rm .pc-shine{display:none}
 .cr-tip{text-align:center;color:rgba(255,255,255,.55);margin:8px 0 0}
 .lb-hold *{animation-play-state:paused!important}
 @keyframes popIn{from{transform:translateY(14px) scale(.6);opacity:0}}
-/* the boards */
-.lb-seg{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface-2);border-radius:13px;padding:3px;margin-bottom:12px}
-.lb-seg-i{position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px) / 4);border-radius:10px;background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.18);
-  transform:translateX(calc(var(--ti) * 100%));transition:transform .38s cubic-bezier(.3,1.25,.5,1)}
-.lb-seg button{position:relative;z-index:1;height:34px;font-size:13.5px;font-weight:700;color:var(--muted);white-space:nowrap;transition:color .25s}
-.lb-seg button[aria-selected="true"]{color:var(--fg)}
-.lb-body.swap>*,.lb-anim .lb-body>*{animation:rowIn .42s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(min(var(--i, 0), 10) * 40ms)}
-@keyframes rowIn{from{transform:translateY(10px);opacity:0}}
-.lb-why{margin:0 2px 8px}
-.lb-note{margin:10px 2px 0}
-.lb-r{display:flex;align-items:center;gap:12px;padding:9px 8px;border-radius:16px}
-.lb-r.me{background:color-mix(in srgb, var(--push) 9%, transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--push) 22%, transparent)}
-.lb-av{position:relative;flex-shrink:0}
-.lb-av .lb-a{width:42px;height:42px;font-size:17px}
-.lb-p{position:absolute;right:-5px;bottom:-4px;min-width:20px;height:20px;padding:0 4px;border-radius:10px;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:13px;
-  background:var(--surface-2);color:var(--muted);box-shadow:0 0 0 2px var(--surface)}
-.lb-r.m1 .lb-p,.lb-r.m2 .lb-p,.lb-r.m3 .lb-p{background:var(--md);color:#1A1306}
-.lb-r.m1 .lb-av .lb-a{box-shadow:0 0 0 2px var(--surface),0 0 0 4px #F0AE2E}
-.lb-n{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
-.lb-n b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lb-n b small{font-weight:600;color:var(--muted);font-size:12px}
-.lb-n>small{color:var(--muted);font-size:12.5px;line-height:1.25}
-.lb-v{font-family:var(--display);font-weight:700;font-size:22px;white-space:nowrap}.lb-v small{font-size:13px;color:var(--muted);font-weight:600}
-.lb-track{display:block;height:5px;border-radius:3px;background:var(--surface-2);overflow:hidden}
-.lb-track i{display:block;height:100%;width:var(--w);border-radius:inherit;background:linear-gradient(90deg, color-mix(in srgb, var(--push) 70%, #F0AE2E), var(--push))}
-.lb-r:not(.me) .lb-track i{background:color-mix(in srgb, var(--fg) 28%, transparent)}
-.lb-body.swap .lb-track i,.lb-anim .lb-track i,.lb-body.swap .lf-bar i,.lb-anim .lf-bar i,.lb-body.swap .mr-t i,.lb-anim .mr-t i{animation:grow .8s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(min(var(--i, 0), 10) * 40ms + 120ms)}
-@keyframes grow{from{width:0}}
-.lb-ring{position:relative;width:40px;height:40px;display:grid;place-items:center}
-.lb-ring svg{position:absolute;inset:0;width:100%;height:100%}
-.lb-ring circle{fill:none;stroke-width:3.5}.lb-ring .t{stroke:var(--surface-2)}.lb-ring .v{stroke:var(--good);stroke-linecap:round;stroke-dashoffset:var(--off)}
-.lb-body.swap .lb-ring .v,.lb-anim .lb-ring .v{animation:ring .9s cubic-bezier(.2,.8,.2,1) both}
-@keyframes ring{from{stroke-dashoffset:var(--c0)}}
-.lb-ring b{font-size:12.5px;font-family:var(--body)}.lb-ring b small{font-size:9px;color:var(--muted)}
-.lb-tro{display:inline-flex;align-items:center;gap:4px}.lb-tro svg{width:19px;height:19px;color:#F0AE2E}
-.lb-h{font-family:var(--display);font-size:19px;font-weight:700;margin:18px 2px 6px}
-.lf{padding:10px 12px;border-radius:14px;background:var(--surface-2);margin-top:8px}
-.lf-h{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}.lf-h b{font-weight:600;min-width:0}.lf-h small{color:var(--muted);font-size:12px;white-space:nowrap}
-.lf-r{display:flex;align-items:center;gap:8px;padding:3px 0;position:relative}
-.lf-bar{flex:1;height:10px;border-radius:5px;background:color-mix(in srgb, var(--fg) 7%, transparent);overflow:hidden}
-.lf-bar i{display:block;height:100%;width:var(--w);border-radius:inherit;background:color-mix(in srgb, var(--fg) 30%, transparent)}
-.lf-r.me .lf-bar i{background:var(--push)}
-.lf-v{min-width:64px;text-align:right;font-family:var(--display);font-weight:700;font-size:17px}.lf-v small{font-size:12px;color:var(--muted)}
-.lf-r .lb-crown{position:static;transform:none;width:20px;height:14px;margin-left:-2px}
-.lf-own{display:flex;flex-direction:column}
-.lf-o{display:flex;justify-content:space-between;gap:10px;padding:10px 2px;border-top:1px solid var(--line)}.lf-o:first-child{border-top:0}
-.lf-o span{font-family:var(--display);font-weight:700;font-size:17px;white-space:nowrap}
-/* muscles */
 .mr-hex{flex-shrink:0;display:block;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}
 .mr-hex.dim{opacity:.38;filter:saturate(.5)}
-.mr-list{display:flex;flex-direction:column}
-.mr-r{display:flex;align-items:center;gap:12px;padding:8px 2px}
-.mr-n{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}.mr-n b{font-weight:600}.mr-n small{color:var(--muted);font-size:12px}
-.mr-t{display:block;height:6px;border-radius:3px;background:var(--surface-2);overflow:hidden}.mr-t i{display:block;height:100%;width:var(--w);border-radius:inherit;background:var(--tc)}
-.vs-pick{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -2px 10px;padding:2px}
-.vs-pick::-webkit-scrollbar{display:none}
-.vs-pick button{display:flex;align-items:center;gap:6px;flex-shrink:0;height:34px;padding:0 12px 0 4px;border-radius:17px;background:var(--surface-2);font-weight:600;font-size:13.5px;color:var(--muted)}
-.vs-pick button[aria-checked="true"]{background:color-mix(in srgb, var(--pull) 18%, var(--surface-2));color:var(--fg);box-shadow:inset 0 0 0 1.5px var(--pull)}
-.vs-score{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;padding:6px 4px 2px}
-.vs-side{display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:600;font-size:14px;min-width:0}
-.vs-side span{max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.vs-a{width:48px;height:48px;font-size:18px;box-shadow:0 0 0 2.5px var(--surface),0 0 0 4.5px var(--pull)}
-.vs-side.me .vs-a{box-shadow:0 0 0 2.5px var(--surface),0 0 0 4.5px var(--push)}
-.vs-num{display:flex;align-items:center;gap:6px;font-family:var(--display);font-weight:700;font-size:46px;line-height:1}
-.vs-num b{color:var(--muted);font-weight:700}.vs-num b.lead{color:var(--fg)}.vs-num i{font-style:normal;color:var(--muted);font-size:32px;transform:translateY(-3px)}
-.vs-cap{text-align:center;margin:6px 0 10px}
-.vs-rows{display:flex;flex-direction:column;gap:2px}
-.vs-r{display:flex;align-items:center;gap:10px;padding:5px 0}
-.vs-mid{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:5px}
-.vs-mid b{font-size:13.5px;font-weight:600}
-.vs-bar{position:relative;width:100%;height:8px;display:grid;grid-template-columns:1fr 1fr;gap:3px}
-.vs-bar i{display:block;height:100%;border-radius:4px;width:var(--w);opacity:.45}
-.vs-bar i.l{justify-self:end;background:var(--push)}.vs-bar i.r{justify-self:start;background:var(--pull)}
-.vs-bar i.win{opacity:1}
-.lb-body.swap .vs-bar i,.lb-anim .vs-bar i{animation:grow .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(min(var(--i, 0), 10) * 35ms + 150ms)}
-.lb-body.swap .vs-num,.lb-anim .vs-num{animation:popIn .5s cubic-bezier(.3,1.5,.5,1) both}
+/* this week: the race */
+.wr{padding:16px 12px 14px}
+.wr-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:0 6px}
+.wr-h b{font-family:var(--display);font-size:21px;font-weight:700}
+.wr-left{font-size:12.5px;font-weight:700;color:var(--push);background:color-mix(in srgb, var(--push) 13%, transparent);padding:3px 9px;border-radius:10px;white-space:nowrap}
+.wr-say{margin:4px 6px 10px;font-size:14px;line-height:1.4;color:var(--muted)}.wr-say b{color:var(--fg);font-weight:650}
+.wr-ls{display:flex;flex-direction:column;gap:2px}
+.wr-l{display:grid;grid-template-columns:20px minmax(0,1fr) 62px;align-items:end;column-gap:10px;padding:7px 8px 6px 4px;border-radius:14px}
+.wr-l.me{background:color-mix(in srgb, var(--push) 8%, transparent)}
+.wr-pl{align-self:center;text-align:center;font-family:var(--display);font-weight:700;font-size:16px;color:var(--muted)}
+.wr-l.lead .wr-pl{color:color-mix(in srgb, #F0AE2E 75%, var(--fg))}
+.wr-m{display:flex;flex-direction:column;gap:3px;min-width:0}
+.wr-t{display:flex;align-items:baseline;gap:8px;min-width:0}
+.wr-t b{font-size:15px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;flex-shrink:0}
+.wr-t small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.wr-tr{position:relative;height:30px}
+.wr-tr::before{content:"";position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;border-radius:3px;background:var(--surface-2)}
+.wr-f{position:absolute;left:0;top:50%;height:6px;margin-top:-3px;border-radius:3px;width:calc(var(--p) * (100% - 30px) + 15px);background:var(--k)}
+.wr-l.lead .wr-f{background:linear-gradient(90deg, color-mix(in srgb, #F0AE2E 35%, transparent), #F0AE2E)}
+.wr-a{position:absolute;top:1px;left:calc(var(--p) * (100% - 30px));width:28px;height:28px}
+.wr-a .lb-a{width:28px;height:28px;font-size:11px;box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--k)}
+.wr-l.me .wr-a .lb-a{box-shadow:0 0 0 2px color-mix(in srgb, var(--push) 8%, var(--surface)),0 0 0 3.5px var(--k)}
+.wr-l.lead .wr-a .lb-a{box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px #F0AE2E}
+.wr-a .lb-crown{position:absolute;left:50%;top:-12px;width:20px;height:14px;margin-left:-10px;transform:rotate(-10deg)}
+.wr-v{display:flex;align-items:baseline;justify-content:flex-end;gap:2px;height:30px;line-height:30px}
+.wr-v b{font-family:var(--display);font-size:22px;font-weight:700}.wr-v small{font-size:11px;color:var(--muted)}
+.wr-ghost{width:100%;border:0;background:none;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.wr-ghost .wr-pl{color:var(--push);font-size:20px}.wr-ghost .wr-t b{color:var(--push);max-width:none}
+.wr-ghost .wr-tr::before{background:none;height:0;margin-top:0;border-top:2px dashed var(--line)}
+.wr-rule{margin:10px 6px 0;font-size:12px;line-height:1.4;color:var(--muted)}
+.lb-anim .wr-f{animation:wrGrow 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 110ms + 120ms)}
+.lb-anim .wr-a{animation:wrRide 1s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 110ms + 120ms)}
+.lb-anim .wr-a .lb-crown{animation:wrCrown .55s cubic-bezier(.3,1.7,.5,1) 1.2s both}
+@keyframes wrGrow{from{width:15px}}
+@keyframes wrRide{from{left:0}}
+@keyframes wrCrown{from{opacity:0;transform:translateY(8px) rotate(-10deg) scale(.3)}}
+/* head to head: one column per person */
+.hh{padding:16px 14px 10px}.card.hh{background:var(--surface)} /* flat, so the sticky names row matches it */
+.hh-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:0 2px 6px}
+.hh-h b{font-family:var(--display);font-size:21px;font-weight:700}
+.hh-inv{--c:var(--push);color:var(--push);font-size:14px;font-weight:650}
+.hh-solo{margin:0 2px 4px;font-size:13.5px;line-height:1.4;color:var(--muted)}
+.hh-g{--cols:minmax(0,1fr) repeat(var(--n), var(--cw))}
+.hh-g.solo{--cols:minmax(0,1fr) 84px}
+.hh-row{display:grid;grid-template-columns:var(--cols);align-items:stretch;border-top:1px solid var(--line)}
+.hh-head{position:sticky;top:calc(env(safe-area-inset-top, 0px) + var(--toph, 0px));z-index:3;background:var(--surface);border-top:0;padding-top:6px;align-items:end;box-shadow:0 1px 0 var(--line)}
+.hh-cap{align-self:end;padding:0 8px 8px 2px;font-size:11.5px;line-height:1.3;color:var(--muted)}
+.hh-p{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0;padding:8px 2px 8px}
+.hh-p.me{background:color-mix(in srgb, var(--push) 9%, transparent);border-radius:14px 14px 0 0}
+.hh-p .lb-a{width:34px;height:34px;font-size:13px;margin-bottom:3px}
+.hh-p.me .lb-a{box-shadow:0 0 0 2px var(--surface),0 0 0 3.5px var(--push)}
+.hh-p b{font-size:13px;font-weight:650;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hh-p small{font-size:11px;color:var(--muted);white-space:nowrap}
+.hh-p.best small{color:color-mix(in srgb, #F0AE2E 72%, var(--fg));font-weight:650}
+.hh-sec{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:18px 2px 7px}
+.hh-sec b{font-size:15px;font-weight:700}.hh-sec small{font-size:12px;color:var(--muted);white-space:nowrap}
+.hh-g:not(.solo) .hh-head+.hh-sec{padding-top:12px}
+.hh-k{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;padding:8px 8px 8px 2px}
+.hh-k b{font-size:14px;font-weight:600;line-height:1.25}
+.hh-k small{font-size:11.5px;line-height:1.3;color:var(--muted)}
+.hh-v{display:flex;align-items:center;justify-content:center;min-height:44px;font-family:var(--display);font-weight:700;font-size:16px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hh-v b{font-weight:700;padding:3px 6px;border-radius:9px}
+.hh-v small{font-family:var(--body);font-size:10.5px;font-weight:600;color:var(--muted)}
+.hh-v.me{background:color-mix(in srgb, var(--push) 9%, transparent)}
+.hh-row:last-child .hh-v.me{border-radius:0 0 14px 14px}
+.hh-v.lo{color:color-mix(in srgb, var(--fg) 72%, var(--surface))}
+.hh-v.no{color:var(--faint);font-weight:500}
+.hh-v.gold b{background:color-mix(in srgb, #F0AE2E 22%, transparent);color:color-mix(in srgb, #F0AE2E 72%, var(--fg));box-shadow:inset 0 0 0 1px color-mix(in srgb, #F0AE2E 35%, transparent)}
+.hh-v.gold small{color:inherit;opacity:.8}
+.hh-v.dim svg{opacity:.35;filter:saturate(.4)}
+.hh-v .lvl-svg{display:block}
+.hh-empty{margin:2px 2px 6px}
+.hh-g.wide{overflow-x:auto;margin:0 -14px;padding:0 14px;scrollbar-width:none;--cols:104px repeat(var(--n), var(--cw))}
+.hh-g.wide::-webkit-scrollbar{display:none}
+.hh-g.wide .hh-row{width:max-content;min-width:100%}
+.hh-g.wide .hh-k{position:sticky;left:-14px;z-index:1;background:var(--surface);padding-left:14px;margin-left:-14px;width:calc(100% + 14px)}
+.hh-g.wide .hh-head{position:static}
+.hh-g.wide .hh-cap{align-self:stretch;display:flex;align-items:flex-end}
+.hh-g.wide .hh-sec{position:sticky;left:0}
+.lb-anim .hh-v.gold b{animation:hhGold .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:calc(.9s + min(var(--i, 0), 16) * 35ms)}
+.lb-anim .hh-v.dim svg{animation:hhDim .6s ease both;animation-delay:calc(.9s + min(var(--i, 0), 16) * 35ms)}
+@keyframes hhGold{from{background-color:transparent;box-shadow:none;transform:scale(.8)}}
+@keyframes hhDim{from{opacity:1;filter:none}}
+@media (max-width:350px){.wr-t small{font-size:11.5px}.wr-v b{font-size:20px}.wr-l{grid-template-columns:16px minmax(0,1fr) 54px;column-gap:8px}.hh-k b{font-size:13px}.hh-k small{font-size:11px}.hh-v{font-size:15px}}
+@media (prefers-reduced-motion: reduce){.lb-anim .wr-f,.lb-anim .wr-a,.lb-anim .wr-a .lb-crown,.lb-anim .hh-v.gold b,.lb-anim .hh-v.dim svg{animation:none}}
 /* managing friends */
 .lb-mng{padding:4px 16px}
 .mng-h{width:100%;display:flex;align-items:center;justify-content:space-between;height:48px;font:inherit;color:inherit;font-weight:600}
@@ -1223,7 +1163,7 @@ html.rm .pc-shine{display:none}
 .lb-priv{margin:0 6px 4px}
 .lb-in{width:100%;height:54px;font-size:24px;text-align:center;letter-spacing:.18em;text-transform:uppercase;padding:0 12px}
 .lb-addbtn{width:100%;margin:14px 0 6px}
-@media (max-width:350px){.lb-seg button{font-size:12px}.vs-num{font-size:38px}.me-ava .lb-a{width:48px;height:48px}.me-n b{font-size:21px}.me-inv{padding:0 8px 0 11px}}
+@media (max-width:350px){.me-ava .lb-a{width:48px;height:48px}.me-n b{font-size:21px}.me-inv{padding:0 8px 0 11px}}
 .acc-fr{margin-top:12px;border-radius:14px;background:var(--surface-2);padding:12px 14px;width:100%}
 .acc-seg{display:flex;margin:0 0 12px}.acc-seg button{flex:1}
 .acc-f{display:flex;flex-direction:column;gap:10px}
@@ -2529,12 +2469,11 @@ function lbPeople() {
   return out;
 }
 const lbInit = n => (n || "?").trim().split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
-const lbHue = id => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+const lbHue = id => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return h >= 10 && h < 70 ? h + 150 : h; }; // never orange (you) or gold (the leader)
 const lbAva = (r, cls = "") => `<span class="lb-a ${cls}" style="--h:${lbHue(r.id)}">${r.photo ? `<img src="${r.photo}" alt="">` : escH(lbInit(r.name))}</span>`;
 // 1, 2, 2, 4: equal scores share a place
 const lbPlaces = (L, f) => L.map((r, i) => { let j = i; while (j > 0 && f(L[j - 1]) === f(r)) j--; return j; });
 const IC_CROWN = '<svg class="lb-crown" viewBox="0 0 32 22" aria-hidden="true"><path d="M3 19L1.5 5.5l8 6L16 1l6.5 10.5 8-6L29 19z" fill="#F0AE2E" stroke="#B9801A" stroke-width="1.2" stroke-linejoin="round"/><circle cx="16" cy="13" r="2.2" fill="#FFF3D1"/></svg>';
-const IC_TROPHY = '<svg class="i" viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0zM8 6H4.5a3.5 3.5 0 0 0 4 4M16 6h3.5a3.5 3.5 0 0 1-4 4M12 13v4M8.5 20h7M9.5 17h5"/></svg>';
 const IC_CAM = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l1.6-2.2h6.8L17 8h3v11H4z" fill="currentColor"/><circle cx="12" cy="13.2" r="3.4" fill="var(--surface)"/></svg>';
 // a small hexagon in a muscle's rank colour, with its level
 function mrHex(L, size = 30, dim) {
@@ -2548,85 +2487,74 @@ function weekLeft() {
   const ms = parse(addD(mondayOf(today()), 7)).getTime() - Date.now(), h = Math.max(0, Math.floor(ms / 3600000)), d = Math.floor(h / 24);
   return d >= 1 ? `${d}d ${h % 24}h left` : h >= 1 ? `${h}h ${Math.floor(ms / 60000) % 60}m left` : `${Math.max(1, Math.floor(ms / 60000))} min left`;
 }
-// this week's top three as player cards, dealt face down and flipped, the leader in front. Tap a card to see its back.
-const CARD_T = [["#FFE9A6", "#F0AE2E", "#9A6614"], ["#F4F7FB", "#AEB8C7", "#5F6B7D"], ["#F8CFA8", "#C97A3A", "#74421C"]];
-function lbPodium(P) {
-  const L = P.slice().sort((a, b) => b.wk.pts - a.wk.pts), pl = lbPlaces(L, r => r.wk.pts), ORD = ["1st", "2nd", "3rd"];
-  const card = i => { const r = L[i], pos = ["c1", "c2", "c3"][i];
-    if (!r) return `<button class="pc ${pos} pc-empty" data-act="lbinv" aria-label="Invite a friend"><span class="pc-in"><span class="pc-f pc-back"><span class="pc-plus"><svg class="i" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></span><b>Invite</b><small>a friend</small></span></span></button>`;
-    const t = CARD_T[Math.min(pl[i], 2)], lv = levelOf(r.p.xp || 0), c = r.p.cons, first = (r.me ? "You" : r.name.split(" ")[0]);
-    return `<button class="pc ${pos}${r.me ? " me" : ""}" data-act="lbflip" style="--m1:${t[0]};--m2:${t[1]};--m3:${t[2]}" aria-label="${ORD[pl[i]] || pl[i] + 1 + "th"}: ${escH(first)}, ${r.wk.pts} points. Tap for details">
-      <span class="pc-in">
-        <span class="pc-f"><span class="pc-top"><span class="pc-pts"><b class="num" data-count="${r.wk.pts}">${r.wk.pts}</b><small>pts</small></span><span class="pc-rk">${ORD[pl[i]] || ""}</span></span>
-          ${lbAva(r, "pc-a")}<b class="pc-nm">${escH(first)}</b>
-          <span class="pc-st"><span><b class="num">${r.wk.done}/${r.wk.plan}</b><small>workouts</small></span><span><b class="num">${r.wk.prs}</b><small>record${r.wk.prs === 1 ? "" : "s"}</small></span></span>
-          ${i === 0 ? '<i class="pc-shine"></i>' : ""}</span>
-        <span class="pc-f pc-bk"><span class="pc-bh">${lvlBadge(lv, 34, false)}<span><b>${escH(r.name)}</b><small>${escH(lv.name)}</small></span></span>
-          <span class="pc-kv"><span>Streak</span><b class="num">${r.p.streak || 0} d</b></span>
-          <span class="pc-kv"><span>Regularity</span><b class="num">${c ? c.pct + "%" : "–"}</b></span>
-          <span class="pc-kv"><span>This week</span><b class="num">${r.wk.done} of ${r.wk.plan}</b></span>
-          <span class="pc-kv"><span>Records</span><b class="num">${r.wk.prs}</b></span></span>
-      </span></button>`; };
-  const sparks = Array.from({ length: 12 }, (_, k) => `<i style="--a:${k * 30 + (k % 2) * 12}deg;--r:${70 + (k % 3) * 18}px"></i>`).join("");
-  return `<section class="card lb-pod"><div class="pd-h"><b>This week</b><span class="pd-left">${weekLeft()}</span></div>
-    <div class="pc-fan">${card(1)}${card(2)}${card(0)}${L[0] && L[0].wk.pts > 0 ? `<span class="pc-crown">${IC_CROWN}</span><span class="pc-spark" aria-hidden="true">${sparks}</span>` : ""}</div>
-    <p class="small muted pd-rule">1 point per set, +4 per record, +15 per workout, +25 per quest. Resets Monday.</p></section>`;
+// ---- the Friends tab: this week's race, then every comparison side by side ----
+const LIFT_SHORT = { bpr: "Bench press", sdp: "DB shoulder press", hsq: "Squat", ngp: "Lat pulldown", csr: "Chest-supported row", scr: "Cable row", bss: "Split squat", idp: "Incline DB press", msp: "Machine shoulder press", rdl: "Romanian deadlift" };
+const liftName = id => LIFT_SHORT[id] || (EXBY[id] ? EXBY[id].n.split(" (")[0] : id);
+const lbFirst = r => r.me ? "You" : (r.name || "Friend").trim().split(/\s+/)[0];
+const lbCol = r => r.me ? "var(--push)" : `hsl(${lbHue(r.id)} 62% 55%)`;
+// points this week as a race: everyone's lane, the leader in gold, and in plain words how far you are from the next place
+function lbRace(P) {
+  const L = P.slice().sort((a, b) => b.wk.pts - a.wk.pts || (a.me ? -1 : b.me ? 1 : 0)), pl = lbPlaces(L, r => r.wk.pts), top = Math.max(1, L[0].wk.pts), solo = L.length < 2;
+  const me = L.find(r => r.me), mi = L.indexOf(me), lead = L[0], pts = n => `${n} point${n === 1 ? "" : "s"}`;
+  let say;
+  if (solo) say = me.wk.pts ? `<b>${pts(me.wk.pts)}</b> so far. Invite a friend to race each other.` : "No points yet this week. Every set counts.";
+  else if (!lead.wk.pts) say = "Nobody has scored yet. The first set takes the lead.";
+  else if (pl[mi] === 0) { const tied = L.filter(r => !r.me && r.wk.pts === me.wk.pts);
+    say = tied.length ? `You're tied for first with ${tied.map(r => escH(lbFirst(r))).join(" and ")}.` : `You lead by <b>${pts(me.wk.pts - L.find(r => !r.me).wk.pts)}</b>.`; }
+  else { const above = L.slice(0, mi).filter(r => r.wk.pts > me.wk.pts).pop(), gap = above.wk.pts - me.wk.pts;
+    say = above === lead ? `${escH(lbFirst(lead))} leads. <b>${pts(gap)}</b> to catch up.` : `${escH(lbFirst(lead))} leads. <b>${pts(gap)}</b> to pass ${escH(lbFirst(above))}.`; }
+  const lane = (r, i) => { const w = r.wk.plan ? `${r.wk.done}/${r.wk.plan} workouts` : `${r.wk.done} workout${r.wk.done === 1 ? "" : "s"}`, first = pl[i] === 0 && r.wk.pts > 0 && !solo;
+    return `<div class="wr-l${r.me ? " me" : ""}${first ? " lead" : ""}" style="--p:${(r.wk.pts / top).toFixed(3)};--k:${lbCol(r)};--i:${i}">
+      <span class="wr-pl num">${pl[i] + 1}</span>
+      <span class="wr-m"><span class="wr-t"><b>${escH(lbFirst(r))}</b><small>${w}${r.wk.prs ? ` · ${r.wk.prs} PR${r.wk.prs === 1 ? "" : "s"}` : ""}</small></span>
+        <span class="wr-tr"><i class="wr-f"></i><span class="wr-a">${lbAva(r)}${first ? IC_CROWN : ""}</span></span></span>
+      <span class="wr-v"><b class="num" data-count="${r.wk.pts}">${r.wk.pts}</b><small>pts</small></span></div>`; };
+  return `<section class="card wr"><div class="wr-h"><b>This week</b><span class="wr-left">${weekLeft()}</span></div>
+    <p class="wr-say">${say}</p>
+    <div class="wr-ls">${L.map(lane).join("")}${solo ? `<button class="wr-l wr-ghost" data-act="lbinv"><span class="wr-pl">+</span><span class="wr-m"><span class="wr-t"><b>Invite a friend</b><small>and race each other every week</small></span><span class="wr-tr"></span></span><span class="wr-v"></span></button>` : ""}</div>
+    <p class="wr-rule">1 point per set, +4 per record, +15 per workout, +25 per quest. Starts again on Monday.</p></section>`;
 }
-function lbRow(r, i, val, sub, w, n) {
-  const md = i < 3 && !lbSolo;
-  return `<div class="lb-r${r.me ? " me" : ""}${md ? " m" + (i + 1) : ""}" style="--i:${n == null ? i : n};--md:${MEDAL[i] || "var(--line)"}"><span class="lb-av">${lbAva(r)}<span class="lb-p num">${i + 1}</span></span>
-    <span class="lb-n"><b>${escH(r.name)}${r.me ? ' <small>you</small>' : ""}</b><small>${sub}</small></span><span class="lb-v num">${val}</span></div>`;
-}
-let lbSolo = false; // only you on the board: no medals
-const lbRing = pct => { const C = 2 * Math.PI * 15; return `<span class="lb-ring"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="t"/><circle cx="18" cy="18" r="15" class="v" stroke-dasharray="${C.toFixed(1)}" style="--off:${(C * (1 - pct / 100)).toFixed(1)};--c0:${C.toFixed(1)}" transform="rotate(-90 18 18)"/></svg><b class="num">${pct}<small>%</small></b></span>`; };
-function lbTab(tab) {
-  const P = lbPeople(); lbSolo = P.length < 2;
-  if (tab === "week") {
-    const L = P.slice().sort((a, b) => b.wk.pts - a.wk.pts), pl = lbPlaces(L, r => r.wk.pts), top = Math.max(1, ...L.map(r => r.wk.pts));
-    return L.map((r, i) => lbRow(r, pl[i], `${r.wk.pts}<small> pts</small>`, `${r.wk.done} of ${r.wk.plan} workouts${r.wk.prs ? ` · ${r.wk.prs} record${r.wk.prs === 1 ? "" : "s"}` : ""}`, r.wk.pts / top * 100, i)).join("");
-  }
-  if (tab === "reg") {
-    const val = r => ((r.p.cons || {}).pct ?? -1) * 1000 + (r.p.streak || 0), L = P.slice().sort((a, b) => val(b) - val(a)), pl = lbPlaces(L, val);
-    return `<p class="small muted lb-why">Planned workouts done over the last 4 weeks, so it's fair whatever program you follow.</p>`
-      + L.map((r, i) => lbRow(r, pl[i], r.p.cons ? lbRing(r.p.cons.pct) : "–", r.p.cons ? `${r.p.cons.done} of ${r.p.cons.plan} done · ${r.p.streak || 0}‑day streak` : "Not enough days yet", null, i)).join("");
-  }
-  if (tab === "rec") {
-    const L = P.slice().sort((a, b) => b.wk.prs - a.wk.prs), pl = lbPlaces(L, r => r.wk.prs);
-    let h = `<p class="small muted lb-why">Personal records beaten this week.</p>` + L.map((r, i) => lbRow(r, pl[i], `<span class="lb-tro">${IC_TROPHY}${r.wk.prs}</span>`, r.wk.prs ? `new best${r.wk.prs === 1 ? "" : "s"} this week` : "none yet this week", null, i)).join("");
-    if (lbSolo) { // nobody to compare with yet: your own best sets
-      const me = P[0], mine = KEY_LIFTS.filter(id => me && me.p.lifts && me.p.lifts[id] && EXBY[id]);
-      return h + `<h3 class="lb-h">Your best lifts</h3>` + (mine.length ? `<div class="lf-own">${mine.map((id, n) => { const ex = EXBY[id], b = me.p.lifts[id];
-        return `<div class="lf-o" style="--i:${n}"><b>${escH(ex.n.split(" (")[0])}</b><span class="num">${ex.bw ? `${b.r} reps${b.w ? ` +${kg(b.w)} kg` : ""}` : `${kg(b.w)} kg × ${b.r}`}</span></div>`; }).join("")}</div>`
-        : `<p class="small muted">Log the main lifts and your best sets show up here.</p>`) + `<p class="small muted" style="margin:10px 2px 0">Add a friend and every lift you both do becomes a head-to-head.</p>`;
-    }
-    const ids = KEY_LIFTS.filter(id => EXBY[id] && P.filter(r => r.p.lifts && r.p.lifts[id]).length >= 2);
-    h += `<h3 class="lb-h">Head to head</h3>`;
-    if (!ids.length) return h + `<p class="small muted">As soon as two of you log the same lift, it shows up here.</p>`;
-    return h + ids.map((id, n) => { const ex = EXBY[id], L2 = P.filter(r => r.p.lifts && r.p.lifts[id]).sort((a, b) => b.p.lifts[id].s - a.p.lifts[id].s), top = L2[0].p.lifts[id].s || 1;
-      return `<div class="lf" style="--i:${n}"><div class="lf-h"><b>${escH(ex.n.split(" (")[0])}</b><small>${ex.bw ? "most reps" : "estimated max"}</small></div>${L2.map((r, j) => { const b = r.p.lifts[id];
-        return `<div class="lf-r${r.me ? " me" : ""}">${lbAva(r, "xs")}<span class="lf-bar"><i style="--w:${Math.max(6, b.s / top * 100)}%"></i></span><span class="lf-v num">${ex.bw ? `${b.r}<small> reps</small>` : `${kg(Math.round(b.s))}<small> kg</small>`}</span>${j === 0 && L2[1] && b.s > L2[1].p.lifts[id].s ? IC_CROWN : ""}</div>`; }).join("")}</div>`; }).join("");
-  }
-  // muscles: alone, your ranks; with friends, you against one of them, muscle by muscle
-  const me = P.find(r => r.me), others = P.filter(r => !r.me);
-  if (!others.length) {
-    const R = muscleRanks(), list = MUSCLES.map(([m, lab]) => ({ m, lab, r: R[m] })).filter(x => x.r).sort((a, b) => b.r.L - a.r.L || b.r.into - a.r.into);
-    return `<p class="small muted lb-why">Your muscle ranks. Add a friend to go head to head on each one.</p><div class="mr-list">${list.map((x, n) => `<div class="mr-r" style="--i:${n};--tc:${x.r.col}">${mrHex(x.r.L, 34)}<span class="mr-n"><b>${x.lab}</b><span class="mr-t"><i style="--w:${Math.round(x.r.into / x.r.need * 100)}%"></i></span><small>${x.r.tier} · ${x.r.need - x.r.into} pts to level ${x.r.L + 1}</small></span></div>`).join("")}</div>`;
-  }
-  const vs = others.find(r => r.id === FBS.vs) || others[0]; FBS.vs = vs.id;
-  const rows = MUSCLES.map(([m, lab]) => ({ lab, a: (me.p.mus || {})[m] || 1, b: (vs.p.mus || {})[m] || 1 }));
-  const won = rows.filter(x => x.a > x.b).length, lost = rows.filter(x => x.a < x.b).length, top = Math.max(2, ...rows.flatMap(x => [x.a, x.b]));
-  return `${others.length > 1 ? `<div class="vs-pick" role="radiogroup" aria-label="Compare with">${others.map(r => `<button data-act="lbvs" data-v="${r.id}" role="radio" aria-checked="${r.id === vs.id}">${lbAva(r, "xs")}<span>${escH(r.name.split(" ")[0])}</span></button>`).join("")}</div>` : ""}
-    <div class="vs-score"><div class="vs-side me">${lbAva(me, "vs-a")}<span>You</span></div><div class="vs-num num"><b class="${won > lost ? "lead" : ""}">${won}</b><i>:</i><b class="${lost > won ? "lead" : ""}">${lost}</b></div><div class="vs-side">${lbAva(vs, "vs-a")}<span>${escH(vs.name.split(" ")[0])}</span></div></div>
-    <p class="small muted vs-cap">${won === lost ? "Dead even." : won > lost ? `You win ${won} of ${rows.length} muscles.` : `${escH(vs.name.split(" ")[0])} wins ${lost} of ${rows.length} muscles.`} ${rows.length - won - lost ? `${rows.length - won - lost} tied.` : ""}</p>
-    <div class="vs-rows">${rows.map((x, n) => `<div class="vs-r" style="--i:${n}">${mrHex(x.a, 28, x.a < x.b)}<span class="vs-mid"><b>${x.lab}</b><span class="vs-bar"><i class="l${x.a > x.b ? " win" : ""}" style="--w:${x.a / top * 100}%"></i><i class="r${x.b > x.a ? " win" : ""}" style="--w:${x.b / top * 100}%"></i></span></span>${mrHex(x.b, 28, x.b < x.a)}</div>`).join("")}</div>`;
+// everything else, side by side: one column per person, the best of each row in gold
+function lbH2H(P) {
+  const me = P.find(r => r.me), oth = P.filter(r => !r.me).sort((a, b) => b.wk.pts - a.wk.pts || (b.p.lvl || 0) - (a.p.lvl || 0)), cols = [me, ...oth], n = cols.length, solo = n < 2;
+  const lifts = KEY_LIFTS.filter(id => EXBY[id] && cols.filter(r => r.p.lifts && r.p.lifts[id]).length >= (solo ? 1 : 2));
+  const num = u => v => `<b>${v}${u ? `<small>${u}</small>` : ""}</b>`;
+  const secs = [
+    { t: "Consistency", rows: [
+      { k: "Level", vis: (v, r) => lvlBadge(levelOf(r.p.xp || 0), 30, false), vals: cols.map(r => r.p.lvl || levelOf(r.p.xp || 0).L) },
+      { k: "Regularity", s: "last 4 weeks", vals: cols.map(r => r.p.cons ? r.p.cons.pct : null), f: num("%") },
+      { k: "Streak", s: "days in a row", vals: cols.map(r => r.p.streak || 0), f: num(" d") },
+      { k: "Best streak", s: "all time", vals: cols.map(r => Math.max(r.p.best || 0, r.p.streak || 0)), f: num(" d") }] },
+    { t: "Best lifts", empty: solo ? "Log the main lifts and your best sets show up here." : "As soon as two of you log the same lift, it shows up here.",
+      rows: lifts.map(id => { const ex = EXBY[id];
+        return { k: liftName(id), s: ex.bw ? "most reps" : "estimated max", vals: cols.map(r => { const b = r.p.lifts && r.p.lifts[id]; return b ? b.s : null; }),
+          f: (v, r) => { const b = r.p.lifts[id]; return ex.bw ? `<b>${b.r}<small> reps</small></b>` : `<b>${kg(Math.round(v))}<small> kg</small></b>`; } }; }) },
+    { t: "Muscles", rows: MUSCLES.map(([m, lab]) => ({ k: lab, vis: v => mrHex(v, 28), vals: cols.map(r => (r.p.mus || {})[m] || 1) })) }];
+  const wins = cols.map(() => 0); let ri = 0;
+  for (const x of secs) { x.mine = 0;
+    for (const row of x.rows) { const v = row.vals.filter(q => q != null), mx = v.length ? Math.max(...v) : null;
+      row.lead = row.vals.map(q => !solo && v.length >= 2 && v.some(y => y !== mx) && q === mx);
+      row.lead.forEach((l, k) => { if (l) wins[k]++; }); if (row.lead[0]) x.mine++; row.i = ri++; } }
+  const topW = Math.max(...wins);
+  // as wide as the screen allows; with many friends the table scrolls sideways
+  const inner = Math.min(innerWidth, 600) - 60; let cw = Math.min(66, Math.floor((inner - 98) / n)), wide = false; if (cw < 52) { cw = 58; wide = true; }
+  const cell = (row, k) => { const r = cols[k], v = row.vals[k], lead = row.lead[k], any = row.lead.some(Boolean);
+    const c = v == null ? " no" : row.vis ? (any && !lead ? " dim" : "") : lead ? " gold" : any ? " lo" : "";
+    return `<span class="hh-v${r.me && !solo ? " me" : ""}${c}">${v == null ? "–" : row.vis ? row.vis(v, r) : row.f(v, r)}</span>`; };
+  const head = solo ? "" : `<div class="hh-row hh-head"><span class="hh-k hh-cap">Gold is the best of the group</span>${cols.map((r, k) => `<span class="hh-p${r.me ? " me" : ""}${wins[k] === topW && topW ? " best" : ""}">${lbAva(r)}<b>${escH(lbFirst(r))}</b><small><span class="num">${wins[k]}</span> win${wins[k] === 1 ? "" : "s"}</small></span>`).join("")}</div>`;
+  const body = secs.map(x => `<div class="hh-sec"><b>${x.t}</b>${!solo && x.rows.length ? `<small>You lead ${x.mine} of ${x.rows.length}</small>` : ""}</div>`
+    + (x.rows.length ? x.rows.map(row => `<div class="hh-row" style="--i:${row.i}"><span class="hh-k"><b>${escH(row.k)}</b>${row.s ? `<small>${row.s}</small>` : ""}</span>${cols.map((_, k) => cell(row, k)).join("")}</div>`).join("")
+      : `<p class="small muted hh-empty">${x.empty}</p>`)).join("");
+  return `<section class="card hh"><div class="hh-h"><b>${solo ? "Your numbers" : "Head to head"}</b></div>
+    ${solo ? `<p class="hh-solo">Add a friend and every row becomes a head-to-head, with the best of each in gold.</p>` : ""}
+    <div class="hh-g${wide ? " wide" : ""}${solo ? " solo" : ""}" style="--n:${n};--cw:${cw}px">${head}${body}</div></section>`;
 }
 function friendsHTML(anim) {
   const u = FB.user && fbMods && fbMods.auth.currentUser;
   if (!u) return FB.st === "loading" && lsGet("aub.fb.uid") ? `<section class="card"><p class="small muted">Connecting to your account…</p></section>`
     : `<section class="card lb-signin" style="--c:var(--push)"><span class="lb-hero"><svg class="i" viewBox="0 0 24 24">${TAB_DEF.friends[1]}</svg></span><h2 class="sec-t">Train with your friends</h2>
-      <p class="small muted">Compare points, regularity, records and muscle levels every week with the friends you add. You need an account for this. It also keeps a private copy of your data.</p>
+      <p class="small muted">Race your friends every week, and see your levels, regularity, best lifts and muscles side by side. You need an account for this. It also keeps a private copy of your data.</p>
       <button class="btn" data-act="account">Create an account or sign in</button></section>`;
-  const T = [["week", "Week"], ["reg", "Regularity"], ["rec", "Records"], ["mus", "Muscles"]], ti = Math.max(0, T.findIndex(t => t[0] === FBS.tab));
   const list = FBS.list || [], friends = list.filter(f => FBS.prof[f.fid]), pend = list.filter(f => !FBS.prof[f.fid]), P = lbPeople(), me = P.find(r => r.me);
   const code = FBS.code ? FBS.code.slice(0, 3) + " " + FBS.code.slice(3) : "…", lv = levelOf(me ? me.p.xp || 0 : 0);
   const person = (id, name, photo, sub, btns) => `<div class="lb-rq">${lbAva({ id, name, photo: okPhoto(photo) ? photo : "" })}<span class="lb-n"><b>${escH(name)}</b><small>${sub}</small></span>${btns}</div>`;
@@ -2644,12 +2572,9 @@ function friendsHTML(anim) {
     </section>
     ${FBS.reqIn.length ? `<section class="card lb-reqc"><h2 class="sec-t">Friend request${FBS.reqIn.length > 1 ? "s" : ""}</h2>${FBS.reqIn.map(r => `<div class="req">${person(r.from, r.fromName, "", "wants to compete with you", "")}
       <div class="req-b"><button class="btn sm ghost" data-act="lbno" data-v="${r.from}">Decline</button><button class="btn sm" data-act="lbyes" data-v="${r.from}">Accept</button></div></div>`).join("")}</section>` : ""}
-    ${lbPodium(P)}
-    <section class="card lb-board">
-      <div class="lb-seg" role="tablist" style="--ti:${ti}"><i class="lb-seg-i"></i>${T.map(([k, l]) => `<button data-act="lbtab" data-v="${k}" role="tab" aria-selected="${FBS.tab === k}">${l}</button>`).join("")}</div>
-      <div id="lbbody" class="lb-body">${lbTab(FBS.tab)}</div>
-      ${FBS.list === null ? `<p class="small muted lb-note">Loading your friends…</p>` : ""}
-    </section>
+    ${lbRace(P)}
+    ${lbH2H(P)}
+    ${FBS.list === null ? `<p class="small muted lb-note">Loading your friends…</p>` : ""}
     ${list.length ? `<section class="card lb-mng"><button class="mng-h" data-act="lbmng" aria-expanded="${!!FBS.mng}"><span>Your friends <b class="num">${friends.length}</b>${pend.length ? `<em>${pend.length} waiting</em>` : ""}</span><svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button>
       <div class="lb-dd${FBS.mng ? " open" : ""}"><div class="lb-dd-in">
       ${friends.map(f => { const p = FBS.prof[f.fid]; return person(f.fid, p.name || f.name, p.photo, `Level ${p.lvl || 1}${p.prog ? " · " + escH(p.prog) : ""}`, `<button class="linkb lb-rm" data-act="lbrm" data-v="${f.fid}">Remove</button>`); }).join("")}
@@ -2739,8 +2664,9 @@ function crDone(use) {
   URL.revokeObjectURL(C.url);
 }
 document.addEventListener("change", e => { if (e.target && (e.target.id === "lbphoto" || e.target.classList.contains("lbphoto2"))) { const f = e.target.files && e.target.files[0]; e.target.value = ""; lbSetPhoto(f); } });
+const lbTopH = () => requestAnimationFrame(() => { const t = $(".top"); if (t) document.documentElement.style.setProperty("--toph", t.offsetHeight + "px"); });
 function vFriends(anim) {
-  setHeader("Friends", "Leaderboard");
+  setHeader("Friends", "Leaderboard"); lbTopH();
   lbHydrate();
   if (FB.user && Date.now() - FBS.at > 8000) setTimeout(() => lbRefresh(true), 30); // fresh numbers each time you open the tab
   const ready = FBS.list !== null; FBS.animNext = !ready; // very first time: the cards are dealt once the numbers are in
@@ -2772,7 +2698,7 @@ function lbRedraw(anim) {
   if (S.tab !== "friends" || !BOOTED) return;
   if ($("#sheet").classList.contains("show")) { S.lbStale = true; return; } // redrawn when the sheet closes
   const y = scrollY; FBS.animNext = false; FBS.sig = lbSig(); if (anim && !REDUCED) FBS.animUntil = Date.now() + 2200;
-  view.innerHTML = friendsHTML(anim && !REDUCED); figScan(view);
+  view.innerHTML = friendsHTML(anim && !REDUCED); figScan(view); lbTopH();
   if (anim && !REDUCED) countUp(); else view.querySelectorAll("[data-count]").forEach(el => el.textContent = el.dataset.count);
   scrollTo(0, Math.min(y, Math.max(0, document.documentElement.scrollHeight - innerHeight)));
 }
@@ -2789,15 +2715,10 @@ document.addEventListener("focusout", () => setTimeout(fixViewport, 150));
 if (window.visualViewport) { let vh0 = visualViewport.height; visualViewport.addEventListener("resize", () => { const h = visualViewport.height; if (h > vh0 + 80) setTimeout(fixViewport, 80); vh0 = h; }); }
 async function lbAct(a, b) {
   if (a === "friends") { FBS.msg = ""; if ($("#sheet").classList.contains("show")) closeSheet(); if (S.tab !== "friends" && TABS.includes("friends")) go("friends"); else lbRedraw(); await fbPushNow(); return lbRefresh(true); }
-  if (a === "lbtab") { FBS.tab = b.dataset.v; const body = $("#lbbody"), seg = $("#view .lb-seg"); if (!body || !seg) return lbRedraw();
-    seg.style.setProperty("--ti", ["week", "reg", "rec", "mus"].indexOf(FBS.tab)); seg.querySelectorAll("[data-act=lbtab]").forEach(x => x.setAttribute("aria-selected", x.dataset.v === FBS.tab));
-    body.classList.remove("swap"); body.innerHTML = lbTab(FBS.tab); void body.offsetWidth; if (!REDUCED) body.classList.add("swap"); return; }
-  if (a === "lbvs") { FBS.vs = b.dataset.v; const body = $("#lbbody"); if (!body) return; body.classList.remove("swap"); body.innerHTML = lbTab("mus"); void body.offsetWidth; if (!REDUCED) body.classList.add("swap"); return; }
   if (a === "lbinv" || a === "lbmng") { const k = a === "lbinv" ? "inv" : "mng"; FBS[k] = !FBS[k];
     const dd = a === "lbinv" ? $("#lbdd") : b.parentElement.querySelector(".lb-dd"); if (dd) dd.classList.toggle("open", FBS[k]);
     const btn = a === "lbinv" ? $("#view .me-inv") : b; if (btn) btn.setAttribute("aria-expanded", FBS[k]);
-    if (a === "lbinv" && FBS.inv && b && b.closest(".lb-pod")) scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" }); return; }
-  if (a === "lbflip") { b.classList.toggle("flip"); return; }
+    if (a === "lbinv" && FBS.inv && b && b.closest(".wr, .hh")) scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" }); return; }
   if (a === "lbphotorm") { setPath("photo", ""); fbPushProfile(true); toast("Photo removed"); return lbRedraw(); }
   if (a === "lbshare") { const c = FBS.code; if (!c) return; const url = /^https?:/.test(location.protocol) ? location.origin + location.pathname : "https://tuffyishungry.github.io/upper-body-app/";
     const text = `Add me on Upper Body, my friend code is ${c}. Get the app here: ${url}`;
@@ -4961,8 +4882,11 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22h";
+const APP_VER = "2026-11-22i";
 const NEWS = [
+  { v: "2026-11-22i", d: "22 Nov", items: [
+    ["var(--push)", "A new Friends tab", "This week is now a race: everyone's lane, the leader in gold, and how many points you need to pass the next person."],
+    ["#F0AE2E", "Everything side by side", "Level, regularity, streaks, best lifts and every muscle in one table, one column per friend. No more switching: the best of each row is in gold."]] },
   { v: "2026-11-22h", d: "22 Nov", items: [
     ["var(--core)", "Timed holds", "Plank, side plank and suitcase hold are timed now: tap Start on a set, hold as long as you can, tap to stop. The goal is a little more than your best last time, and beating your best is a record. Per-side holds switch sides by themselves after 5 s."],
     ["var(--pull)", "Stretches too", "Stretches get the same timer with a fixed 30 s."],
