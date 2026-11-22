@@ -1,6 +1,6 @@
 // Opens instantly from the saved copy, then checks GitHub for a newer version in the background.
 // When one has arrived, the page shows "New version ready" with a Reload button.
-const CACHE = "upper-body-v4";
+const CACHE = "upper-body-v5";
 const SHELL = ["./", "index.html", "manifest.webmanifest", "icon2-180.png", "icon2-192.png", "icon2-512.png"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL.map(u => new Request(u, { cache: "no-cache" }))))); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
@@ -31,6 +31,9 @@ self.addEventListener("fetch", e => {
       const net = fetch(req).then(r => { if (r.ok) { const cp = r.clone(); caches.open(CACHE).then(c => c.put(req, cp)); } return r; }).catch(() => hit);
       if (hit) { e.waitUntil(net); return hit; } return net;
     }));
+  } else if (url.hostname === "www.gstatic.com" && url.pathname.startsWith("/firebasejs/")) {
+    // the account's code (a fixed version, never changes): saved once, so the account also starts offline
+    e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => { if (r.ok) { const cp = r.clone(); caches.open(CACHE).then(c => c.put(req, cp)); } return r; })));
   } else if (/fonts\.(googleapis|gstatic)\.com$/.test(url.hostname)) {
     e.respondWith(caches.match(req).then(hit => hit || fetch(req).then(r => { if (r.ok || r.type === "opaque") { const cp = r.clone(); caches.open(CACHE).then(c => c.put(req, cp)); } return r; })));
   }

@@ -851,6 +851,43 @@ button.row{color:inherit}
 .swp{font-size:12px;font-weight:600;color:var(--muted);margin-top:4px;display:flex;align-items:center;gap:5px}
 .swp svg{width:13px;height:13px;flex-shrink:0}
 .swp.inj{color:color-mix(in srgb, var(--warn) 80%, var(--fg))}
+.lbc{display:block;width:100%;text-align:left;font:inherit;color:inherit;border:0}
+.lbc-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}.lbc-h svg{width:18px;height:18px;color:var(--muted)}
+.lb-r,.lb-rq{display:flex;align-items:center;gap:10px;padding:9px 4px;border-radius:12px}
+.lb-r.me{background:color-mix(in srgb, var(--c) 10%, transparent);padding-inline:8px;margin-inline:-4px}
+.lb-p{width:24px;height:24px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:var(--muted)}
+.lb-p[style*="--md"]{background:var(--md);color:#1A1306}
+.lb-a{width:34px;height:34px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:13px;color:#fff;background:hsl(var(--h) 55% 45%)}
+.lb-a.sm{width:28px;height:28px;font-size:11px;justify-self:center}
+.lb-n{flex:1;min-width:0;display:flex;flex-direction:column}.lb-n b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lb-n b small{font-weight:600;color:var(--muted);font-size:12px}.lb-n>small{color:var(--muted);font-size:12.5px}
+.lb-v{font-family:var(--display);font-weight:700;font-size:20px;white-space:nowrap}.lb-v small{font-size:13px;color:var(--muted);font-weight:600}
+.lb-tabs{display:flex;margin:6px 0 10px}.lb-tabs button{flex:1;font-size:13px;padding:0 4px}
+.lb-why{margin:0 2px 6px}.lb-h{font-size:15px;margin:16px 2px 4px}
+.lb-lift{display:flex;flex-direction:column;margin:12px 2px 2px}
+.lb-req,.lb-pend{display:flex;flex-direction:column;gap:2px;margin:0 0 8px;padding:6px 10px;border-radius:14px;background:color-mix(in srgb, var(--push) 9%, var(--surface-2))}
+.lb-pend{background:var(--surface-2);margin-top:10px}
+.lb-rq .btn.sm{flex:0 0 auto;height:34px;padding:0 12px;font-size:13px}
+.lb-empty{padding:18px 4px;text-align:center}.lb-empty p{margin:6px 0 0}
+.lb-code{font-family:var(--display);font-weight:700;font-size:20px;letter-spacing:.06em;margin-left:auto;white-space:nowrap}
+.lb-add .srow{gap:10px}.lb-add .srow>span:first-child{flex:1}.lb-add .lb-code{flex-shrink:0}.lb-add .btn.sm{flex:0 0 auto;height:38px;padding:0 14px}
+.lb-in{flex:1;min-width:0;height:42px;font-size:17px;text-align:left;padding:0 12px;text-transform:uppercase;letter-spacing:.08em}
+.lb-mg{display:grid;grid-template-columns:minmax(84px,1fr) repeat(var(--n),minmax(30px,40px));gap:6px 6px;align-items:center;margin-top:6px}
+.lb-mn{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lb-ml{justify-self:center;width:30px;height:26px;display:grid;place-items:center;border-radius:8px;font-weight:700;font-size:13px;color:color-mix(in srgb, var(--rc) 80%, var(--fg));background:color-mix(in srgb, var(--rc) 16%, transparent)}
+.lb-ml.best{box-shadow:inset 0 0 0 1.5px var(--rc)}
+.lb-a.sm.me{box-shadow:0 0 0 2px var(--bg),0 0 0 4px color-mix(in srgb, var(--fg) 35%, transparent)}
+.acc-fr{margin-top:12px;border-radius:14px;background:var(--surface-2);padding:12px 14px;width:100%}
+.acc-seg{display:flex;margin:0 0 12px}.acc-seg button{flex:1}
+.acc-f{display:flex;flex-direction:column;gap:10px}
+.acc-f .in,.acc-delbox .in{width:100%;height:48px;font-size:17px;text-align:left;padding:0 14px}
+.acc-msg{margin:0 2px;min-height:1.2em;color:var(--warn)}
+.acc-fp,.acc-del{display:block;margin:14px auto 0}
+.acc-del{--c:var(--bad);color:var(--bad)}
+.acc-box .srow{gap:12px}
+.acc-in{width:150px;height:40px;font-size:16px;text-align:right;padding:0 12px}
+.acc-ok{flex-shrink:0;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;color:var(--good);background:color-mix(in srgb, var(--good) 16%, transparent)}.acc-ok:empty{display:none}.acc-ok svg{width:18px;height:18px;stroke-width:2.6}
+.acc-delbox{margin-top:12px;padding:12px;border-radius:14px;background:color-mix(in srgb, var(--bad) 9%, var(--surface-2))}
+.acc-delbox .in{margin-top:8px}
 .pl-note{display:flex;gap:10px;align-items:flex-start;margin:10px 0 0;padding:11px 12px;border-radius:12px;font-size:13.5px;line-height:1.42;background:color-mix(in srgb, var(--c) 12%, var(--surface-2))}
 .pl-note>svg{width:19px;height:19px;color:var(--c);flex-shrink:0;margin-top:1px}
 .pl-note>div{flex:1;min-width:0}
@@ -1512,7 +1549,8 @@ const dirty = new Set(), inflight = new Set(), again = new Set(), timers = {};
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 let LVRAF = 0;
 function touch(id) {
-  dataChanged(); saveLocal(); dirty.add(id); if (!LVRAF) LVRAF = requestAnimationFrame(() => { LVRAF = 0; checkQuest(); syncLevelBadge(); syncStw(); checkMuscleRanks(); });
+  if (S.docs[id] && typeof S.docs[id] === "object") S.docs[id]._t = Math.max(Date.now(), (S.docs[id]._t || 0) + 1); // never older than the version it replaces, even if this phone's clock is behind
+  dataChanged(); saveLocal(); dirty.add(id); if (!LVRAF) LVRAF = requestAnimationFrame(() => { LVRAF = 0; checkQuest(); syncLevelBadge(); syncStw(); checkMuscleRanks(); if (FB.user && S.mode === "cloud") fbPushProfile(); });
   clearTimeout(timers[id]); timers[id] = setTimeout(() => flush(id), 600);
 }
 async function flush(id) {
@@ -1567,6 +1605,383 @@ async function connect() {
     }
     if (changed) { dataChanged(); saveLocal(); applySettings(); softRender(); }
   }, err => { clearTimeout(slow); col = null; S.mode = "local"; setSync("local"); });
+}
+
+/* ================= account (Firebase) =================
+   Only in the home-screen app. The phone keeps its own copy (aub.v1) exactly as before; the account adds a private copy
+   online (users/{uid}/docs, readable by its owner only) and the friends' leaderboard. Syncing never deletes anything:
+   a day that exists on both sides keeps the newest version, and a copy of the phone is saved before the first link. */
+// the project's web config (public by design: the security rules in Firestore protect the data)
+const FB_CFG = { apiKey: "AIzaSyB5vtXBZKUeYh2N5Wp05Df-jAVbRRTB3vQ", authDomain: "upper-body.firebaseapp.com", projectId: "upper-body",
+  storageBucket: "upper-body.firebasestorage.app", messagingSenderId: "605391999255", appId: "1:605391999255:web:66be40b1c384ea0a076752" };
+const FB_URL = "https://www.gstatic.com/firebasejs/10.12.2/";
+const FB = { st: "off", user: null, err: "", busy: false, ask: null };
+let fbMods = null, fbUnsub = null;
+const fbOK = () => !!FB_CFG && !window.claude; // a page opened inside Claude saves to the Claude account instead
+const lsGet = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, v); return true; } catch (e) { return false; } };
+async function fbLoad() {
+  if (fbMods) return fbMods;
+  const [A, U, F] = await Promise.all(["app", "auth", "firestore"].map(m => import(FB_URL + "firebase-" + m + ".js")));
+  const app = A.initializeApp(FB_CFG);
+  return (fbMods = { A, U, F, app, auth: U.getAuth(app), db: F.getFirestore(app) });
+}
+// start listening to the account (only once the person has one, or opens the account screen)
+async function fbStart() {
+  if (!fbOK() || FB.st === "loading" || fbMods) return;
+  FB.st = "loading"; fbUI();
+  try { const m = await fbLoad(); m.U.onAuthStateChanged(m.auth, u => { FB.user = u || null; FB.st = u ? "in" : "out"; if (u) fbLink(u); else fbUnlink(); fbUI(); }); }
+  catch (e) { FB.st = "error"; FB.err = navigator.onLine === false ? "offline" : "load"; fbMods = null; fbUI(); }
+}
+function fbUnlink() { if (fbUnsub) { try { fbUnsub(); } catch (e) {} fbUnsub = null; } if (S.mode === "cloud" && !window.claude) { col = null; S.mode = "local"; setSync("local"); } }
+// a copy of this phone's data before the account touches it; kept until replaced by a newer link
+function fbSafeCopy(uid, tag) {
+  const txt = JSON.stringify({ t: Date.now(), uid, docs: S.docs });
+  if (!lsSet("aub.safe." + tag, txt)) lsSet("aub.safe." + tag, JSON.stringify({ t: Date.now(), uid, docs: {} }));
+}
+function fbLink(u) {
+  const { F, db } = fbMods, uid = u.uid; fbUnlink();
+  const ref = F.collection(db, "users", uid, "docs");
+  let initial = true; setSync("loading");
+  fbUnsub = F.onSnapshot(ref, snap => {
+    if (initial) { if (snap.metadata && snap.metadata.fromCache) return; initial = false; fbMerge(uid, snap); return; }
+    if (S.mode !== "cloud") return;
+    let changed = false;
+    for (const ch of snap.docChanges()) {
+      if (ch.type === "removed") continue;
+      const id = ch.doc.id; if (dirty.has(id) || inflight.has(id)) continue;
+      const v = cleanDoc(id, JSON.parse(JSON.stringify(ch.doc.data() || null))); if (!v) continue;
+      const loc = S.docs[id]; if (loc && (loc._t || 0) >= (v._t || 0)) continue; // ours is as new or newer
+      S.docs[id] = v; changed = true;
+    }
+    if (changed) { dataChanged(); saveLocal(); fbBaseline(); applySettings(); softRender(); }
+  }, err => { FB.err = (err && err.code) || "sync"; fbUnlink(); setSync("error", "Offline?"); fbUI(); });
+}
+async function fbMerge(uid, snap) {
+  const cloud = {};
+  snap.docs.forEach(d => { const v = cleanDoc(d.id, JSON.parse(JSON.stringify(d.data() || null))); if (v) cloud[d.id] = v; });
+  const first = lsGet("aub.fb.uid") !== uid;
+  const nL = Object.keys(S.docs).filter(k => k[0] === "d").length, nC = Object.keys(cloud).filter(k => k[0] === "d").length;
+  if (first) fbSafeCopy(uid, "first");
+  // this phone and this account both hold workouts (another phone, or someone else's account): ask before combining
+  if (first && nL && nC) {
+    const ok = await new Promise(res => { FB.ask = { nL, nC, res }; openAccount(); });
+    FB.ask = null;
+    if (!ok) { await fbOut(); return; }
+  }
+  const up = [];
+  let over = false, got = 0;
+  for (const id in cloud) {
+    const loc = S.docs[id], v = cloud[id];
+    if (!loc) { S.docs[id] = v; got++; continue; }
+    if (stableStr(loc) === stableStr(v)) continue;
+    if ((v._t || 0) > (loc._t || 0)) { if (!over) { fbSafeCopy(uid, "last"); over = true; } S.docs[id] = v; got++; }
+    else up.push(id);
+  }
+  for (const id of Object.keys(S.docs)) if (!(id in cloud) && S.docs[id] && typeof S.docs[id] === "object") up.push(id);
+  lsSet("aub.fb.uid", uid);
+  col = { doc: id => ({ set: body => fbMods.F.setDoc(fbMods.F.doc(fbMods.db, "users", uid, "docs", id), body) }) };
+  S.mode = "cloud"; setSync("ok");
+  for (const id of up) { dirty.add(id); flush(id); }
+  dataChanged(); saveLocal(); if (got) fbBaseline(); applySettings(); softRender(); fbUI(); fbPushProfile(true);
+}
+function fbBaseline() {
+  try { const v = levelNow(); localStorage.setItem("aub.lvl", v.L); if (+(localStorage.getItem("aub.lvx") || 0) < v.L) localStorage.setItem("aub.lvx", v.L);
+    const R = muscleRanks(), now = {}; for (const m in R) now[m] = R[m].L; localStorage.setItem("aub.mr", JSON.stringify(now));
+    if (weekDone() >= 6) localStorage.setItem("aub.pw", mondayOf(today())); } catch (e) {}
+}
+async function fbOut() {
+  Object.assign(FBS, { last: "", code: null, list: null, prof: {}, reqIn: [], reqOut: {}, at: 0, msg: "" });
+  fbUnlink(); try { await fbMods.U.signOut(fbMods.auth); } catch (e) {}
+  FB.user = null; FB.st = "out"; fbUI();
+}
+const FB_ERR = { "auth/invalid-email": "That email address doesn't look right.", "auth/email-already-in-use": "There is already an account with this email. Sign in instead.",
+  "auth/weak-password": "Use at least 6 characters for the password.", "auth/wrong-password": "Wrong email or password.", "auth/invalid-credential": "Wrong email or password.",
+  "auth/user-not-found": "Wrong email or password.", "auth/too-many-requests": "Too many tries. Wait a few minutes, then try again.",
+  "auth/network-request-failed": "No connection. Check your internet and try again.", "auth/requires-recent-login": "For safety, type your password again." };
+const fbErr = e => FB_ERR[e && e.code] || `Something went wrong (${(e && e.code) || "unknown"}).`;
+// the account screen: create / sign in, or your account once signed in
+function openAccount(keep) {
+  const sh = $("#sheet"); sh.classList.remove("full"); sh.style.setProperty("--c", "var(--pull)");
+  // what you already typed survives a redraw (an error message, switching between sign in and create)
+  const keepV = id => { const el = sh.querySelector("#" + id); if (el) S.fbForm[id] = el.value; return escH(S.fbForm[id] || ""); };
+  S.fbForm = S.fbForm || {};
+  const H = (t, sub) => `<div class="grab"></div><h2 class="sec-t" style="margin:4px 2px 2px">${t}</h2>${sub ? `<p class="small muted" style="margin:0 2px 14px">${sub}</p>` : ""}`;
+  let h = "";
+  if (window.claude) h = H("Account", "This page saves to your Claude account already. Accounts and the friends' leaderboard work in the home-screen app.") + `<div class="bwq-b"><button class="btn" data-act="close">OK</button></div>`;
+  else if (!FB_CFG) h = H("Account", "Accounts aren't switched on yet. Your data is saved on this phone.") + `<div class="bwq-b"><button class="btn" data-act="close">OK</button></div>`;
+  else if (FB.ask) h = H("Combine your data?", `This account already holds <b>${FB.ask.nC} day${FB.ask.nC === 1 ? "" : "s"}</b>, and this phone holds <b>${FB.ask.nL} day${FB.ask.nL === 1 ? "" : "s"}</b>. Combining keeps everything: where the same day is on both, the newest version stays. A copy of this phone is kept first.`)
+    + `<div class="bwq-b"><button class="btn ghost" data-act="fbno">Don't, sign out</button><button class="btn" data-act="fbyes">Combine</button></div>`;
+  else if (FB.st === "loading" || (FB.st === "off" && fbOK())) h = H("Account", "Connecting…") + `<div class="bwq-b"><button class="btn ghost" data-act="close">Close</button></div>`;
+  else if (FB.st === "error") h = H("Account", FB.err === "offline" ? "You're offline. Your data is safe on this phone; the account connects when you're back online." : "The account service couldn't be reached. Your data is safe on this phone. Try again in a moment.")
+    + `<div class="bwq-b"><button class="btn ghost" data-act="close">Close</button><button class="btn" data-act="fbretry">Try again</button></div>`;
+  else if (FB.st === "in" && FB.user) {
+    const u = FB.user, n = Object.keys(S.docs).filter(k => k[0] === "d").length;
+    h = H(escH(u.displayName || "Your account"), escH(u.email || ""))
+      + `<div class="sbox acc-box"><div class="srow"><span>Private backup<small>${S.mode === "cloud" ? `${n} days saved in your account. Only you can read them.` : "Connecting…"}</small></span><span class="acc-ok">${S.mode === "cloud" ? IC.check : ""}</span></div>
+        <div class="srow"><span>Your name<small>What your friends will see</small></span><input class="in acc-in" id="accname" maxlength="24" value="${escH(u.displayName || "")}" placeholder="Name" autocapitalize="words"></div></div>
+      <button class="srow g-open acc-fr" data-act="friends"><span>Friends and leaderboard<small>Your code, requests, and how you compare</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>
+      <p class="small muted" style="margin:12px 2px 0">Signing out keeps everything on this phone and in your account.</p>
+      <div class="bwq-b"><button class="btn ghost" data-act="fbout">Sign out</button><button class="btn" data-act="close">Done</button></div>
+      <button class="linkb acc-del" data-act="fbdelask">Delete my account</button>
+      ${S.fbDel ? `<div class="acc-delbox"><p class="small">This deletes your account and everything saved in it. This phone keeps its own copy. Type your password to confirm.</p><input class="in" id="accpw2" type="password" autocomplete="current-password" placeholder="Password"><div class="bwq-b"><button class="btn ghost" data-act="fbdelno">Cancel</button><button class="btn" data-act="fbdel" style="--c:var(--bad)">Delete</button></div></div>` : ""}`;
+  } else {
+    const up = S.fbMode === "up";
+    h = H(up ? "Create your account" : "Sign in", up ? "Your workouts get a private backup online, and you can add friends to a leaderboard. Everything already on this phone is kept." : "Welcome back. Everything already on this phone is kept.")
+      + `<div class="seg acc-seg" role="group" aria-label="Account"><button data-act="fbmode" data-v="in" aria-pressed="${!up}">Sign in</button><button data-act="fbmode" data-v="up" aria-pressed="${up}">Create account</button></div>
+      <form class="acc-f" onsubmit="return false">
+        ${up ? `<input class="in" id="accn" maxlength="24" placeholder="Your name (friends see it)" autocomplete="nickname" autocapitalize="words" value="${keepV("accn")}">` : ""}
+        <input class="in" id="acce" type="email" inputmode="email" autocomplete="email" autocapitalize="off" placeholder="Email" value="${keepV("acce")}">
+        <input class="in" id="accp" type="password" autocomplete="${up ? "new-password" : "current-password"}" placeholder="Password${up ? " (6+ characters)" : ""}">
+        <p class="small acc-msg" id="accmsg" role="alert">${S.fbMsg ? escH(S.fbMsg) : ""}</p>
+        <button class="btn" data-act="fbgo" type="button" ${FB.busy ? "disabled" : ""}>${FB.busy ? "One moment…" : up ? "Create account" : "Sign in"}</button>
+      </form>
+      ${up ? "" : `<button class="linkb acc-fp" data-act="fbreset">Forgot your password?</button>`}`;
+  }
+  sh.innerHTML = h;
+  if (!keep) sh.scrollTop = 0;
+  if (!sh.classList.contains("show")) showSheet();
+}
+// redraw the account screen if it's open, and the Settings row
+function fbUI() {
+  const sh = $("#sheet");
+  if (sh.classList.contains("show") && (sh.querySelector(".acc-f, .acc-box, [data-act=fbyes], [data-act=fbretry]") || /Connecting…/.test(sh.textContent))) openAccount(true);
+  else if (sh.classList.contains("show") && sh.querySelector("[data-act=account]")) openSheet();
+}
+async function fbAct(a, b) {
+  if (a === "account") { S.fbMsg = ""; openAccount(); if (fbOK() && !fbMods) fbStart(); return; }
+  if (a === "fbmode") { S.fbMode = b.dataset.v; S.fbMsg = ""; return openAccount(true); }
+  if (a === "fbyes" || a === "fbno") { if (FB.ask) FB.ask.res(a === "fbyes"); return; }
+  if (a === "fbretry") { FB.st = "off"; fbMods = null; return fbStart(); }
+  if (a === "fbout") { await fbOut(); toast("Signed out. Your data stays on this phone."); return openAccount(true); }
+  if (a === "fbdelask") { S.fbDel = true; return openAccount(true); }
+  if (a === "fbdelno") { S.fbDel = false; return openAccount(true); }
+  const m = fbMods; if (!m) return;
+  if (a === "fbreset") {
+    const e = (($("#acce") || {}).value || "").trim(); if (!e) { S.fbMsg = "Type your email first, then tap again."; return openAccount(true); }
+    try { await m.U.sendPasswordResetEmail(m.auth, e); S.fbMsg = "Check your inbox for a link to choose a new password."; } catch (x) { S.fbMsg = fbErr(x); }
+    return openAccount(true);
+  }
+  if (a === "fbgo") {
+    const up = S.fbMode === "up", e = (($("#acce") || {}).value || "").trim(), p = ($("#accp") || {}).value || "", n = (($("#accn") || {}).value || "").trim();
+    if (up && !n) { S.fbMsg = "Add a name: it's what your friends will see."; return openAccount(true); }
+    FB.busy = true; S.fbMsg = ""; openAccount(true);
+    try {
+      if (up) { const c = await m.U.createUserWithEmailAndPassword(m.auth, e, p); await m.U.updateProfile(c.user, { displayName: n }); FB.user = m.auth.currentUser; toast("Account created. Your data is being backed up"); }
+      else { await m.U.signInWithEmailAndPassword(m.auth, e, p); toast("Signed in"); }
+    } catch (x) { S.fbMsg = fbErr(x); }
+    FB.busy = false; return openAccount(true);
+  }
+  if (a === "fbdel") {
+    const u = m.auth.currentUser, pw = ($("#accpw2") || {}).value || ""; if (!u) return;
+    try {
+      await m.U.reauthenticateWithCredential(u, m.U.EmailAuthProvider.credential(u.email, pw));
+      fbUnlink();
+      const snap = await m.F.getDocs(m.F.collection(m.db, "users", u.uid, "docs"));
+      for (const d of snap.docs) await m.F.deleteDoc(d.ref);
+      if (typeof fbDropSocial === "function") await fbDropSocial(u.uid);
+      await m.U.deleteUser(u);
+      try { localStorage.removeItem("aub.fb.uid"); } catch (x) {}
+      S.fbDel = false; FB.user = null; FB.st = "out"; toast("Account deleted. This phone keeps its copy."); return openAccount(true);
+    } catch (x) { toast(fbErr(x)); }
+  }
+}
+// Enter in the password field = the main button
+document.addEventListener("keydown", e => { if (e.key === "Enter" && (e.target.id === "accp" || e.target.id === "acce")) { e.preventDefault(); const b = document.querySelector('#sheet [data-act="fbgo"]'); if (b) b.click(); } });
+// your name, saved to the account when you leave the field
+document.addEventListener("change", e => {
+  if (e.target.id !== "accname" || !fbMods || !fbMods.auth.currentUser) return;
+  const v = e.target.value.trim().slice(0, 24); if (!v) return;
+  fbMods.U.updateProfile(fbMods.auth.currentUser, { displayName: v }).then(() => { FB.user = fbMods.auth.currentUser; toast("Name saved"); if (typeof fbPushProfile === "function") fbPushProfile(true); }, x => toast(fbErr(x)));
+});
+
+
+/* ================= friends + leaderboard =================
+   profiles/{uid}: your leaderboard card (name, points this week, regularity, records, best lifts, muscle levels).
+   Only people you added (profiles/{uid}/friends/{them}) can read it. Sleep, weight, food and pain never leave the phone this way.
+   codes/{code}: your friend code → your account. requests/{from}_{to}: "add me back". */
+const KEY_LIFTS = ["bpr", "idp", "mcp", "sdp", "msp", "hsq", "lpr", "rdl", "drd", "bss", "pup", "chu", "lpd", "ngp", "csr", "scr", "sdr"];
+const progName = () => (S.docs.settings && S.docs.settings.program && S.docs.settings.program.name) || "Upper Body PPL";
+const isTrainDay = d => { const w = wkOf(d); return !!w && !w.light && !w.rest; };
+function xpOfDoc(x) { let v = 0; for (const k in (x && x.ex) || {}) for (const q of x.ex[k] || []) if (q && q.ok) { v++; if (q.pr) v += 4; } if (x && x.done) v += wkOf(x.date).light ? 8 : 15; if (x && x.qd) v += QUEST_PTS; return v; }
+// your card, computed on this phone
+function fbStats() {
+  const t = today(), mon = mondayOf(t), lv = levelNow(), st = streaks();
+  let pts = 0, prs = 0, done = 0, plan = 0;
+  for (let i = 0; i < 7; i++) { const d = addD(mon, i); if (d > t) break; const x = dayDoc(d); if (x) { pts += xpOfDoc(x); for (const k in x.ex || {}) for (const q of x.ex[k] || []) if (q && q.ok && q.pr) prs++; } }
+  for (let i = 0; i < 7; i++) { const d = addD(mon, i); if (isTrainDay(d)) { plan++; if (isDone(d)) done++; } }
+  // regularity: planned training days of the last 4 weeks that were finished (today only once it's done)
+  const first = Object.values(S.docs).filter(x => x && x.date && x.done).map(x => x.date).sort()[0] || t, start = [getStart(), first].sort()[0];
+  let cd = 0, cp = 0;
+  for (let i = 0; i < 28; i++) { const d = addD(t, -i); if (d < start || !isTrainDay(d) || (d === t && !isDone(t))) continue; cp++; if (isDone(d)) cd++; }
+  const lifts = {};
+  for (const id of KEY_LIFTS) { const ex = EXBY[id]; if (!ex) continue; let b = null; for (const h of exHistory(id)) for (const q of h.sets) { const sc = score(ex, q.w, q.r); if (sc > 0 && (!b || sc > b.s)) b = { s: Math.round(sc * 10) / 10, w: q.w || 0, r: q.r || 0, d: h.date }; } if (b) lifts[id] = b; }
+  const R = muscleRanks(), mus = {}; for (const m in R) mus[m] = R[m].L;
+  return { week: { mon, pts, prs, done, plan }, cons: cp ? { pct: Math.round(cd / cp * 100), done: cd, plan: cp } : null, streak: st.cur, best: st.best, lvl: lv.L, xp: lv.xp, lifts, mus };
+}
+const fbCode = () => { const A = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; let c = ""; for (let i = 0; i < 6; i++) c += A[Math.floor(Math.random() * A.length)]; return c; };
+const FBS = { last: "", t: 0, code: null, list: null, prof: {}, reqIn: [], reqOut: {}, at: 0, tab: "week", msg: "" };
+let fbPT = 0;
+// send your card (a few seconds after a change, and right after signing in)
+function fbPushProfile(now) { clearTimeout(fbPT); fbPT = setTimeout(fbPushNow, now ? 0 : 4000); }
+async function fbPushNow() {
+  const m = fbMods, u = m && m.auth.currentUser; if (!u || S.mode !== "cloud") return;
+  try {
+    const ref = m.F.doc(m.db, "profiles", u.uid);
+    if (!FBS.code) { const cur = await m.F.getDoc(ref); FBS.code = cur.exists() && cur.data().code; }
+    const name = (u.displayName || "Friend").slice(0, 24);
+    if (!FBS.code) { // a free friend code for this account
+      for (let i = 0; i < 5 && !FBS.code; i++) { const c = fbCode(), cr = m.F.doc(m.db, "codes", c); const ex = await m.F.getDoc(cr); if (!ex.exists()) { await m.F.setDoc(cr, { uid: u.uid, name }); FBS.code = c; } }
+    }
+    const card = { name, code: FBS.code || "", ...fbStats(), prog: (wkOf(today()) && progName()) || "" };
+    const key = JSON.stringify(card); if (key === FBS.last) return;
+    await m.F.setDoc(ref, { ...card, t: Date.now() }); FBS.last = key; FBS.prof[u.uid] = { ...card, t: Date.now() };
+    if (FBS.code && FBS.nameSent !== name) { await m.F.setDoc(m.F.doc(m.db, "codes", FBS.code), { uid: u.uid, name }); FBS.nameSent = name; }
+  } catch (e) { FBS.msg = fbErr(e); }
+}
+// friends, their cards and the requests waiting for you
+async function fbLoadSocial(force) {
+  const m = fbMods, u = m && m.auth.currentUser; if (!u) return;
+  if (!force && Date.now() - FBS.at < 60000) return;
+  FBS.at = Date.now();
+  try {
+    const fr = await m.F.getDocs(m.F.collection(m.db, "profiles", u.uid, "friends"));
+    FBS.list = fr.docs.map(d => ({ fid: d.id, ...d.data() }));
+    const rin = await m.F.getDocs(m.F.query(m.F.collection(m.db, "requests"), m.F.where("to", "==", u.uid)));
+    FBS.reqIn = rin.docs.map(d => d.data()).filter(r => !FBS.list.some(f => f.fid === r.from));
+    const me = await m.F.getDoc(m.F.doc(m.db, "profiles", u.uid)); if (me.exists()) { FBS.prof[u.uid] = me.data(); FBS.code = FBS.code || me.data().code; }
+    await Promise.all(FBS.list.map(async f => {
+      try { const p = await m.F.getDoc(m.F.doc(m.db, "profiles", f.fid)); FBS.prof[f.fid] = p.exists() ? p.data() : null; }
+      catch (e) { FBS.prof[f.fid] = null; } // not shared with you (yet)
+      if (!FBS.prof[f.fid]) { try { const r = await m.F.getDoc(m.F.doc(m.db, "requests", u.uid + "_" + f.fid)); FBS.reqOut[f.fid] = r.exists(); } catch (e) { FBS.reqOut[f.fid] = false; } }
+    }));
+  } catch (e) { FBS.msg = fbErr(e); }
+}
+async function fbAddFriend(code) {
+  const m = fbMods, u = m && m.auth.currentUser; if (!u) return;
+  code = code.toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (code.length !== 6) { FBS.msg = "A friend code has 6 letters and numbers."; return; }
+  try {
+    const c = await m.F.getDoc(m.F.doc(m.db, "codes", code));
+    if (!c.exists()) { FBS.msg = "No one has this code. Check it with your friend."; return; }
+    const { uid: fid, name } = c.data();
+    if (fid === u.uid) { FBS.msg = "That's your own code."; return; }
+    if ((FBS.list || []).some(f => f.fid === fid)) { FBS.msg = `${name} is already in your list.`; return; }
+    // adding someone = letting them see your card, and asking them to add you back
+    await m.F.setDoc(m.F.doc(m.db, "profiles", u.uid, "friends", fid), { name, t: Date.now() });
+    const incoming = FBS.reqIn.find(r => r.from === fid);
+    if (incoming) await m.F.deleteDoc(m.F.doc(m.db, "requests", fid + "_" + u.uid));
+    else await m.F.setDoc(m.F.doc(m.db, "requests", u.uid + "_" + fid), { from: u.uid, to: fid, fromName: (u.displayName || "Friend").slice(0, 24), t: Date.now() });
+    toast(incoming ? `You and ${name} are now friends` : `Request sent to ${name}`); FBS.msg = "";
+  } catch (e) { FBS.msg = fbErr(e); }
+}
+async function fbAccept(fid, yes) {
+  const m = fbMods, u = m && m.auth.currentUser; if (!u) return; const r = FBS.reqIn.find(x => x.from === fid); if (!r) return;
+  try {
+    if (yes) await m.F.setDoc(m.F.doc(m.db, "profiles", u.uid, "friends", fid), { name: r.fromName, t: Date.now() });
+    await m.F.deleteDoc(m.F.doc(m.db, "requests", fid + "_" + u.uid));
+    toast(yes ? `You and ${r.fromName} are now friends` : "Request declined");
+  } catch (e) { FBS.msg = fbErr(e); }
+}
+async function fbRemove(fid) {
+  const m = fbMods, u = m && m.auth.currentUser; if (!u) return;
+  try { await m.F.deleteDoc(m.F.doc(m.db, "profiles", u.uid, "friends", fid)); try { await m.F.deleteDoc(m.F.doc(m.db, "requests", u.uid + "_" + fid)); } catch (e) {} toast("Removed. They can't see your card anymore."); }
+  catch (e) { FBS.msg = fbErr(e); }
+}
+// when the account is deleted: the card, the code, the friends list and open requests go too
+async function fbDropSocial(uid) {
+  const m = fbMods; const del = async ref => { try { await m.F.deleteDoc(ref); } catch (e) {} };
+  try { const fr = await m.F.getDocs(m.F.collection(m.db, "profiles", uid, "friends")); for (const d of fr.docs) await del(d.ref); } catch (e) {}
+  try { const p = await m.F.getDoc(m.F.doc(m.db, "profiles", uid)); if (p.exists() && p.data().code) await del(m.F.doc(m.db, "codes", p.data().code)); } catch (e) {}
+  for (const f of ["from", "to"]) { try { const q = await m.F.getDocs(m.F.query(m.F.collection(m.db, "requests"), m.F.where(f, "==", uid))); for (const d of q.docs) await del(d.ref); } catch (e) {} }
+  await del(m.F.doc(m.db, "profiles", uid));
+}
+// ---- the leaderboard ----
+const MEDAL = ["#F0AE2E", "#AEB8C7", "#C97A3A"];
+function lbPeople() {
+  const u = fbMods && fbMods.auth.currentUser; if (!u) return [];
+  const mon = mondayOf(today()), out = [];
+  const add = (id, p, me) => { if (!p) return; const wk = p.week && p.week.mon === mon ? p.week : { pts: 0, prs: 0, done: 0, plan: (p.week && p.week.plan) || 0 }; out.push({ id, me, name: me ? (u.displayName || "You") : p.name || "Friend", p, wk }); };
+  add(u.uid, { ...(FBS.prof[u.uid] || {}), ...fbStats(), name: u.displayName }, true);
+  for (const f of FBS.list || []) add(f.fid, FBS.prof[f.fid], false);
+  return out;
+}
+const lbInit = n => (n || "?").trim().split(/\s+/).map(w => w[0]).join("").slice(0, 2).toUpperCase();
+const lbHue = id => { let h = 0; for (const c of id) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+// 1, 2, 2, 4: equal scores share a place
+const lbPlaces = (L, f) => L.map((r, i) => { let j = i; while (j > 0 && f(L[j - 1]) === f(r)) j--; return j; });
+function lbRow(r, i, val, sub) {
+  return `<div class="lb-r${r.me ? " me" : ""}"><span class="lb-p num" style="${i < 3 ? `--md:${MEDAL[i]}` : ""}">${i + 1}</span><span class="lb-a" style="--h:${lbHue(r.id)}">${escH(lbInit(r.name))}</span>
+    <span class="lb-n"><b>${escH(r.name)}${r.me ? ' <small>you</small>' : ""}</b><small>${sub}</small></span><span class="lb-v num">${val}</span></div>`;
+}
+function lbTab(tab) {
+  const P = lbPeople();
+  if (tab === "week") {
+    const L = P.slice().sort((a, b) => b.wk.pts - a.wk.pts), pl = lbPlaces(L, r => r.wk.pts);
+    return `<p class="small muted lb-why">Points this week, Monday to Sunday: 1 per set, 4 per record, 15 per workout, 8 per core session, 25 per bonus quest.</p>` + L.map((r, i) => lbRow(r, pl[i], `${r.wk.pts}<small> pts</small>`, `${r.wk.done}/${r.wk.plan} workouts · ${r.wk.prs} record${r.wk.prs === 1 ? "" : "s"}`)).join("");
+  }
+  if (tab === "reg") {
+    const L = P.slice().sort((a, b) => ((b.p.cons || {}).pct ?? -1) - ((a.p.cons || {}).pct ?? -1) || (b.p.streak || 0) - (a.p.streak || 0));
+    const pl = lbPlaces(L, r => ((r.p.cons || {}).pct ?? -1) * 1000 + (r.p.streak || 0));
+    return `<p class="small muted lb-why">Planned workouts done in the last 4 weeks. Fair even with different programs.</p>` + L.map((r, i) => lbRow(r, pl[i], r.p.cons ? `${r.p.cons.pct}<small>%</small>` : "–", r.p.cons ? `${r.p.cons.done} of ${r.p.cons.plan} · streak ${r.p.streak || 0}` : "Not enough days yet")).join("");
+  }
+  if (tab === "rec") {
+    const L = P.slice().sort((a, b) => b.wk.prs - a.wk.prs), pl = lbPlaces(L, r => r.wk.prs);
+    let h = `<p class="small muted lb-why">Personal records beaten this week.</p>` + L.map((r, i) => lbRow(r, pl[i], `${r.wk.prs}`, r.wk.prs ? "new bests this week" : "none yet this week")).join("");
+    const ids = KEY_LIFTS.filter(id => P.filter(r => r.p.lifts && r.p.lifts[id]).length >= 2);
+    h += `<h3 class="lb-h">Lifts you share</h3>`;
+    if (!ids.length) h += `<p class="small muted">When two of you have logged the same lift, the best sets are compared here.</p>`;
+    for (const id of ids) {
+      const ex = EXBY[id], L2 = P.filter(r => r.p.lifts && r.p.lifts[id]).sort((a, b) => b.p.lifts[id].s - a.p.lifts[id].s), pl = lbPlaces(L2, r => ex.bw ? r.p.lifts[id].s : Math.round(r.p.lifts[id].s));
+      h += `<div class="lb-lift"><b>${escH(ex.n.split(" (")[0])}</b><span class="small muted">${ex.bw ? "most reps (added weight counts half)" : "estimated max from the best set"}</span></div>`
+        + L2.map((r, i) => { const b = r.p.lifts[id]; return lbRow(r, pl[i], ex.bw ? `${b.r}<small> reps</small>` : `${kg(Math.round(b.s))}<small> kg</small>`, ex.bw ? (b.w ? `+${kg(b.w)} kg` : "body weight") : `${kg(b.w)} kg × ${b.r}`); }).join("");
+    }
+    return h;
+  }
+  // muscles: everyone's level per muscle, best first
+  const cols = P.slice(0, 6);
+  return `<p class="small muted lb-why">Muscle levels side by side, same scale as your Muscles card. A ring marks the best level for each muscle.</p><div class="lb-mg" style="--n:${cols.length}">
+    <span></span>${cols.map(r => `<span class="lb-a sm${r.me ? " me" : ""}" style="--h:${lbHue(r.id)}" title="${escH(r.name)}">${escH(lbInit(r.name))}</span>`).join("")}
+    ${MUSCLES.map(([m, lab]) => { const lv = cols.map(r => (r.p.mus || {})[m] || 1), top = Math.max(...lv);
+      return `<span class="lb-mn">${lab}</span>` + lv.map((L, j) => { const ti = MR_TIERS.filter(([n]) => L >= n).length - 1; return `<span class="lb-ml${L === top && top > 1 ? " best" : ""}" style="--rc:${MR_TIERS[ti][2]}">${L}</span>`; }).join(""); }).join("")}</div>`;
+}
+function openFriends(keep) {
+  const sh = $("#sheet"), u = fbMods && fbMods.auth.currentUser; if (!u) return openAccount();
+  sh.classList.add("full"); sh.style.setProperty("--c", "var(--push)");
+  const T = [["week", "This week"], ["reg", "Regularity"], ["rec", "Records"], ["mus", "Muscles"]];
+  const loading = !FBS.list;
+  const pend = (FBS.list || []).filter(f => !FBS.prof[f.fid]);
+  sh.innerHTML = `<div class="grab" style="margin-top:8px"></div><div class="sheet-h" style="padding-top:2px"><h2>Friends</h2><button class="linkb" data-act="close" style="--c:var(--pull);font-size:16px">Done</button></div>
+    ${FBS.reqIn.length ? `<div class="lb-req">${FBS.reqIn.map(r => `<div class="lb-rq"><span class="lb-a" style="--h:${lbHue(r.from)}">${escH(lbInit(r.fromName))}</span><span class="lb-n"><b>${escH(r.fromName)}</b><small>wants to be friends</small></span><button class="btn sm ghost" data-act="lbno" data-v="${r.from}">Decline</button><button class="btn sm" data-act="lbyes" data-v="${r.from}">Accept</button></div>`).join("")}</div>` : ""}
+    <div class="seg lb-tabs" role="tablist">${T.map(([k, l]) => `<button data-act="lbtab" data-v="${k}" aria-pressed="${FBS.tab === k}">${l}</button>`).join("")}</div>
+    <div class="lb-body">${loading ? `<p class="small muted">Loading…</p>` : (FBS.list || []).length ? lbTab(FBS.tab) : `<div class="lb-empty"><b>Add your first friend</b><p class="small muted">Send them your code below. When they type it in the app, you both appear here.</p></div>`}</div>
+    ${pend.length ? `<div class="lb-pend">${pend.map(f => `<div class="lb-rq"><span class="lb-a" style="--h:${lbHue(f.fid)}">${escH(lbInit(f.name))}</span><span class="lb-n"><b>${escH(f.name)}</b><small>${FBS.reqOut[f.fid] ? "Waiting for them to accept" : "Not sharing with you"}</small></span><button class="linkb" data-act="lbrm" data-v="${f.fid}" style="--c:var(--bad);color:var(--bad)">Remove</button></div>`).join("")}</div>` : ""}
+    <div class="sgroup"><div class="lbl">Add a friend</div><div class="sbox lb-add">
+      <div class="srow"><span>Your code<small>Send it to a friend who uses the app</small></span><span class="lb-code num">${FBS.code ? FBS.code.slice(0, 3) + " " + FBS.code.slice(3) : "…"}</span><button class="btn ghost sm" data-act="lbcopy" ${FBS.code ? "" : "disabled"}>Copy</button></div>
+      <div class="srow"><input class="in lb-in" id="lbcode" maxlength="7" placeholder="Friend's code" autocapitalize="characters" autocomplete="off"><button class="btn sm" data-act="lbadd">Add</button></div>
+      ${FBS.msg ? `<p class="small acc-msg" role="alert" style="padding:0 0 10px">${escH(FBS.msg)}</p>` : ""}</div></div>
+    ${(FBS.list || []).filter(f => FBS.prof[f.fid]).length ? `<div class="sgroup"><div class="lbl">Your friends</div><div class="sbox">${FBS.list.filter(f => FBS.prof[f.fid]).map(f => `<div class="srow"><span>${escH(FBS.prof[f.fid].name || f.name)}<small>Level ${FBS.prof[f.fid].lvl || 1}${FBS.prof[f.fid].prog ? " · " + escH(FBS.prof[f.fid].prog) : ""}</small></span><button class="linkb" data-act="lbrm" data-v="${f.fid}" style="--c:var(--bad);color:var(--bad)">Remove</button></div>`).join("")}</div></div>` : ""}
+    <p class="small muted" style="margin:4px 4px 18px">Friends see your name, level, points, regularity, records, best lifts and muscle levels. Never your sleep, weight, food or notes.</p>`;
+  if (!keep) sh.scrollTop = 0;
+  if (!sh.classList.contains("show")) showSheet();
+}
+async function lbAct(a, b) {
+  if (a === "friends") { FBS.msg = ""; openFriends(); await fbPushNow(); await fbLoadSocial(true); if ($("#sheet .lb-tabs")) openFriends(true); return; }
+  if (a === "lbtab") { FBS.tab = b.dataset.v; return openFriends(true); }
+  if (a === "lbcopy") { const c = FBS.code; try { await navigator.clipboard.writeText(`Add me in Upper Body: ${c}`); toast("Code copied"); } catch (e) { toast("Your code: " + c); } return; }
+  if (a === "lbadd") { await fbAddFriend((($("#lbcode") || {}).value || "")); await fbLoadSocial(true); return openFriends(true); }
+  if (a === "lbyes" || a === "lbno" || a === "lbrm") FBS.msg = "";
+  if (a === "lbyes" || a === "lbno") { await fbAccept(b.dataset.v, a === "lbyes"); await fbLoadSocial(true); return openFriends(true); }
+  if (a === "lbrm") { await fbRemove(b.dataset.v); await fbLoadSocial(true); return openFriends(true); }
+}
+// Home: a small leaderboard card while you're signed in
+function lbCard() {
+  if (!fbOK() || !FB.user) return "";
+  if (FBS.list === null || Date.now() - FBS.at > 120000) setTimeout(() => fbLoadSocial().then(() => { const c = $("#lbcard"); if (c) c.outerHTML = lbCard(); }), 50);
+  const P = lbPeople().sort((a, b) => b.wk.pts - a.wk.pts), pl = lbPlaces(P, r => r.wk.pts), meI = P.findIndex(r => r.me), n = FBS.reqIn.length;
+  const rows = (FBS.list || []).length ? P.slice(0, 3).map((r, i) => lbRow(r, pl[i], `${r.wk.pts}<small> pts</small>`, `${r.wk.done}/${r.wk.plan} workouts`)).join("") + (meI > 2 ? lbRow(P[meI], pl[meI], `${P[meI].wk.pts}<small> pts</small>`, `${P[meI].wk.done}/${P[meI].wk.plan} workouts`) : "")
+    : `<p class="small muted" style="margin:2px 0 0">${FBS.list === null ? (FBS.msg ? "Can't load your friends right now." : "Loading…") : "Add friends with your code to compete every week."}</p>`;
+  return `<button class="card lbc" id="lbcard" data-act="friends" style="--c:var(--push)"><div class="lbc-h"><h2 class="sec-t" style="margin:0">Friends this week</h2>${n ? `<span class="pill">${n} request${n > 1 ? "s" : ""}</span>` : `<svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>`}</div>${rows}</button>`;
 }
 
 /* ================= settings ================= */
@@ -2600,6 +3015,7 @@ function vHome() {
       <div class="meta">${bannerMeta(t)}</div></div>${ring(c.ok, c.tot)}
       ${TABS.includes("today") ? `<button class="btn home-btn ${done ? "ghost" : ""}" ${!done && !c.ok && !(doc && doc.start) ? `data-act="startwk"` : tap("today")}>${done ? `<span class="done-note">${IC.ok} ${wk.light ? "Session" : "Workout"} complete</span>` : c.ok >= c.tot ? "All sets done · finish the workout" : c.ok ? `Continue · ${c.ok} of ${c.tot} sets done` : doc && doc.start ? "Continue workout" : `${SW_PLAY}${wk.light ? "Start the core session" : "Start workout"}`}</button>` : ""}</section>`;
   h += coachCard();
+  h += lbCard();
   // protein + sleep
   const e = eatenToday(), left = Math.max(0, PROT - e.p), sl = sleepH(doc && doc.sleep);
   h += `<div class="tiles">${T2("food", "var(--pull)", `<span class="lbl">Protein</span><b class="num">${left ? `<span data-count="${left}">${left}</span><small>g to go</small>` : "Done"}</b>
@@ -3005,8 +3421,11 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22a";
+const APP_VER = "2026-11-22b";
 const NEWS = [
+  { v: "2026-11-22b", d: "22 Nov", items: [
+    ["var(--good)", "Your account", "Settings → Account: a private online copy of everything, so a new phone gets it all back. Only you can read it."],
+    ["var(--push)", "Friends and leaderboard", "Add friends with a 6-letter code and compare points this week, regularity, records and muscle levels. They never see your sleep, weight or food."]] },
   { v: "2026-11-22a", d: "22 Nov", items: [
     ["var(--pull)", "Easy weeks make sense", "Re-entry weeks suggest about 70% of your old weights. Deload and re-entry weeks no longer ask for more reps, more weight or extra sets, and their times are only compared with each other."],
     ["var(--core)", "Sleep advice lines up", "Home, Today and Sleep now use the same limits: under 6 h, ease off; 6 to 7 h, train as planned and go to bed earlier."],
@@ -3074,7 +3493,7 @@ function lvlFX(up, replay) {
     <div class="lvfx-c"><div class="lvfx-eb">Level up</div><div class="lvfx-badge">${lvlBadge(v, 156, false)}</div>
       <div class="lvfx-n">Level <span class="roll"><span><i>${up.L0 || up.L - 1}</i><i>${up.L}</i></span></span></div>
       <div class="lvfx-name">${newTier ? `New title · <b>${v.name}</b>` : v.name}</div>
-      <div class="lvfx-pts num">${v.need - v.into} points to level ${up.L + 1}${(() => { const bs = BOOTS.find(b => b[2] > (up.L0 || up.L - 1) && b[2] <= up.L && b[3]); return bs ? `<br><span class="lvfx-new">New opening animation: ${bs[1]}</span>` : ""; })()}</div>
+      <div class="lvfx-pts num">${v.need - v.into} point${v.need - v.into === 1 ? "" : "s"} to level ${up.L + 1}${(() => { const bs = BOOTS.find(b => b[2] > (up.L0 || up.L - 1) && b[2] <= up.L && b[3]); return bs ? `<br><span class="lvfx-new">New opening animation: ${bs[1]}</span>` : ""; })()}</div>
 </div><div class="lvfx-hint">Tap anywhere to continue</div>`;
   document.body.appendChild(el);
   const t0 = Date.now(); let gone = false;
@@ -4230,6 +4649,7 @@ function openSheet() {
   const pal = (id, p) => { const { g, a } = famNow(p); return `<button class="pal" data-act="set" data-k="palette" data-v="${id}" aria-pressed="${st.palette === id}" style="background:${g[0]};color:${lt ? "#131720" : "#EEF1F6"};--ring:${g[2]}"><span class="dots">${a.map(c => `<i style="background:${c};box-shadow:0 0 0 2px ${g[0]}"></i>`).join("")}</span><span class="pcard" style="background:${g[1]}"></span>${p.n}</button>`; };
   sh.classList.add("full"); sh.style.removeProperty("--c");
   sh.innerHTML = `<div class="grab" style="margin-top:8px"></div><div class="sheet-h" style="padding-top:2px"><h2>Settings</h2><button class="linkb" data-act="close" style="--c:var(--pull);font-size:16px">Done</button></div>
+    ${fbOK() ? `<div class="sgroup"><div class="lbl">Account</div><div class="sbox"><button class="srow g-open" data-act="account"><span>${FB.user ? escH(FB.user.displayName || "Your account") : "Create an account or sign in"}<small>${FB.user ? (S.mode === "cloud" ? "Private backup on · " : "Connecting · ") + escH(FB.user.email || "") : "Private backup of your workouts, and a leaderboard with friends"}</small></span><svg class="i" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button></div></div>` : ""}
     <div class="sgroup"><div class="lbl">Appearance</div><div class="sbox">
       ${(() => { const v = palVals(st), sw = { auto: `linear-gradient(135deg, ${v.bl[0]} 50%, ${v.bd[0]} 50%)`, light: v.bl[0], soft: softFam(v.bl)[0], dim: dimFam(v.bd)[0], dark: v.bd[0] };
         return `<div class="srow stack"><span>Theme<small>Soft and Dim sit between Light and Dark</small></span><div class="seg themes" role="group" aria-label="Theme">${[["auto", "Auto"], ["light", "Light"], ["soft", "Soft"], ["dim", "Dim"], ["dark", "Dark"]].map(([k, l]) => `<button data-act="set" data-k="theme" data-v="${k}" aria-pressed="${st.theme === k}"><i style="background:${sw[k]}"></i>${l}</button>`).join("")}</div></div>`; })()}
@@ -4600,6 +5020,8 @@ document.addEventListener("click", e => {
   if (a === "up" || a === "down") return moveEx(+b.dataset.v, a === "up" ? -1 : 1);
   if (a === "later") return doLater(+b.dataset.v);
   if (a === "skip" || a === "unskip") return setSkip(+b.dataset.v, a === "skip");
+  if (a === "account" || /^fb/.test(a)) return fbAct(a, b);
+  if (a === "friends" || /^lb/.test(a)) return lbAct(a, b);
   if (a === "keepslot") { const d = S.sel, doc = ensureDay(d), s = new Set(doc.keep || []); s.add(+b.dataset.v); doc.keep = [...s]; touch("d" + d); flipList(); refreshToday(); return; }
   if (a === "travel") return toggleTravel(b.dataset.v === "set");
   if (a === "injopen") { const c = injCur(); S.injDraft = { area: b.dataset.a || (c ? c.area : null), days: c && c.to >= today() ? Math.min(14, Math.max(3, diffD(today(), c.to) + 1)) : 7 }; return openInjury(); }
@@ -5056,6 +5478,7 @@ if (UI0 && UI0.timer && UI0.timer.end > Date.now() + 1000) {
   $("#tlab").textContent = (tm.hx && tm.hx.fixed ? "" : "Rest · ") + tm.label; clearInterval(tIv); tIv = setInterval(tick, 200); tick();
 }
 connect();
+if (fbOK() && lsGet("aub.fb.uid")) fbStart();
 // keep "today" fresh if the app stays open overnight
 let lastDay = today();
 function onResume() {
