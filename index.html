@@ -127,7 +127,7 @@ html.booting .app,html.booting .tabs{transition:transform .55s cubic-bezier(.2,.
   <div class="spk l"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div><div class="spk r"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div>
   <div class="flash"></div>
 </div></div>
-<script>document.documentElement.classList.add("bootin","booting");try{var bt2=JSON.parse(localStorage.getItem("aub.boot2")||"null"),be2=document.getElementById("boot");if(bt2&&be2){for(var k in bt2)if(k!=="cls")be2.style.setProperty("--"+k,bt2[k]);if(bt2.cls)be2.classList.add(bt2.cls);document.documentElement.style.background=bt2.bbg;}}catch(e){}</script>
+<script>document.documentElement.classList.add("bootin","booting");try{var bt2=JSON.parse(localStorage.getItem("aub.boot2")||"null"),be2=document.getElementById("boot");if(bt2&&be2){for(var k in bt2)if(k!=="cls")be2.style.setProperty("--"+k,bt2[k]);if(bt2.cls)be2.classList.add(bt2.cls);document.documentElement.style.background=bt2.bbg;}var tc=(bt2&&/^#/.test(bt2.ba))?bt2.ba:"#FF6A2B";document.querySelectorAll('meta[name="theme-color"]').forEach(function(m){m.setAttribute("content",tc)});}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
@@ -937,7 +937,9 @@ button.row{color:inherit}
 .dd-code{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:12px;background:var(--surface-2)}
 .dd-code span{color:var(--muted);font-size:13.5px;font-weight:600}.dd-code b{font-family:var(--display);font-size:24px;letter-spacing:.14em}
 .dd-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.dd-btns .btn{min-width:0;height:40px;font-size:14px}
-.dd-rm{display:block;margin:10px auto 0;--c:var(--bad);color:var(--bad);font-size:14px}
+.dd-ph{display:flex;justify-content:center;gap:22px;margin-top:10px}
+.dd-ch{position:relative;--c:var(--pull);font-size:14px;cursor:pointer}.dd-ch input{position:absolute;inset:0;opacity:0;width:100%;font-size:16px}
+.dd-rm{--c:var(--bad);color:var(--bad);font-size:14px}
 .dd-tip{margin:10px 2px 0;text-align:center}
 /* requests */
 .lb-reqc{box-shadow:inset 0 0 0 1.5px color-mix(in srgb, var(--push) 50%, transparent);animation:reqIn .5s cubic-bezier(.3,1.4,.5,1) both}
@@ -948,39 +950,95 @@ button.row{color:inherit}
 .req-b{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:2px 0 6px}.req-b .btn{height:38px;font-size:14px;min-width:0}
 /* the podium: stacks of plates, the leader on top */
 .lb-pod{padding:14px 12px 12px;overflow:hidden;position:relative;
-  background:radial-gradient(120% 80% at 50% 105%, color-mix(in srgb, #F0AE2E 16%, transparent), transparent 62%), var(--surface)}
-.pd-h{display:flex;align-items:baseline;justify-content:space-between;padding:0 4px}
+  background:radial-gradient(70% 55% at 50% 58%, color-mix(in srgb, #F0AE2E 20%, transparent), transparent 70%), var(--surface)}
+.pd-h{display:flex;align-items:baseline;justify-content:space-between;padding:0 4px;position:relative;z-index:2}
 .pd-h b{font-family:var(--display);font-size:21px;font-weight:700}
-.pd-left{font-size:13px;font-weight:600;color:var(--muted)}
-.pd-row{display:grid;grid-template-columns:1fr 1.15fr 1fr;align-items:end;gap:8px;margin-top:6px}
-.pd-slot{display:flex;flex-direction:column;align-items:center;min-width:0}
-.pd-who{display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;padding-bottom:8px;min-width:0;max-width:100%;font:inherit;color:inherit}
-.pd-who b{font-weight:700;font-size:14.5px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pd-pts{font-size:12.5px;color:var(--muted);font-weight:600}
-.pd-slot.p1 .pd-pts{color:var(--fg)}
-.pd-a{width:54px;height:54px;font-size:20px;box-shadow:0 0 0 2.5px var(--surface),0 0 0 5px var(--md)}
-.pd-slot.p1 .pd-a{width:70px;height:70px;font-size:26px}
-.pd-ghost .pd-a{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 2px var(--line)}
-.pd-ghost .pd-a svg{width:22px;height:22px}.pd-ghost b{color:var(--muted)}
-.pd-ghost:active .pd-a{transform:scale(.94)}
-.lb-crown{position:absolute;top:-17px;left:50%;width:34px;height:24px;transform:translateX(-50%) rotate(-8deg);filter:drop-shadow(0 3px 4px rgba(0,0,0,.3));z-index:1}
-.pd-stack{position:relative;width:100%;display:flex;flex-direction:column;gap:3px}
-.pd-stack i{display:block;height:19px;border-radius:7px;
-  background:linear-gradient(180deg, color-mix(in srgb, var(--md) 55%, #fff) 0 2px, var(--md) 2px calc(100% - 5px), color-mix(in srgb, var(--md) 60%, #000) calc(100% - 5px));
-  box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--md) 70%, #000)}
-.pd-stack i:nth-child(odd){margin-inline:4%}
-.pd-slot.empty .pd-stack i{background:var(--surface-2);box-shadow:inset 0 0 0 1.5px var(--line)}
-.pd-n{position:absolute;left:50%;bottom:6px;transform:translateX(-50%);font-family:var(--display);font-weight:700;font-size:26px;line-height:1;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
-.pd-slot.empty .pd-n{color:var(--muted);text-shadow:none}
-.pd-slot.me .pd-who b::after{content:"";display:inline-block;width:6px;height:6px;margin-left:5px;border-radius:50%;background:var(--push);vertical-align:middle}
-.pd-rule{margin:10px 4px 0;text-align:center}
-/* the podium plays once when the tab opens: plates drop in, then the people */
-.lb-anim .pd-stack i{animation:plate .5s cubic-bezier(.3,1.35,.5,1) both;animation-delay:calc(var(--o) * 140ms + var(--k) * 70ms + 120ms)}
-.lb-anim .pd-who{animation:popIn .55s cubic-bezier(.3,1.5,.5,1) both;animation-delay:calc(var(--o) * 140ms + 420ms)}
-.lb-anim .lb-crown{animation:crown .8s cubic-bezier(.3,1.6,.5,1) both;animation-delay:900ms}
-@keyframes plate{from{transform:translateY(-46px);opacity:0}}
+.pd-left{font-size:12.5px;font-weight:700;color:var(--push);background:color-mix(in srgb, var(--push) 13%, transparent);padding:3px 9px;border-radius:10px}
+.pd-rule{margin:6px 4px 0;text-align:center;position:relative;z-index:2}
+/* the cards */
+.pc-fan{position:relative;height:266px;margin-top:4px;perspective:900px}
+.pc{position:absolute;left:50%;top:28px;width:150px;height:212px;margin-left:-75px;padding:0;font:inherit;color:#fff;text-align:center;
+  transform:translate(var(--x,0), var(--y,0)) rotate(var(--rz,0)) scale(var(--s,1));transition:transform .5s cubic-bezier(.3,1.3,.5,1);
+  filter:drop-shadow(0 14px 18px rgba(0,0,0,.38));-webkit-tap-highlight-color:transparent}
+.pc.c1{z-index:3;--y:-6px}
+.pc.c2{z-index:2;--x:-71%;--y:24px;--rz:-10deg;--s:.8}
+.pc.c3{z-index:1;--x:71%;--y:24px;--rz:10deg;--s:.8}
+.pc-in{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;transition:transform .65s cubic-bezier(.3,1.25,.5,1)}
+.pc.flip .pc-in{transform:rotateY(180deg)}
+.pc-f{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;border-radius:20px;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  padding:12px 10px 10px;border:2px solid transparent;
+  background:linear-gradient(165deg, color-mix(in srgb, var(--m2) 42%, #141820), #0F1218 62%) padding-box,
+    linear-gradient(140deg, var(--m1), var(--m2) 35%, var(--m3) 60%, var(--m1) 80%, var(--m2)) border-box}
+.pc-f::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.5;
+  background:repeating-linear-gradient(125deg, transparent 0 14px, color-mix(in srgb, var(--m1) 9%, transparent) 14px 15px)}
+.pc-bk{transform:rotateY(180deg);align-items:stretch;justify-content:center;gap:6px;text-align:left;padding:12px}
+.pc-top{position:relative;width:100%;display:flex;justify-content:space-between;align-items:flex-start}
+.pc-pts{display:flex;flex-direction:column;align-items:flex-start;line-height:.85}
+.pc-pts b{font-family:var(--display);font-weight:700;font-size:40px;color:var(--m1);text-shadow:0 2px 0 color-mix(in srgb, var(--m3) 80%, #000)}
+.pc-pts small{font-size:11px;font-weight:700;color:var(--m1);opacity:.75;margin-top:4px}
+.pc-rk{font-family:var(--display);font-weight:700;font-size:17px;color:var(--m1);opacity:.9}
+.pc-a{position:relative;width:64px;height:64px;font-size:24px;margin-top:-6px;box-shadow:0 0 0 2.5px #0F1218,0 0 0 4.5px var(--m2),0 6px 16px rgba(0,0,0,.45)}
+.pc-nm{position:relative;margin-top:8px;font-size:17px;font-weight:700;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pc.me .pc-nm::after{content:"";display:inline-block;width:6px;height:6px;margin-left:5px;border-radius:50%;background:var(--push);vertical-align:middle}
+.pc-st{position:relative;margin-top:auto;width:100%;display:grid;grid-template-columns:1fr 1fr;border-top:1px solid color-mix(in srgb, var(--m1) 25%, transparent);padding-top:7px}
+.pc-st span{display:flex;flex-direction:column;line-height:1.1}.pc-st span+span{border-left:1px solid color-mix(in srgb, var(--m1) 25%, transparent)}
+.pc-st b{font-family:var(--display);font-size:18px;font-weight:700}.pc-st small{font-size:10.5px;color:rgba(255,255,255,.6)}
+.pc-bh{position:relative;display:flex;align-items:center;gap:8px;margin-bottom:4px}.pc-bh>span{display:flex;flex-direction:column;min-width:0}
+.pc-bh b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pc-bh small{font-size:11.5px;color:var(--m1)}
+.pc-kv{position:relative;display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:rgba(255,255,255,.7);padding:3px 0;border-top:1px solid rgba(255,255,255,.08)}
+.pc-kv b{font-family:var(--display);font-size:17px;color:#fff}
+.pc-empty .pc-f{--m1:var(--line);background:repeating-linear-gradient(135deg, var(--surface-2) 0 10px, color-mix(in srgb, var(--surface-2) 70%, var(--surface)) 10px 20px) padding-box, linear-gradient(var(--line), var(--line)) border-box;
+  color:var(--muted);justify-content:center;gap:4px;border-style:dashed}
+.pc-empty .pc-f::before{display:none}
+.pc-empty{filter:none}
+.pc-plus{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--surface);box-shadow:inset 0 0 0 1.5px var(--line);margin-bottom:4px}.pc-plus svg{width:22px;height:22px}
+.pc-empty b{font-size:15px}.pc-empty small{font-size:12px}
+.pc-shine{position:absolute;inset:-20%;pointer-events:none;background:linear-gradient(110deg, transparent 38%, rgba(255,255,255,.42) 47%, rgba(255,255,255,.08) 53%, transparent 60%);
+  transform:translateX(-90%);animation:shine 6s ease-in-out 1.9s infinite;mix-blend-mode:screen}
+@keyframes shine{0%{transform:translateX(-90%)}18%,100%{transform:translateX(90%)}}
+.pc-crown{position:absolute;left:50%;top:0;z-index:4;width:46px;margin-left:-23px;pointer-events:none}
+.pc-crown .lb-crown{position:static;transform:rotate(-10deg);width:46px;height:32px}
+.pc-spark{position:absolute;left:50%;top:128px;z-index:4;pointer-events:none}
+.pc-spark i{position:absolute;width:6px;height:6px;margin:-3px;border-radius:50%;background:#FFE29A;box-shadow:0 0 8px #F0AE2E;opacity:0}
+.pc-spark i:nth-child(3n){background:#fff;width:4px;height:4px}
+/* the deal: cards fly in face down, flip, fan out; the leader lands last, then crown, sparks and shine */
+.lb-anim .pc{animation:deal .7s cubic-bezier(.25,1.2,.45,1) both}
+.lb-anim .pc.c3{animation-delay:.1s}.lb-anim .pc.c2{animation-delay:.28s}.lb-anim .pc.c1{animation-delay:.5s}
+.lb-anim .pc-in{animation:faceUp .75s cubic-bezier(.3,1.25,.5,1) both}
+.lb-anim .pc.c3 .pc-in{animation-delay:.42s}.lb-anim .pc.c2 .pc-in{animation-delay:.6s}.lb-anim .pc.c1 .pc-in{animation-delay:.86s}
+.lb-anim .pc-empty .pc-in{animation:none}
+.lb-anim .pc-bk>*{animation:hideBk 1.7s step-end both} /* while the cards fly in, their backs are plain */
+@keyframes hideBk{0%{opacity:0}100%{opacity:1}}
+@keyframes deal{from{transform:translate(0, 150px) rotate(0) scale(.55);opacity:0}}
+@keyframes faceUp{from{transform:rotateY(180deg)}}
+.lb-anim .pc-crown{animation:crownIn .7s cubic-bezier(.3,1.7,.5,1) 1.35s both}
+@keyframes crownIn{from{transform:translateY(-40px) rotate(-35deg) scale(.3);opacity:0}}
+.lb-anim .pc-spark i{animation:spark .9s cubic-bezier(.2,.8,.3,1) 1.4s both}
+@keyframes spark{0%{transform:rotate(var(--a)) translateY(0) scale(.3);opacity:0}25%{opacity:1}100%{transform:rotate(var(--a)) translateY(calc(var(--r) * -1)) scale(1);opacity:0}}
+.lb-anim .lb-pod{animation:podGlow 1.6s ease .9s both}
+@keyframes podGlow{0%{background-size:100% 100%}40%{box-shadow:inset 0 0 0 1.5px color-mix(in srgb, #F0AE2E 45%, transparent)}100%{box-shadow:none}}
+@media (max-width:350px){.pc-fan{height:236px}.pc{width:128px;height:184px;margin-left:-64px}.pc.c2{--x:-60%;--s:.74}.pc.c3{--x:60%;--s:.74}.pc-pts b{font-size:34px}.pc-a{width:52px;height:52px;font-size:20px}.pc-nm{font-size:15px}.pc-spark{top:112px}}
+@media (prefers-reduced-motion: reduce){.pc-shine{animation:none;display:none}}
+html.rm .pc-shine{display:none}
+.lb-crown{display:block;width:34px;height:24px;filter:drop-shadow(0 3px 4px rgba(0,0,0,.3))}
+/* framing your photo */
+.crop{position:fixed;inset:0;z-index:80;background:#05070A;color:#fff;display:flex;flex-direction:column;animation:crIn .25s ease both;touch-action:none;
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.crop.out{opacity:0;transition:opacity .2s}
+@keyframes crIn{from{opacity:0}}
+.cr-top{display:flex;align-items:center;justify-content:space-between;height:54px;padding:0 16px;flex-shrink:0;position:relative;z-index:2;background:#05070A}
+.cr-top b{font-size:16px}.cr-top .linkb{--c:#fff;color:#fff;font-size:16px}.cr-top .cr-ok{color:var(--push);font-weight:700}
+.cr-mid{flex:1;display:grid;place-items:center;overflow:hidden;position:relative}
+.cr-box{position:relative;cursor:grab;touch-action:none}
+.cr-box:active{cursor:grabbing}
+.cr-box img{position:absolute;left:50%;top:50%;max-width:none;user-select:none;-webkit-user-select:none;pointer-events:none;transform-origin:center;will-change:transform}
+.cr-ring{position:absolute;inset:0;border-radius:50%;pointer-events:none;box-shadow:0 0 0 2px rgba(255,255,255,.85),0 0 0 100vmax rgba(5,7,10,.62)}
+.cr-bot{flex-shrink:0;padding:14px 24px 18px;position:relative;z-index:2;background:#05070A}
+.cr-z{display:flex;align-items:center;gap:12px;color:rgba(255,255,255,.7)}.cr-z svg{width:22px;height:22px;flex-shrink:0}
+.cr-z input{flex:1;accent-color:var(--push);height:30px}
+.cr-tip{text-align:center;color:rgba(255,255,255,.55);margin:8px 0 0}
+.lb-hold *{animation-play-state:paused!important}
 @keyframes popIn{from{transform:translateY(14px) scale(.6);opacity:0}}
-@keyframes crown{from{transform:translate(-50%,-26px) rotate(-40deg) scale(.4);opacity:0}}
 /* the boards */
 .lb-seg{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));background:var(--surface-2);border-radius:13px;padding:3px;margin-bottom:12px}
 .lb-seg-i{position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px) / 4);border-radius:10px;background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.18);
@@ -991,10 +1049,14 @@ button.row{color:inherit}
 @keyframes rowIn{from{transform:translateY(10px);opacity:0}}
 .lb-why{margin:0 2px 8px}
 .lb-note{margin:10px 2px 0}
-.lb-r{display:flex;align-items:center;gap:10px;padding:9px 6px;border-radius:14px}
-.lb-r.me{background:color-mix(in srgb, var(--push) 9%, transparent)}
-.lb-p{width:24px;flex-shrink:0;text-align:center;font-family:var(--display);font-weight:700;font-size:18px;color:var(--muted)}
-.lb-p.md{color:var(--md)}
+.lb-r{display:flex;align-items:center;gap:12px;padding:9px 8px;border-radius:16px}
+.lb-r.me{background:color-mix(in srgb, var(--push) 9%, transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb, var(--push) 22%, transparent)}
+.lb-av{position:relative;flex-shrink:0}
+.lb-av .lb-a{width:42px;height:42px;font-size:17px}
+.lb-p{position:absolute;right:-5px;bottom:-4px;min-width:20px;height:20px;padding:0 4px;border-radius:10px;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:13px;
+  background:var(--surface-2);color:var(--muted);box-shadow:0 0 0 2px var(--surface)}
+.lb-r.m1 .lb-p,.lb-r.m2 .lb-p,.lb-r.m3 .lb-p{background:var(--md);color:#1A1306}
+.lb-r.m1 .lb-av .lb-a{box-shadow:0 0 0 2px var(--surface),0 0 0 4px #F0AE2E}
 .lb-n{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
 .lb-n b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lb-n b small{font-weight:600;color:var(--muted);font-size:12px}
 .lb-n>small{color:var(--muted);font-size:12.5px;line-height:1.25}
@@ -1062,7 +1124,7 @@ button.row{color:inherit}
 .lb-priv{margin:0 6px 4px}
 .lb-in{width:100%;height:54px;font-size:24px;text-align:center;letter-spacing:.18em;text-transform:uppercase;padding:0 12px}
 .lb-addbtn{width:100%;margin:14px 0 6px}
-@media (max-width:350px){.lb-seg button{font-size:12px}.pd-a{width:46px;height:46px}.pd-slot.p1 .pd-a{width:58px;height:58px}.vs-num{font-size:38px}.me-ava .lb-a{width:48px;height:48px}.me-n b{font-size:21px}.me-inv{padding:0 8px 0 11px}}
+@media (max-width:350px){.lb-seg button{font-size:12px}.vs-num{font-size:38px}.me-ava .lb-a{width:48px;height:48px}.me-n b{font-size:21px}.me-inv{padding:0 8px 0 11px}}
 .acc-fr{margin-top:12px;border-radius:14px;background:var(--surface-2);padding:12px 14px;width:100%}
 .acc-seg{display:flex;margin:0 0 12px}.acc-seg button{flex:1}
 .acc-f{display:flex;flex-direction:column;gap:10px}
@@ -2015,6 +2077,7 @@ async function fbMerge(uid, snap) {
   S.mode = "cloud"; setSync("ok");
   for (const id of up) { dirty.add(id); flush(id); }
   dataChanged(); saveLocal(); if (got) fbBaseline(); applySettings(); softRender(); fbUI(); fbPushProfile(true);
+  setTimeout(() => fbLoadSocial().then(lbUpdate), 2500); // the Friends board, ready before you open it
   if (S.obWait) setTimeout(obResume, 60);
 }
 function fbBaseline() {
@@ -2024,6 +2087,7 @@ function fbBaseline() {
 }
 async function fbOut() {
   Object.assign(FBS, { last: "", code: null, list: null, prof: {}, reqIn: [], reqOut: {}, at: 0, msg: "", photoSent: undefined, vs: null, inv: false, mng: false });
+  try { localStorage.removeItem("aub.fbsoc"); } catch (e) {}
   fbUnlink(); try { await fbMods.U.signOut(fbMods.auth); } catch (e) {}
   FB.user = null; FB.st = "out"; fbUI();
 }
@@ -2079,7 +2143,7 @@ function fbUI() {
   const sh = $("#sheet");
   if (sh.classList.contains("show") && (sh.querySelector(".acc-f, .acc-box, [data-act=fbyes], [data-act=fbretry]") || /Connecting…/.test(sh.textContent))) openAccount(true);
   else if (sh.classList.contains("show") && sh.querySelector("[data-act=account]")) openSheet();
-  lbRedraw();
+  if (S.tab === "friends" && !!FB.user !== !!$("#view .lb-wrap")) lbRedraw(true); else lbUpdate(); // signed in or out: new screen; otherwise only real changes
 }
 async function fbAct(a, b) {
   if (a === "account") { S.fbMsg = ""; openAccount(); if (fbOK() && !fbMods) fbStart(); return; }
@@ -2177,18 +2241,27 @@ async function fbLoadSocial(force) {
   const m = fbMods, u = m && m.auth.currentUser; if (!u) return;
   if (!force && Date.now() - FBS.at < 60000) return;
   FBS.at = Date.now();
-  try {
+  try { // everything is gathered first and shown in one go: no half-loaded board
     const fr = await m.F.getDocs(m.F.collection(m.db, "profiles", u.uid, "friends"));
-    FBS.list = fr.docs.map(d => ({ fid: d.id, ...d.data() }));
+    const list = fr.docs.map(d => ({ fid: d.id, ...d.data() })), prof = {}, reqOut = {};
     const rin = await m.F.getDocs(m.F.query(m.F.collection(m.db, "requests"), m.F.where("to", "==", u.uid)));
-    FBS.reqIn = rin.docs.map(d => d.data()).filter(r => !FBS.list.some(f => f.fid === r.from));
-    const me = await m.F.getDoc(m.F.doc(m.db, "profiles", u.uid)); if (me.exists()) { FBS.prof[u.uid] = me.data(); FBS.code = FBS.code || me.data().code; }
-    await Promise.all(FBS.list.map(async f => {
-      try { const p = await m.F.getDoc(m.F.doc(m.db, "profiles", f.fid)); FBS.prof[f.fid] = p.exists() ? p.data() : null; }
-      catch (e) { FBS.prof[f.fid] = null; } // not shared with you (yet)
-      if (!FBS.prof[f.fid]) { try { const r = await m.F.getDoc(m.F.doc(m.db, "requests", u.uid + "_" + f.fid)); FBS.reqOut[f.fid] = r.exists(); } catch (e) { FBS.reqOut[f.fid] = false; } }
+    const me = await m.F.getDoc(m.F.doc(m.db, "profiles", u.uid)); if (me.exists()) prof[u.uid] = me.data();
+    await Promise.all(list.map(async f => {
+      try { const p = await m.F.getDoc(m.F.doc(m.db, "profiles", f.fid)); prof[f.fid] = p.exists() ? p.data() : null; }
+      catch (e) { prof[f.fid] = null; } // not shared with you (yet)
+      if (!prof[f.fid]) { try { const r = await m.F.getDoc(m.F.doc(m.db, "requests", u.uid + "_" + f.fid)); reqOut[f.fid] = r.exists(); } catch (e) { reqOut[f.fid] = false; } }
     }));
+    if (!m.auth.currentUser || m.auth.currentUser.uid !== u.uid) return;
+    Object.assign(FBS, { list, prof, reqOut, reqIn: rin.docs.map(d => d.data()).filter(r => !list.some(f => f.fid === r.from)) });
+    if (me.exists()) FBS.code = FBS.code || me.data().code;
+    try { localStorage.setItem("aub.fbsoc", JSON.stringify({ uid: u.uid, list, prof, reqOut, reqIn: FBS.reqIn, code: FBS.code })); } catch (e) {}
   } catch (e) { FBS.msg = fbErr(e); }
+}
+document.addEventListener("visibilitychange", () => { if (!document.hidden && FB.user && S.tab !== "friends" && Date.now() - FBS.at > 90000) fbLoadSocial().then(lbUpdate); });
+// the last board you saw, so the tab opens with it straight away (then refreshes quietly)
+function lbHydrate() {
+  const u = FB.user; if (!u || FBS.list !== null) return;
+  try { const c = JSON.parse(localStorage.getItem("aub.fbsoc") || "null"); if (c && c.uid === u.uid && Array.isArray(c.list)) Object.assign(FBS, { list: c.list, prof: c.prof || {}, reqOut: c.reqOut || {}, reqIn: c.reqIn || [], code: FBS.code || c.code || null }); } catch (e) {}
 }
 async function fbAddFriend(code) {
   const m = fbMods, u = m && m.auth.currentUser; if (!u) return;
@@ -2223,7 +2296,7 @@ async function fbRemove(fid) {
 }
 // when the account is deleted: the card, the code, the friends list and open requests go too
 async function fbDropSocial(uid) {
-  const m = fbMods; const del = async ref => { try { await m.F.deleteDoc(ref); } catch (e) {} };
+  const m = fbMods; try { localStorage.removeItem("aub.fbsoc"); } catch (e) {} const del = async ref => { try { await m.F.deleteDoc(ref); } catch (e) {} };
   try { const fr = await m.F.getDocs(m.F.collection(m.db, "profiles", uid, "friends")); for (const d of fr.docs) await del(d.ref); } catch (e) {}
   try { const p = await m.F.getDoc(m.F.doc(m.db, "profiles", uid)); if (p.exists() && p.data().code) await del(m.F.doc(m.db, "codes", p.data().code)); } catch (e) {}
   for (const f of ["from", "to"]) { try { const q = await m.F.getDocs(m.F.query(m.F.collection(m.db, "requests"), m.F.where(f, "==", uid))); for (const d of q.docs) await del(d.ref); } catch (e) {} }
@@ -2261,21 +2334,34 @@ function weekLeft() {
   const ms = parse(addD(mondayOf(today()), 7)).getTime() - Date.now(), h = Math.max(0, Math.floor(ms / 3600000)), d = Math.floor(h / 24);
   return d >= 1 ? `${d}d ${h % 24}h left` : h >= 1 ? `${h}h ${Math.floor(ms / 60000) % 60}m left` : `${Math.max(1, Math.floor(ms / 60000))} min left`;
 }
-// the podium: this week's points, the top three on stacks of plates
+// this week's top three as player cards, dealt face down and flipped, the leader in front. Tap a card to see its back.
+const CARD_T = [["#FFE9A6", "#F0AE2E", "#9A6614"], ["#F4F7FB", "#AEB8C7", "#5F6B7D"], ["#F8CFA8", "#C97A3A", "#74421C"]];
 function lbPodium(P) {
-  const L = P.slice().sort((a, b) => b.wk.pts - a.wk.pts), pl = lbPlaces(L, r => r.wk.pts), mon = mondayOf(today());
-  const slot = i => { const r = L[i], place = r ? pl[i] : i, plates = [4, 3, 2][i];
-    const who = r ? `<div class="pd-who">${i === 0 && r.wk.pts > 0 ? IC_CROWN : ""}${lbAva(r, "pd-a")}<b>${escH(r.me ? "You" : r.name.split(" ")[0])}</b><span class="pd-pts num"><span data-count="${r.wk.pts}">${r.wk.pts}</span> pts</span></div>`
-      : `<button class="pd-who pd-ghost" data-act="lbinv"><span class="lb-a pd-a"><svg class="i" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></span><b>Invite</b><span class="pd-pts">a friend</span></button>`;
-    return `<div class="pd-slot p${i + 1}${r ? "" : " empty"}${r && r.me ? " me" : ""}" style="--md:${MEDAL[place] || MEDAL[2]};--o:${[1, 0, 2].indexOf(i)}">${who}
-      <div class="pd-stack">${Array.from({ length: plates }, (_, k) => `<i style="--k:${plates - 1 - k}"></i>`).join("")}<span class="pd-n num">${place + 1}</span></div></div>`; };
+  const L = P.slice().sort((a, b) => b.wk.pts - a.wk.pts), pl = lbPlaces(L, r => r.wk.pts), ORD = ["1st", "2nd", "3rd"];
+  const card = i => { const r = L[i], pos = ["c1", "c2", "c3"][i];
+    if (!r) return `<button class="pc ${pos} pc-empty" data-act="lbinv" aria-label="Invite a friend"><span class="pc-in"><span class="pc-f pc-back"><span class="pc-plus"><svg class="i" viewBox="0 0 24 24"><path d="M12 6v12M6 12h12"/></svg></span><b>Invite</b><small>a friend</small></span></span></button>`;
+    const t = CARD_T[Math.min(pl[i], 2)], lv = levelOf(r.p.xp || 0), c = r.p.cons, first = (r.me ? "You" : r.name.split(" ")[0]);
+    return `<button class="pc ${pos}${r.me ? " me" : ""}" data-act="lbflip" style="--m1:${t[0]};--m2:${t[1]};--m3:${t[2]}" aria-label="${ORD[pl[i]] || pl[i] + 1 + "th"}: ${escH(first)}, ${r.wk.pts} points. Tap for details">
+      <span class="pc-in">
+        <span class="pc-f"><span class="pc-top"><span class="pc-pts"><b class="num" data-count="${r.wk.pts}">${r.wk.pts}</b><small>pts</small></span><span class="pc-rk">${ORD[pl[i]] || ""}</span></span>
+          ${lbAva(r, "pc-a")}<b class="pc-nm">${escH(first)}</b>
+          <span class="pc-st"><span><b class="num">${r.wk.done}/${r.wk.plan}</b><small>workouts</small></span><span><b class="num">${r.wk.prs}</b><small>record${r.wk.prs === 1 ? "" : "s"}</small></span></span>
+          ${i === 0 ? '<i class="pc-shine"></i>' : ""}</span>
+        <span class="pc-f pc-bk"><span class="pc-bh">${lvlBadge(lv, 34, false)}<span><b>${escH(r.name)}</b><small>${escH(lv.name)}</small></span></span>
+          <span class="pc-kv"><span>Streak</span><b class="num">${r.p.streak || 0} d</b></span>
+          <span class="pc-kv"><span>Regularity</span><b class="num">${c ? c.pct + "%" : "–"}</b></span>
+          <span class="pc-kv"><span>This week</span><b class="num">${r.wk.done} of ${r.wk.plan}</b></span>
+          <span class="pc-kv"><span>Records</span><b class="num">${r.wk.prs}</b></span></span>
+      </span></button>`; };
+  const sparks = Array.from({ length: 12 }, (_, k) => `<i style="--a:${k * 30 + (k % 2) * 12}deg;--r:${70 + (k % 3) * 18}px"></i>`).join("");
   return `<section class="card lb-pod"><div class="pd-h"><b>This week</b><span class="pd-left">${weekLeft()}</span></div>
-    <div class="pd-row">${[1, 0, 2].map(slot).join("")}</div>
-    <p class="small muted pd-rule">1 point per set, +4 per record, +15 per workout, +25 per quest. Resets on Monday.</p></section>`;
+    <div class="pc-fan">${card(1)}${card(2)}${card(0)}${L[0] && L[0].wk.pts > 0 ? `<span class="pc-crown">${IC_CROWN}</span><span class="pc-spark" aria-hidden="true">${sparks}</span>` : ""}</div>
+    <p class="small muted pd-rule">1 point per set, +4 per record, +15 per workout, +25 per quest. Resets Monday.</p></section>`;
 }
 function lbRow(r, i, val, sub, w, n) {
-  return `<div class="lb-r${r.me ? " me" : ""}" style="--i:${n == null ? i : n}"><span class="lb-p num${i < 3 && !lbSolo ? " md" : ""}" style="--md:${MEDAL[i] || "transparent"}">${i + 1}</span>${lbAva(r)}
-    <span class="lb-n"><b>${escH(r.name)}${r.me ? ' <small>you</small>' : ""}</b>${w != null ? `<span class="lb-track"><i style="--w:${Math.max(3, Math.min(100, w))}%"></i></span>` : ""}<small>${sub}</small></span><span class="lb-v num">${val}</span></div>`;
+  const md = i < 3 && !lbSolo;
+  return `<div class="lb-r${r.me ? " me" : ""}${md ? " m" + (i + 1) : ""}" style="--i:${n == null ? i : n};--md:${MEDAL[i] || "var(--line)"}"><span class="lb-av">${lbAva(r)}<span class="lb-p num">${i + 1}</span></span>
+    <span class="lb-n"><b>${escH(r.name)}${r.me ? ' <small>you</small>' : ""}</b><small>${sub}</small></span><span class="lb-v num">${val}</span></div>`;
 }
 let lbSolo = false; // only you on the board: no medals
 const lbRing = pct => { const C = 2 * Math.PI * 15; return `<span class="lb-ring"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="t"/><circle cx="18" cy="18" r="15" class="v" stroke-dasharray="${C.toFixed(1)}" style="--off:${(C * (1 - pct / 100)).toFixed(1)};--c0:${C.toFixed(1)}" transform="rotate(-90 18 18)"/></svg><b class="num">${pct}<small>%</small></b></span>`; };
@@ -2338,7 +2424,7 @@ function friendsHTML(anim) {
       <div class="lb-dd${FBS.inv ? " open" : ""}" id="lbdd"><div class="lb-dd-in">
         <div class="dd-code"><span>Your code</span><b class="num">${code}</b></div>
         <div class="dd-btns"><button class="btn sm" data-act="lbshare" ${FBS.code ? "" : "disabled"}>Send my code</button><button class="btn sm ghost" data-act="lbaddopen">Enter a code</button></div>
-        ${me.photo ? `<button class="linkb dd-rm" data-act="lbphotorm">Remove my photo</button>` : `<p class="small muted dd-tip">Tap your picture to add a photo. Your friends see it.</p>`}
+        ${me.photo ? `<span class="dd-ph"><label class="linkb dd-ch">Change photo<input type="file" accept="image/*" class="lbphoto2" aria-label="Choose another photo"></label><button class="linkb dd-rm" data-act="lbphotorm">Remove photo</button></span>` : `<p class="small muted dd-tip">Tap your picture to add a photo and frame it. Your friends see it.</p>`}
       </div></div>
       ${FBS.msg && !$("#sheet.show #lbcode") ? `<p class="small acc-msg" role="alert" style="margin:10px 2px 0">${escH(FBS.msg)}</p>` : ""}
     </section>
@@ -2369,36 +2455,109 @@ function openAddFriend(keep) {
   if (!sh.classList.contains("show")) showSheet();
   if (!keep) setTimeout(() => { const i = $("#lbcode"); if (i) i.focus(); }, 380);
 }
-// your profile photo: square, small (about 10 KB), stored with your settings and shown to friends
+// your profile photo: you frame it yourself, then it's saved square and small (about 10 KB), with your settings, and shown to friends
 async function lbSetPhoto(file) {
   if (!file) return;
+  let url;
   try {
-    const url = URL.createObjectURL(file);
+    url = URL.createObjectURL(file);
     const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
-    const n = 168, c = document.createElement("canvas"); c.width = c.height = n;
-    const w = img.naturalWidth, h = img.naturalHeight, m = Math.min(w, h);
-    c.getContext("2d").drawImage(img, (w - m) / 2, (h - m) / 2, m, m, 0, 0, n, n); URL.revokeObjectURL(url);
-    let d = c.toDataURL("image/jpeg", .82); if (d.length > 60000) d = c.toDataURL("image/jpeg", .6);
-    if (!okPhoto(d)) throw 0;
-    setPath("photo", d); fbPushProfile(true); toast("Photo updated"); lbRedraw();
-  } catch (e) { toast("This photo couldn't be read. Try another one."); }
+    if (!img.naturalWidth || !img.naturalHeight) throw 0;
+    openCrop(img, url);
+  } catch (e) { if (url) URL.revokeObjectURL(url); toast("This photo couldn't be read. Try another one."); }
 }
-document.addEventListener("change", e => { if (e.target && e.target.id === "lbphoto") { const f = e.target.files && e.target.files[0]; e.target.value = ""; lbSetPhoto(f); } });
+let CROP = null;
+function openCrop(img, url) {
+  const V = Math.round(Math.min(innerWidth - 48, 330)), w = img.naturalWidth, h = img.naturalHeight, s0 = V / Math.min(w, h);
+  const C = CROP = { img, url, V, w, h, s0, z: 1, x: 0, y: 0, pts: new Map(), g: null };
+  const el = document.createElement("div"); el.id = "crop"; el.className = "crop";
+  el.setAttribute("role", "dialog"); el.setAttribute("aria-modal", "true"); el.setAttribute("aria-label", "Frame your photo");
+  el.innerHTML = `<div class="cr-top"><button class="linkb cr-no" data-cr="no">Cancel</button><b>Frame your photo</b><button class="linkb cr-ok" data-cr="ok">Use photo</button></div>
+    <div class="cr-mid"><div class="cr-box" style="width:${V}px;height:${V}px"><img alt="" src="${url}" draggable="false" style="width:${w * s0}px;height:${h * s0}px;margin:${-h * s0 / 2}px 0 0 ${-w * s0 / 2}px"><i class="cr-ring"></i></div></div>
+    <div class="cr-bot"><div class="cr-z"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M8.5 11h5M16 16l4 4"/></svg>
+      <input type="range" id="crz" min="1" max="4" step="0.01" value="1" aria-label="Zoom">
+      <svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M8.5 11h5M11 8.5v5M16 16l4 4"/></svg></div>
+      <p class="small cr-tip">Drag to move. Pinch or use the slider to zoom.</p></div>`;
+  document.body.appendChild(el); lockScroll(true); crDraw();
+  const box = el.querySelector(".cr-box");
+  const at = () => [...C.pts.values()];
+  box.addEventListener("pointerdown", e => { try { box.setPointerCapture(e.pointerId); } catch (x) {} C.pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); C.g = null; e.preventDefault(); });
+  box.addEventListener("pointermove", e => {
+    if (!C.pts.has(e.pointerId)) return; const prev = at(); C.pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); const now = at();
+    if (now.length === 1) { C.x += now[0].x - prev[0].x; C.y += now[0].y - prev[0].y; }
+    else if (now.length >= 2) {
+      const d = (a, b) => Math.hypot(a.x - b.x, a.y - b.y), mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+      const d0 = d(prev[0], prev[1]), d1 = d(now[0], now[1]), m0 = mid(prev[0], prev[1]), m1 = mid(now[0], now[1]);
+      if (d0 > 0) crZoom(C.z * d1 / d0); C.x += m1.x - m0.x; C.y += m1.y - m0.y;
+    }
+    crDraw();
+  });
+  const up = e => { C.pts.delete(e.pointerId); };
+  box.addEventListener("pointerup", up); box.addEventListener("pointercancel", up);
+  box.addEventListener("wheel", e => { e.preventDefault(); crZoom(C.z * (1 - e.deltaY * .0015)); crDraw(); }, { passive: false });
+  el.querySelector("#crz").addEventListener("input", e => { crZoom(+e.target.value); crDraw(); });
+  el.addEventListener("click", e => { const b = e.target.closest("[data-cr]"); if (b) crDone(b.dataset.cr === "ok"); });
+  el.addEventListener("keydown", e => { if (e.key === "Escape") crDone(false); });
+  setTimeout(() => { const ok = el.querySelector(".cr-ok"); if (ok) ok.focus({ preventScroll: true }); }, 50);
+}
+// zoom around the middle of the circle, so what's in the centre stays there
+function crZoom(z) { const C = CROP; z = Math.max(1, Math.min(4, z)); C.x *= z / C.z; C.y *= z / C.z; C.z = z; }
+function crDraw() {
+  const C = CROP, el = $("#crop"); if (!C || !el) return;
+  const mx = (C.w * C.s0 * C.z - C.V) / 2, my = (C.h * C.s0 * C.z - C.V) / 2; // the photo always fills the circle
+  C.x = Math.max(-mx, Math.min(mx, C.x)); C.y = Math.max(-my, Math.min(my, C.y));
+  el.querySelector(".cr-box img").style.transform = `translate(${C.x}px, ${C.y}px) scale(${C.z})`;
+  const r = el.querySelector("#crz"); if (r && Math.abs(+r.value - C.z) > .005) r.value = C.z.toFixed(2);
+}
+function crDone(use) {
+  const C = CROP, el = $("#crop"); CROP = null; if (el) { el.classList.add("out"); setTimeout(() => el.remove(), 220); } lockScroll(!!$("#sheet.show"));
+  if (!C) return;
+  if (use) {
+    try {
+      const n = 168, c = document.createElement("canvas"), k = C.s0 * C.z, side = C.V / k;
+      c.width = c.height = n;
+      c.getContext("2d").drawImage(C.img, C.w / 2 + (-C.V / 2 - C.x) / k, C.h / 2 + (-C.V / 2 - C.y) / k, side, side, 0, 0, n, n);
+      let d = c.toDataURL("image/jpeg", .82); if (d.length > 60000) d = c.toDataURL("image/jpeg", .6);
+      if (!okPhoto(d)) throw 0;
+      setPath("photo", d); fbPushProfile(true); toast("Photo updated"); lbRedraw();
+    } catch (e) { toast("This photo couldn't be read. Try another one."); }
+  }
+  URL.revokeObjectURL(C.url);
+}
+document.addEventListener("change", e => { if (e.target && (e.target.id === "lbphoto" || e.target.classList.contains("lbphoto2"))) { const f = e.target.files && e.target.files[0]; e.target.value = ""; lbSetPhoto(f); } });
 function vFriends(anim) {
   setHeader("Friends", "Leaderboard");
+  lbHydrate();
   if (FB.user && Date.now() - FBS.at > 8000) setTimeout(() => lbRefresh(true), 30); // fresh numbers each time you open the tab
-  if (FBS.list === null) FBS.animNext = true; // first load: play the podium once the numbers are in
-  FBS.sig = lbSig();
-  return friendsHTML(anim && !FBS.animNext);
+  const ready = FBS.list !== null; FBS.animNext = !ready; // very first time: the cards are dealt once the numbers are in
+  FBS.sig = lbSig(); if (anim && ready && !REDUCED) FBS.animUntil = Date.now() + 2200;
+  // numbers older than a few seconds: hold the deal (up to 0.9 s) until the fresh ones arrive, so it plays once, with the right cards
+  FBS.hold = !!(anim && ready && !REDUCED && FB.user && Date.now() - FBS.at > 8000);
+  if (FBS.hold) { clearTimeout(FBS.ht); FBS.ht = setTimeout(lbRelease, 900); }
+  return friendsHTML(anim && ready).replace('class="lb-wrap lb-anim"', FBS.hold ? 'class="lb-wrap lb-anim lb-hold"' : 'class="lb-wrap lb-anim"');
+}
+function lbRelease() {
+  if (!FBS.hold) return; FBS.hold = false; clearTimeout(FBS.ht);
+  const w = $("#view .lb-hold"); if (!w) return;
+  w.classList.remove("lb-hold"); FBS.animUntil = Date.now() + 2200; countUp();
 }
 // what the tab shows; a refresh that changes nothing doesn't redraw (no flicker, no replayed animation)
 const lbSig = () => JSON.stringify([FBS.list, FBS.reqIn, FBS.code, FBS.msg, Object.entries(FBS.prof).map(([k, p]) => p && [k, p.name, p.week, p.cons, p.streak, p.lvl, p.lifts, p.mus, (p.photo || "").length])]);
-async function lbRefresh(force) { await fbLoadSocial(force); if (lbSig() !== FBS.sig) lbRedraw(FBS.animNext); }
+async function lbRefresh(force) { await fbLoadSocial(force);
+  if (FBS.hold && S.tab === "friends") { if (lbSig() !== FBS.sig) { FBS.hold = false; clearTimeout(FBS.ht); lbRedraw(true); } else lbRelease(); return; }
+  lbUpdate(); }
+// redraw only when something visible changed, and never in the middle of the entrance
+function lbUpdate() {
+  if (S.tab !== "friends" || lbSig() === FBS.sig) return;
+  const wait = (FBS.animUntil || 0) - Date.now();
+  if (wait > 0 && !FBS.animNext) { clearTimeout(FBS.ut); FBS.ut = setTimeout(lbUpdate, wait); return; }
+  lbRedraw(FBS.animNext);
+}
 // redraw the Friends tab in place (keeps the scroll position)
 function lbRedraw(anim) {
   if (S.tab !== "friends" || !BOOTED) return;
   if ($("#sheet").classList.contains("show")) { S.lbStale = true; return; } // redrawn when the sheet closes
-  const y = scrollY; FBS.animNext = false; FBS.sig = lbSig();
+  const y = scrollY; FBS.animNext = false; FBS.sig = lbSig(); if (anim && !REDUCED) FBS.animUntil = Date.now() + 2200;
   view.innerHTML = friendsHTML(anim && !REDUCED); figScan(view);
   if (anim && !REDUCED) countUp(); else view.querySelectorAll("[data-count]").forEach(el => el.textContent = el.dataset.count);
   scrollTo(0, Math.min(y, Math.max(0, document.documentElement.scrollHeight - innerHeight)));
@@ -2424,6 +2583,7 @@ async function lbAct(a, b) {
     const dd = a === "lbinv" ? $("#lbdd") : b.parentElement.querySelector(".lb-dd"); if (dd) dd.classList.toggle("open", FBS[k]);
     const btn = a === "lbinv" ? $("#view .me-inv") : b; if (btn) btn.setAttribute("aria-expanded", FBS[k]);
     if (a === "lbinv" && FBS.inv && b && b.closest(".lb-pod")) scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" }); return; }
+  if (a === "lbflip") { b.classList.toggle("flip"); return; }
   if (a === "lbphotorm") { setPath("photo", ""); fbPushProfile(true); toast("Photo removed"); return lbRedraw(); }
   if (a === "lbshare") { const c = FBS.code; if (!c) return; const url = /^https?:/.test(location.protocol) ? location.origin + location.pathname : "https://tuffyishungry.github.io/upper-body-app/";
     const text = `Add me on Upper Body, my friend code is ${c}. Get the app here: ${url}`;
@@ -2746,8 +2906,9 @@ function applySettings() {
   let el = document.getElementById("palette"); if (!el) { el = document.createElement("style"); el.id = "palette"; document.body.appendChild(el); }
   el.textContent = `:root{${D}}@media (prefers-color-scheme: light){:root:not([data-theme="dark"]):not([data-app-theme]){${Lt}}}:root[data-theme="light"]:not([data-app-theme]){${Lt}}:root[data-app-theme="light"]{${Lt}}:root[data-app-theme="dark"]{${D}}:root[data-app-theme="soft"]{${So}}:root[data-app-theme="dim"]{${Di}}`;
   // status bar / app switcher color follows the background
-  const bg = famNow(v).g[0];
-  document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", /^#/.test(bg) ? bg : (isLightNow() ? "#F2F3F6" : "#0C0F14")));
+  const bg = famNow(v).g[0], tc = /^#/.test(bg) ? bg : (isLightNow() ? "#F2F3F6" : "#0C0F14");
+  // while the loading screen is up, the bar colour stays the loading screen's own (set before the first frame); it follows the app afterwards
+  if ($("#boot") && !$("#boot").classList.contains("gone")) window.__tc = tc; else document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", tc));
   if (typeof applyMotion === "function") applyMotion();
   requestAnimationFrame(saveBootTheme);
 }
@@ -3591,7 +3752,7 @@ function renderView(anim = true, dir = 0) {
   figScan(view);
   view.className = "view";
   if (anim && !REDUCED) {
-    [...view.children].forEach((c, i) => c.style.setProperty("--d", Math.min(i, 9)));
+    [...view.children].forEach((c, i) => c.style.setProperty("--d", S.tab === "friends" ? 0 : Math.min(i, 9)));
     void view.offsetWidth;
     view.classList.add("enter"); if (dir) view.classList.add(dir > 0 ? "in-r" : "in-l");
     countUp(); growBars(view);
@@ -4133,8 +4294,13 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22e";
+const APP_VER = "2026-11-22f";
 const NEWS = [
+  { v: "2026-11-22f", d: "22 Nov", items: [
+    ["var(--push)", "Player cards", "This week's top three are dealt as cards, face down, then flipped: the leader lands last, gets the crown and the shine. Tap a card to turn it over for streak, regularity and records."],
+    ["var(--pull)", "Opens once, smoothly", "The Friends tab no longer draws itself twice: it opens with your last board, waits a moment for fresh numbers, then deals the cards once."],
+    ["var(--good)", "Frame your photo", "After choosing a profile photo, drag it and pinch (or use the slider) to frame it in the circle."],
+    ["var(--core)", "Opening the app", "The screen edges now match the loading screen from the very first frame."]] },
   { v: "2026-11-22e", d: "22 Nov", items: [
     ["var(--push)", "A podium every week", "The Friends tab opens on this week's podium: the top three stand on stacks of plates, the leader gets the crown."],
     ["var(--pull)", "Muscles, head to head", "Pick a friend and compare every muscle: their rank, yours, and the score of the match."],
@@ -6190,6 +6356,7 @@ render(true); BOOTED = true;
 function bootOut(bt) {
   requestAnimationFrame(() => {
     const R = document.documentElement; R.classList.add("booting"); bt.classList.add("gone"); R.classList.remove("bootin");
+    if (window.__tc) { document.querySelectorAll('meta[name="theme-color"]').forEach(m => m.setAttribute("content", window.__tc)); window.__tc = ""; }
     // remove it once fully transparent, then repaint the page under it once (iOS can keep a stale frame of a removed layer)
     setTimeout(() => { bt.remove(); R.classList.remove("booting"); const v = document.getElementById("view"); if (v) { v.style.outline = "1px solid transparent"; requestAnimationFrame(() => { v.style.outline = ""; }); } }, 560);
   });
