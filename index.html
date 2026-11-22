@@ -972,6 +972,8 @@ button.row{color:inherit}
 .dz-more>span{flex:1;display:flex;flex-direction:column;gap:2px}.dz-more b{font-size:17px;font-weight:650}.dz-more small{font-size:12.5px;color:var(--muted)}
 .dz-more>.i{width:18px;height:18px;color:var(--faint);transition:transform .25s}.dz-more.on>.i{transform:rotate(90deg)}
 .dz-txt{display:block;margin:18px auto 26px;font-size:14px}
+.dz-store{margin:16px 4px 0;font-size:12.5px;line-height:1.45;color:var(--muted);text-align:center}.dz-store.warn{color:var(--warn)}
+.dz-tl.ph .dz-r{min-height:52px}
 @keyframes dzIn{from{opacity:0;transform:translateY(-4px)}}
 @keyframes dzPop{50%{transform:scale(1.07)}}
 @media (prefers-reduced-motion: reduce){.dz-l.on,.dz-spin,.dz-n.busy .dz-b::after{animation:none}.dz-x,.ds-rec,.dz-now.done{animation:none}}
@@ -2106,10 +2108,18 @@ async function idbSnap(why) {
 try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist(); } catch (e) {}
 // saving to the phone is batched: one write shortly after you stop typing, and always before the app goes to the background
 let saveT = 0;
+// big things that don't have to be in localStorage: moved to IndexedDB, or caches that refill themselves
+function lsMakeRoom(now) {
+  for (const k of ["aub.safe.first", "aub.safe.last"]) { let v = null; try { v = localStorage.getItem(k); } catch (e) {} if (!v) continue; const drop = () => { try { localStorage.removeItem(k); } catch (e) {} };
+    const w = idbSet("safe-" + k.slice(9), v); if (now) drop(); else w.then(ok => { if (ok) drop(); }); } // room needed right now: the main copy comes first
+  for (const k of ["aub.fbsoc", "aub.err"]) try { localStorage.removeItem(k); } catch (e) {}
+}
+let SAVEFAIL = 0;
 const saveNow = () => { clearTimeout(saveT); saveT = 0; const txt = JSON.stringify(S.docs);
-  try { localStorage.setItem(LS, txt); LASTSAVE = Date.now(); }
-  catch (e) { if (Date.now() - SAVEWARN > 60000) { SAVEWARN = Date.now(); toast("This phone couldn't save. Your backup copy still has everything."); } try { logErr("save: " + e); } catch (x) {} }
+  let ok = false; try { localStorage.setItem(LS, txt); ok = true; } catch (e) { lsMakeRoom(true); try { localStorage.setItem(LS, txt); ok = true; } catch (e2) { try { logErr("save: " + e2); } catch (x) {} } }
+  if (ok) { LASTSAVE = Date.now(); SAVEFAIL = 0; } else { SAVEFAIL++; if (Date.now() - SAVEWARN > 60000) { SAVEWARN = Date.now(); toast("This phone couldn't save. Your backup copy still has everything."); } }
   idbSave(txt); };
+try { if (localStorage.getItem("aub.safe.first") || localStorage.getItem("aub.safe.last")) { lsMakeRoom(false); try { localStorage.removeItem("aub.fbsoc"); } catch (e) {} } } catch (e) {} // once: the old copies move out of localStorage
 const saveLocal = () => { if (!saveT) saveT = setTimeout(saveNow, 300); };
 document.addEventListener("visibilitychange", () => { if (document.hidden && saveT) saveNow(); if (document.hidden && BK.tm) { clearTimeout(BK.tm); BK.tm = 0; bkLatest(); } });
 addEventListener("pagehide", () => { if (saveT) saveNow(); });
@@ -2118,10 +2128,16 @@ idbGet("main").then(txt => {
   if (!txt) return; let j; try { j = JSON.parse(txt); } catch (e) { return; } if (!j || typeof j !== "object") return;
   j = cleanAll(j); const c = addCount(S.docs, j); if (!c.total) return;
   for (const id in j) S.docs[id] = addMerge(id, S.docs[id], j[id]);
-  dataChanged(); saveNow(); if (typeof applySettings === "function") { applySettings(); if (typeof BOOTED !== "undefined" && BOOTED) render(false); }
+  dataChanged(); saveNow(); try { fbBaseline(); } catch (e) {} // what came back isn't new progress: no level-up notes for it
+  if (typeof applySettings === "function") { applySettings(); if (typeof BOOTED !== "undefined" && BOOTED) render(false); }
   const ob = document.getElementById("ob"); if (ob && nDays(S.docs)) { ob.remove(); lsSet("aub.ob", "1"); lsSet("aub.tour", "1"); }
-  setTimeout(() => toast(`Restored from this phone's backup copy: ${addWords(c)}`), 1500);
+  fixLog(addWords(c), c.dates);
 });
+// automatic repairs, listed in Settings → Your data instead of a message every time the app opens
+function fixLog(what, dates) {
+  let L = []; try { L = JSON.parse(lsGet("aub.fixlog") || "[]"); } catch (e) {} if (!Array.isArray(L)) L = [];
+  L.unshift({ t: Date.now(), w: what, d: (dates || []).slice(0, 6) }); lsSet("aub.fixlog", JSON.stringify(L.slice(0, 8)));
+}
 
 let col = null;
 const dirty = new Set(), inflight = new Set(), again = new Set(), timers = {};
@@ -2216,8 +2232,8 @@ async function fbStart() {
 function fbUnlink() { if (fbUnsub) { try { fbUnsub(); } catch (e) {} fbUnsub = null; } if (S.mode === "cloud" && !window.claude) { col = null; S.mode = "local"; setSync("local"); } }
 // a copy of this phone's data before the account touches it; kept until replaced by a newer link
 function fbSafeCopy(uid, tag) {
-  const txt = JSON.stringify({ t: Date.now(), uid, docs: S.docs });
-  if (!lsSet("aub.safe." + tag, txt)) lsSet("aub.safe." + tag, JSON.stringify({ t: Date.now(), uid, docs: {} }));
+  idbSet("safe-" + tag, JSON.stringify({ t: Date.now(), uid, docs: S.docs }));
+  try { localStorage.removeItem("aub.safe." + tag); } catch (e) {}
 }
 function fbLink(u) {
   const { F, db } = fbMods, uid = u.uid; fbUnlink();
@@ -3171,8 +3187,8 @@ async function dsPhone() {
     load: async () => JSON.parse((await idbGet(k)) || "{}") });
   for (const k of keys.filter(k => /^pre-/.test(k))) out.push({ id: "l:" + k, t: +k.slice(4), title: whenLabel(+k.slice(4)), sub: "Before your account changed something",
     load: async () => (JSON.parse((await idbGet(k)) || "{}").docs || {}) });
-  for (const [k, sub] of [["aub.safe.first", "Before your account was linked"], ["aub.safe.last", "Before the last account update"]]) {
-    try { const o = JSON.parse(lsGet(k) || "null"); if (o && o.docs && nDays(o.docs)) out.push({ id: "s:" + k, t: o.t, title: whenLabel(o.t), sub, load: async () => o.docs }); } catch (e) {} }
+  for (const [k, sub] of [["safe-first", "Before your account was linked"], ["safe-last", "Before the last account update"]]) {
+    try { const o = JSON.parse((await idbGet(k)) || lsGet("aub." + k.replace("-", ".")) || "null"); if (o && o.docs && nDays(o.docs)) out.push({ id: "s:" + k, t: o.t, title: whenLabel(o.t), sub, load: async () => o.docs }); } catch (e) {} }
   return out.sort((a, b) => b.t - a.t);
 }
 const DS = { phone: null, showPhone: false, open: null, x: null, rec: null, now: "" };
@@ -3274,6 +3290,12 @@ function openData(keep) {
       <div class="dz-tl">${st.bk === "load" ? `<p class="dz-wait"><span class="dz-spin"></span>Loading your backups…</p>` : online.length ? online.map(x => dsRow(x, true)).join("") : st.bk === "ok" ? `<p class="dz-wait">The first backup is being made. It shows up here in a moment.</p>` : ""}</div>` : ""}
     <button class="dz-more${DS.showPhone ? " on" : ""}" data-act="dsphone" aria-expanded="${DS.showPhone}"><span><b>Copies on this phone</b><small>${!DS.phone ? "…" : phone.length ? `${phone.length} kept` : "None yet"} · kept even without an account</small></span>${DZI.chev}</button>
     ${DS.showPhone ? `<div class="dz-tl ph">${phone.length ? phone.map(x => dsRow(x, false)).join("") : `<p class="dz-wait">No copies yet. The first one is made tomorrow.</p>`}</div>` : ""}
+    ${(() => { let L = []; try { L = JSON.parse(lsGet("aub.fixlog") || "[]"); } catch (e) {} if (!Array.isArray(L) || !L.length) return "";
+      return `<div class="dz-h"><span><b>Automatic repairs</b><small>When this phone's main copy missed something, the second copy put it back</small></span></div>
+      <div class="dz-tl ph">${L.map(x => `<div class="dz-item"><div class="dz-r"><span class="dz-dot"></span><span class="dz-rt"><b>${escH(whenLabel(x.t))}</b><small>${escH(x.w)}${x.d && x.d.length ? " · " + x.d.map(fShort).join(", ") : ""}</small></span></div></div>`).join("")}</div>`; })()}
+    ${(() => { let n = 0, main = 0; try { for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i), v = localStorage.getItem(k) || ""; n += k.length + v.length; if (k === LS) main = v.length; } } catch (e) {}
+      const kb = x => x > 1e6 ? (x / 1e6).toFixed(1) + " MB" : Math.round(x / 1000) + " KB";
+      return `<p class="dz-store${SAVEFAIL ? " warn" : ""}">${SAVEFAIL ? "This phone's main copy couldn't be saved just now. The second copy has everything. " : ""}Storage used on this phone: ${kb(n * 2)} (your data ${kb(main * 2)}) of about 5 MB.</p>`; })()}
     <button class="linkb dz-txt" data-act="backup">Copy everything as text</button>`;
   sh.scrollTop = y; if (!sh.classList.contains("show")) showSheet();
 }
@@ -4633,6 +4655,7 @@ function checkMuscleRanks() {
   try { localStorage.setItem("aub.mr", JSON.stringify(now)); } catch (e) {}
   if (!seen) return;
   const ups = Object.keys(now).filter(m => seen[m] != null && now[m] > seen[m]); if (!ups.length) return;
+  if (ups.length > 2 || ups.some(m => now[m] - seen[m] > 1)) return; // one set lifts one muscle by one level at most
   S.mrPulse = S.mrPulse || new Set(); ups.forEach(m => S.mrPulse.add(m));
   ups.forEach((m, i) => setTimeout(() => mrFX(m, MR_TIERS.filter(([n]) => seen[m] >= n).length - 1), 700 + i * 2600));
   if (S.tab === "home") setTimeout(mrPulse, 400);
@@ -4966,8 +4989,11 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22l";
+const APP_VER = "2026-11-22m";
 const NEWS = [
+  { v: "2026-11-22m", d: "22 Nov", items: [
+    ["var(--good)", "Quieter, sturdier saving", "The phone's storage was getting full with extra copies, so some saves didn't stick. Those copies moved to the phone's larger storage. Repairs now happen quietly and are listed in Settings → Your data."],
+    ["var(--core)", "No more level-up bursts", "Opening the app no longer shows a pile of muscle level-ups for things that were simply restored."]] },
   { v: "2026-11-22k", d: "22 Nov", items: [
     ["var(--core)", "Muscle ranks, redone", "Your strongest muscle, your average level and how many are Gold or better at a glance, a bar showing your ranks, and one clear row per muscle with its way to the next level."],
     ["var(--push)", "A bolder race", "This week's race is now big bars with everyone's photo inside: the leader's shines in gold, and the ring around your photo is your progress to the next level."]] },
