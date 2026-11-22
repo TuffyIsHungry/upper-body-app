@@ -30,7 +30,7 @@
 <body>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-#boot{--ba:#FF6A2B;--bon:#0B0E13;--bbg:#06080C;--bs:#1A1F29;--bfg:#F3F5F9;position:fixed;inset:0;z-index:9999;overflow:hidden;background:var(--bbg);font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+#boot{--ba:#FF6A2B;--bon:#0B0E13;--bbg:#06080C;--bs:#1A1F29;--bfg:#F3F5F9;position:fixed;inset:0;z-index:9999;overflow:hidden;background:var(--bbg);box-shadow:0 0 0 100vmax var(--bbg);font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
   --ang:-14deg;--t1:.28s}
 #boot .h{position:absolute;inset:0;overflow:hidden}
 #boot .h.o{clip-path:polygon(0 0,100% 0,100% 44.5%,0 55.5%);background:linear-gradient(160deg,color-mix(in srgb,var(--ba) 62%,#fff) 0%,var(--ba) 45%,color-mix(in srgb,var(--ba) 80%,#000) 100%);color:var(--bon);animation:bTop var(--t1) cubic-bezier(.6,0,.4,1.35) both}
@@ -68,7 +68,7 @@
 #boot .spk.l{margin-left:-39vw} #boot .spk.r{margin-left:39vw}
 #boot .spk.l{transform:translateY(9vw)} #boot .spk.r{transform:translateY(-9vw)}
 #boot .flash{position:absolute;inset:0;background:radial-gradient(60% 30% at 50% 50%,rgba(255,255,255,.95),rgba(255,255,255,0) 70%);opacity:0;pointer-events:none;animation:bFlash .3s ease calc(var(--t1) + .25s) both}
-#boot.gone{pointer-events:none;visibility:hidden;background:transparent;transition:visibility 0s .5s;animation:bGone .2s ease .28s forwards}
+#boot.gone{pointer-events:none;visibility:hidden;background:transparent;box-shadow:none;transition:visibility 0s .5s;animation:bGone .2s ease .28s forwards}
 #boot.gone .h.o{animation:bOutT .45s cubic-bezier(.6,0,.2,1) forwards}
 #boot.gone .h.d{animation:bOutB .45s cubic-bezier(.6,0,.2,1) forwards}
 #boot.gone .seam{animation:bSeamOut .14s ease forwards} #boot.gone .spk,#boot.gone .flash{display:none}
@@ -77,7 +77,7 @@
 @keyframes bSheen{0%{transform:translateX(-110%)}60%,100%{transform:translateX(110%)}}
 @keyframes bSeamOut{from{opacity:.35}to{opacity:0}}
 /* the app behind: slightly zoomed out and dimmed while loading, it settles as the halves open */
-html.bootin .app{transform:scale(.94);opacity:.4}
+html.bootin .app{transform:scale(.94);opacity:0}
 html.bootin .tabs{opacity:0;transform:translateY(24px)}
 html.booting .app,html.booting .tabs{transition:transform .55s cubic-bezier(.2,.8,.2,1),opacity .45s ease}
 @keyframes bTop{0%{transform:translateY(-62%)}100%{transform:none}}
@@ -1013,7 +1013,12 @@ button.row{color:inherit}
 .lb-a img{width:100%;height:100%;object-fit:cover;display:block}
 .lb-a.xs{width:26px;height:26px;font-size:11px}
 /* you + invite */
-.lb-me{padding:14px 14px 14px 16px}
+.lb-me{padding:14px 14px 12px 16px;background:radial-gradient(120% 130% at 0% 0%, color-mix(in srgb, var(--lc) 20%, transparent), transparent 55%),radial-gradient(90% 120% at 100% 100%, color-mix(in srgb, var(--push) 12%, transparent), transparent 60%),var(--surface)}
+.me-st{display:grid;grid-template-columns:repeat(3,1fr);margin-top:12px;padding-top:10px;border-top:1px solid color-mix(in srgb, var(--fg) 9%, transparent)}
+.me-st span{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0}.me-st span+span{border-left:1px solid color-mix(in srgb, var(--fg) 9%, transparent)}
+.me-st b{font-family:var(--display);font-size:21px;font-weight:700;line-height:1.1}.me-st b i{font-style:normal;font-size:12px;color:var(--muted);margin-left:1px}
+.me-st small{font-size:11.5px;color:var(--muted);white-space:nowrap}
+.me-st .gold b{color:color-mix(in srgb, #F0AE2E 78%, var(--fg))}
 .me-row{display:flex;align-items:center;gap:12px}
 .me-ava{position:relative;flex-shrink:0;border-radius:50%}
 .me-ava .lb-a{width:56px;height:56px;font-size:22px;box-shadow:0 0 0 2.5px var(--surface),0 0 0 4.5px color-mix(in srgb, var(--push) 70%, transparent)}
@@ -1078,13 +1083,16 @@ button.row{color:inherit}
 .wr-l{display:grid;grid-template-columns:20px minmax(0,1fr) 62px;align-items:end;column-gap:10px;padding:7px 8px 6px 4px;border-radius:14px}
 .wr-l.me{background:color-mix(in srgb, var(--push) 8%, transparent)}
 .wr-pl{align-self:center;text-align:center;font-family:var(--display);font-weight:700;font-size:16px;color:var(--muted)}
-.wr-l.lead .wr-pl{color:color-mix(in srgb, #F0AE2E 75%, var(--fg))}
+.wr-pl.md{justify-self:center;width:22px;height:22px;line-height:22px;border-radius:50%;font-size:13px;color:#1A1306;background:var(--md);box-shadow:inset 0 -2px 0 rgba(0,0,0,.18)}
 .wr-m{display:flex;flex-direction:column;gap:3px;min-width:0}
 .wr-t{display:flex;align-items:baseline;gap:8px;min-width:0}
 .wr-t b{font-size:15px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%;flex-shrink:0}
 .wr-t small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .wr-tr{position:relative;height:30px}
-.wr-tr::before{content:"";position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;border-radius:3px;background:var(--surface-2)}
+.wr-tr::before{content:"";position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;border-radius:3px;background:repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), color-mix(in srgb, var(--fg) 14%, transparent) calc(25% - 1px) 25%), var(--surface-2)}
+.wr-l.lead .wr-a::before{content:"";position:absolute;inset:-9px;border-radius:50%;background:radial-gradient(closest-side, color-mix(in srgb, #F0AE2E 45%, transparent), transparent);animation:wrHalo 2.6s ease-in-out infinite}
+@keyframes wrHalo{50%{transform:scale(1.18);opacity:.7}}
+.rm .wr-l.lead .wr-a::before{animation:none}
 .wr-f{position:absolute;left:0;top:50%;height:6px;margin-top:-3px;border-radius:3px;width:calc(var(--p) * (100% - 30px) + 15px);background:var(--k)}
 .wr-l.lead .wr-f{background:linear-gradient(90deg, color-mix(in srgb, #F0AE2E 35%, transparent), #F0AE2E)}
 .wr-a{position:absolute;top:1px;left:calc(var(--p) * (100% - 30px));width:28px;height:28px}
@@ -1123,7 +1131,8 @@ button.row{color:inherit}
 .hh-p small{font-size:11px;color:var(--muted);white-space:nowrap}
 .hh-p.best small{color:color-mix(in srgb, #F0AE2E 72%, var(--fg));font-weight:650}
 .hh-sec{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:18px 2px 7px}
-.hh-sec b{font-size:15px;font-weight:700}.hh-sec small{font-size:12px;color:var(--muted);white-space:nowrap}
+.hh-sec b{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}.hh-sec b::before{content:"";width:8px;height:8px;border-radius:3px;background:var(--sc);box-shadow:0 0 0 3px color-mix(in srgb, var(--sc) 20%, transparent)}
+.hh-row.z{background:color-mix(in srgb, var(--fg) 2.8%, transparent)}.hh-sec small{font-size:12px;color:var(--muted);white-space:nowrap}
 .hh-g:not(.solo) .hh-head+.hh-sec{padding-top:12px}
 .hh-k{display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;padding:8px 8px 8px 2px}
 .hh-k b{font-size:14px;font-weight:600;line-height:1.25}
@@ -1306,14 +1315,36 @@ button.row{color:inherit}
 .fz-l svg{width:13px;height:13px}
 .bmap{--bmS:color-mix(in srgb, var(--fg) 10%, var(--surface));--bmU:color-mix(in srgb, var(--fg) 15.5%, var(--surface));--bm0:color-mix(in srgb, var(--fg) 25%, var(--surface));
   display:flex;flex-direction:column;align-items:center;gap:8px}
-.bmap svg{width:100%;max-width:370px;height:auto;display:block;overflow:visible}
-.bm-base{fill:var(--bmS)}
-.bm-out{fill:var(--bmS);stroke:color-mix(in srgb, var(--fg) 16%, transparent);stroke-width:1.1;stroke-linejoin:round}
+.bmap svg{width:100%;max-width:370px;height:auto;display:block;overflow:visible;margin:0 auto;z-index:1}
+.bm-stage svg{position:absolute;left:0;right:0;top:4px;height:calc(100% - 4px);max-width:none}
+.bm-base{fill:url(#bmBody)}
+.bm-g0{stop-color:color-mix(in srgb, var(--fg) 15%, var(--surface))}.bm-g1{stop-color:color-mix(in srgb, var(--fg) 6%, var(--surface))}
+.bm-stage{position:relative;width:100%;max-width:400px;aspect-ratio:214 / 214;flex-shrink:0;border-radius:18px;overflow:hidden;
+  background:radial-gradient(32% 46% at 26% 42%, color-mix(in srgb, var(--top) 15%, transparent), transparent 75%),radial-gradient(32% 46% at 74% 42%, color-mix(in srgb, var(--top) 15%, transparent), transparent 75%),
+    repeating-linear-gradient(0deg, color-mix(in srgb, var(--fg) 3.5%, transparent) 0 1px, transparent 1px 14px),
+    repeating-linear-gradient(90deg, color-mix(in srgb, var(--fg) 3.5%, transparent) 0 1px, transparent 1px 14px)}
+.bm-stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(90% 80% at 50% 45%, transparent 55%, var(--surface))}
+.bm-floor{fill:url(#bmFloor)}
+.mr-card{flex-shrink:0} /* the body is sized by its width: never let the page squeeze this card */
+.bm-sh{fill:url(#bmSheen);pointer-events:none;opacity:.9}.bm-sh.l0{opacity:.35}
+.bm-tag{cursor:pointer}
+.bm-tg polygon{fill:var(--rc);stroke:#fff;stroke-width:1.1;stroke-linejoin:round;filter:drop-shadow(0 1.5px 2px rgba(0,0,0,.45))}
+.bm-tg text{font-size:7.4px;font-weight:800;fill:#fff;font-family:var(--display);pointer-events:none}
+.bm-m.lg{animation:bmGlow 3.2s ease-in-out infinite}
+@keyframes bmGlow{0%,100%{filter:drop-shadow(0 0 2px var(--mc))}50%{filter:drop-shadow(0 0 5px var(--mc)) brightness(1.08)}}
+.bmap.bm-in .bm-m,.bmap.bm-in .bm-sh{animation:bmIn .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--j) * 60ms + 150ms)}
+.bmap.bm-in .bm-m.lg{animation:bmIn .6s cubic-bezier(.2,.8,.2,1) calc(var(--j) * 60ms + 150ms) both,bmGlow 3.2s ease-in-out 1.2s infinite}
+@keyframes bmIn{from{fill:var(--bm0);opacity:.35}}
+.bmap.bm-in .bm-tg{animation:bmTag .5s cubic-bezier(.3,1.7,.5,1) both;animation-delay:calc(.9s + var(--n) * 120ms)}
+@keyframes bmTag{from{transform:scale(0);opacity:0}}
+@media (prefers-reduced-motion: reduce){.bm-m.lg,.bmap.bm-in .bm-m,.bmap.bm-in .bm-sh,.bmap.bm-in .bm-tg{animation:none}.bm-m.lg{filter:drop-shadow(0 0 2.6px var(--mc))}}
+.rm .bm-m.lg,.rm .bmap.bm-in .bm-m,.rm .bmap.bm-in .bm-sh,.rm .bmap.bm-in .bm-tg{animation:none}
+.bm-out{fill:var(--bmS);stroke:color-mix(in srgb, var(--top) 30%, color-mix(in srgb, var(--fg) 22%, transparent));stroke-width:1.3;stroke-linejoin:round}
 .bm-u{fill:var(--bmU);pointer-events:none}
 .bm-m{fill:var(--mc, var(--bm0));stroke:var(--bmS);stroke-width:.7;stroke-linejoin:round;cursor:pointer;transition:fill .3s,filter .3s}
 .bm-m.lg{filter:drop-shadow(0 0 2.6px var(--mc))}
 .bm-m.sel{stroke:var(--fg);stroke-width:1.3}
-.bm-l{font-size:8px;fill:var(--muted);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.bm-l{font-size:7.5px;fill:var(--muted);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
 .bm-cap{text-align:center;min-height:1.4em;margin:2px 0 0}
 .bm-key{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
 .bm-key span{display:flex;align-items:center;gap:5px}
@@ -2505,7 +2536,7 @@ function lbRace(P) {
     say = above === lead ? `${escH(lbFirst(lead))} leads. <b>${pts(gap)}</b> to catch up.` : `${escH(lbFirst(lead))} leads. <b>${pts(gap)}</b> to pass ${escH(lbFirst(above))}.`; }
   const lane = (r, i) => { const w = r.wk.plan ? `${r.wk.done}/${r.wk.plan} workouts` : `${r.wk.done} workout${r.wk.done === 1 ? "" : "s"}`, first = pl[i] === 0 && r.wk.pts > 0 && !solo;
     return `<div class="wr-l${r.me ? " me" : ""}${first ? " lead" : ""}" style="--p:${(r.wk.pts / top).toFixed(3)};--k:${lbCol(r)};--i:${i}">
-      <span class="wr-pl num">${pl[i] + 1}</span>
+      <span class="wr-pl num${!solo && pl[i] < 3 && r.wk.pts ? " md" : ""}" style="--md:${MEDAL[pl[i]] || "transparent"}">${pl[i] + 1}</span>
       <span class="wr-m"><span class="wr-t"><b>${escH(lbFirst(r))}</b><small>${w}${r.wk.prs ? ` · ${r.wk.prs} PR${r.wk.prs === 1 ? "" : "s"}` : ""}</small></span>
         <span class="wr-tr"><i class="wr-f"></i><span class="wr-a">${lbAva(r)}${first ? IC_CROWN : ""}</span></span></span>
       <span class="wr-v"><b class="num" data-count="${r.wk.pts}">${r.wk.pts}</b><small>pts</small></span></div>`; };
@@ -2542,8 +2573,9 @@ function lbH2H(P) {
     const c = v == null ? " no" : row.vis ? (any && !lead ? " dim" : "") : lead ? " gold" : any ? " lo" : "";
     return `<span class="hh-v${r.me && !solo ? " me" : ""}${c}">${v == null ? "–" : row.vis ? row.vis(v, r) : row.f(v, r)}</span>`; };
   const head = solo ? "" : `<div class="hh-row hh-head"><span class="hh-k hh-cap">Gold is the best of the group</span>${cols.map((r, k) => `<span class="hh-p${r.me ? " me" : ""}${wins[k] === topW && topW ? " best" : ""}">${lbAva(r)}<b>${escH(lbFirst(r))}</b><small><span class="num">${wins[k]}</span> win${wins[k] === 1 ? "" : "s"}</small></span>`).join("")}</div>`;
-  const body = secs.map(x => `<div class="hh-sec"><b>${x.t}</b>${!solo && x.rows.length ? `<small>You lead ${x.mine} of ${x.rows.length}</small>` : ""}</div>`
-    + (x.rows.length ? x.rows.map(row => `<div class="hh-row" style="--i:${row.i}"><span class="hh-k"><b>${escH(row.k)}</b>${row.s ? `<small>${row.s}</small>` : ""}</span>${cols.map((_, k) => cell(row, k)).join("")}</div>`).join("")
+  const SC = { Consistency: "var(--good)", "Best lifts": "var(--pull)", Muscles: "var(--core)" };
+  const body = secs.map(x => `<div class="hh-sec" style="--sc:${SC[x.t]}"><b>${x.t}</b>${!solo && x.rows.length ? `<small>You lead ${x.mine} of ${x.rows.length}</small>` : ""}</div>`
+    + (x.rows.length ? x.rows.map(row => `<div class="hh-row${row.i % 2 ? " z" : ""}" style="--i:${row.i}"><span class="hh-k"><b>${escH(row.k)}</b>${row.s ? `<small>${row.s}</small>` : ""}</span>${cols.map((_, k) => cell(row, k)).join("")}</div>`).join("")
       : `<p class="small muted hh-empty">${x.empty}</p>`)).join("");
   return `<section class="card hh"><div class="hh-h"><b>${solo ? "Your numbers" : "Head to head"}</b></div>
     ${solo ? `<p class="hh-solo">Add a friend and every row becomes a head-to-head, with the best of each in gold.</p>` : ""}
@@ -2559,10 +2591,13 @@ function friendsHTML(anim) {
   const code = FBS.code ? FBS.code.slice(0, 3) + " " + FBS.code.slice(3) : "…", lv = levelOf(me ? me.p.xp || 0 : 0);
   const person = (id, name, photo, sub, btns) => `<div class="lb-rq">${lbAva({ id, name, photo: okPhoto(photo) ? photo : "" })}<span class="lb-n"><b>${escH(name)}</b><small>${sub}</small></span>${btns}</div>`;
   return `<div class="lb-wrap${anim ? " lb-anim" : ""}" style="--c:var(--push)">
-    <section class="card lb-me">
+    <section class="card lb-me" style="--lc:${lv.col}">
       <div class="me-row"><span class="me-ava">${lbAva(me, "me-a")}<span class="me-cam">${IC_CAM}</span><input type="file" accept="image/*" id="lbphoto" aria-label="Choose a profile photo"></span>
         <span class="me-n"><b>${escH(me.name)}</b><small><span class="me-lv">${lvlBadge(lv, 20, false)}</span>Level ${lv.L} · ${escH(lv.name)}</small></span>
         <button class="me-inv" data-act="lbinv" aria-expanded="${!!FBS.inv}">Invite<svg class="i" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></button></div>
+      ${(() => { const L = P.slice().sort((a, b) => b.wk.pts - a.wk.pts), pl = lbPlaces(L, r => r.wk.pts), mi = L.indexOf(me), c = me.p.cons;
+        return `<div class="me-st"><span class="${pl[mi] === 0 && P.length > 1 && me.wk.pts ? "gold" : ""}"><b class="num">${P.length > 1 ? "#" + (pl[mi] + 1) : me.wk.pts}</b><small>${P.length > 1 ? `of ${P.length} this week` : "points this week"}</small></span>
+          <span><b class="num">${me.p.streak || 0}<i>d</i></b><small>streak</small></span><span><b class="num">${c ? c.pct + "<i>%</i>" : "–"}</b><small>regularity</small></span></div>`; })()}
       <div class="lb-dd${FBS.inv ? " open" : ""}" id="lbdd"><div class="lb-dd-in">
         <div class="dd-code"><span>Your code</span><b class="num">${code}</b></div>
         <div class="dd-btns"><button class="btn sm" data-act="lbshare" ${FBS.code ? "" : "disabled"}>Send my code</button><button class="btn sm ghost" data-act="lbaddopen">Enter a code</button></div>
@@ -2671,10 +2706,9 @@ function vFriends(anim) {
   if (FB.user && Date.now() - FBS.at > 8000) setTimeout(() => lbRefresh(true), 30); // fresh numbers each time you open the tab
   const ready = FBS.list !== null; FBS.animNext = !ready; // very first time: the cards are dealt once the numbers are in
   FBS.sig = lbSig(); if (anim && ready && !REDUCED) FBS.animUntil = Date.now() + 2200;
-  // numbers older than a few seconds: hold the deal (up to 0.9 s) until the fresh ones arrive, so it plays once, with the right cards
-  FBS.hold = !!(anim && ready && !REDUCED && FB.user && Date.now() - FBS.at > 8000);
-  if (FBS.hold) { clearTimeout(FBS.ht); FBS.ht = setTimeout(lbRelease, 900); }
-  return friendsHTML(anim && ready).replace('class="lb-wrap lb-anim"', FBS.hold ? 'class="lb-wrap lb-anim lb-hold"' : 'class="lb-wrap lb-anim"');
+  // the entrance plays once, straight away, with the last numbers; fresher ones are put in quietly once it has finished
+  FBS.hold = false;
+  return friendsHTML(anim && ready);
 }
 function lbRelease() {
   if (!FBS.hold) return; FBS.hold = false; clearTimeout(FBS.ht);
@@ -2684,7 +2718,6 @@ function lbRelease() {
 // what the tab shows; a refresh that changes nothing doesn't redraw (no flicker, no replayed animation)
 const lbSig = () => JSON.stringify([FBS.list, FBS.reqIn, FBS.code, FBS.msg, Object.entries(FBS.prof).map(([k, p]) => p && [k, p.name, p.week, p.cons, p.streak, p.lvl, p.lifts, p.mus, (p.photo || "").length])]);
 async function lbRefresh(force) { await fbLoadSocial(force);
-  if (FBS.hold && S.tab === "friends") { if (lbSig() !== FBS.sig) { FBS.hold = false; clearTimeout(FBS.ht); lbRedraw(true); } else lbRelease(); return; }
   lbUpdate(); }
 // redraw only when something visible changed, and never in the middle of the entrance
 function lbUpdate() {
@@ -3597,14 +3630,16 @@ function slotInfo(d, i, doc = dayDoc(d)) {
   // whatever was already logged in this slot that day stays (switching a mode mid-workout keeps your sets)
   const tId = TRAVEL[base.id], trav = tId ? (has(tId) || (trav0 && !has(base.id) && !(ALT[base.id] && has(ALT[base.id][0])))) : trav0;
   let ex = base, auto = null;
+  const chose = !!(doc && doc.swap && doc.swap[i] != null); // you picked this slot's exercise yourself today: that choice is what you see
   if (trav && base.id in TRAVEL) { const t = TRAVEL[base.id]; if (t === null) { if (!kept) auto = "travel"; } else ex = mkEx(base, t, { travel: true }); }
-  else if (swapOn(d, doc, base, i) && (!trav || TRAVEL_OK.has(ALT[base.id][0]))) ex = altOf(base); // in travel mode, only swaps that need no machine
+  else if (swapOn(d, doc, base, i) && (!trav || chose || TRAVEL_OK.has(ALT[base.id][0]))) ex = altOf(base); // in travel mode, only swaps that need no machine, unless you chose it
   if (!ex.travel) { const pf = plFix()[ex.id]; if (pf && pf.kind === "reps" && pf.d <= d && d <= pf.until && !wkOf(d).light) ex = varEx(ex, { r: pf.r, plr: pf.until }); }
   const area = injOn(d);
   if (area && !kept && !auto) {
     let r = injFor(d, i, area, ex.id, trav);
     if (r && r !== "light" && r !== "skip" && has(ex.id)) r = null; // already logged the normal one
     if (r === "skip" && has(ex.id)) r = null;
+    if (r && chose) r = "light"; // your own pick for today stays: injury mode only makes it lighter
     if (r === "skip") auto = "injury";
     else if (r === "light") ex = varEx(ex, { s: Math.min(ex.s, 2), injL: area });
     else if (r) ex = mkEx(ex, r, { inj: area, injS: true });
@@ -4661,12 +4696,22 @@ function bodyMap(R) {
         "M48.6 57.5C47.8 68 47.8 80 48.4 92.4Q48.8 95 50 95V55.5Z",                         // lower back
         "M49.4 97C44 96 37.8 98.4 35.6 103.6C34.6 108.4 36.6 113.4 41.6 114.4C45.4 115 48.4 113.4 49.4 111Z"] // glutes
   };
-  const mus = list => list.map(([m, d]) => `<path class="bm-m ${lvl(m)}" data-act="bm" data-m="${m}" d="${d}" style="${fill(m)}"><title>${lab(m)}: level ${R[m] ? R[m].L : 1}</title></path>`).join("");
+  const mus = list => list.map(([m, d], j) => `<path class="bm-m ${lvl(m)}" data-act="bm" data-m="${m}" d="${d}" style="${fill(m)};--j:${j}"><title>${lab(m)}: level ${R[m] ? R[m].L : 1}</title></path><path class="bm-sh ${lvl(m)}" d="${d}" style="--j:${j}"/>`).join("");
   const half = side => `${side.u.map(d => `<path class="bm-u" d="${d}"/>`).join("")}${mus(side.m)}`;
-  const fig = (x, side, label) => `<g transform="translate(${x} 0)">
+  // the three strongest muscles get their level on the body
+  const TAGC = { F: { Chest: [42, 46], "Side delts": [24.5, 44], "Front delts": [31, 43], Biceps: [25.6, 61], Abs: [46.6, 76], Quads: [41, 128] },
+    B: { Lats: [40, 64], "Side delts": [24.5, 44], "Rear delts": [31, 43], Triceps: [25, 60], Hamstrings: [41.5, 132], Calves: [42, 163] } };
+  const tops = MUSCLES.filter(([m]) => R[m] && R[m].pts).sort((a, b) => R[b[0]].pts - R[a[0]].pts).slice(0, 3).map(x => x[0]), used = { F: [], B: [] };
+  const tag = (k, m, n) => { const c = TAGC[k][m]; if (!c) return ""; let x = 100 - c[0]; if (used[k].some(([a, b]) => Math.hypot(a - x, b - c[1]) < 13)) x = c[0]; used[k].push([x, c[1]]);
+    const r = R[m], hx = [0, 1, 2, 3, 4, 5].map(i => { const a = (60 * i - 90) * Math.PI / 180; return `${(6.6 * Math.cos(a)).toFixed(2)},${(6.6 * Math.sin(a)).toFixed(2)}`; }).join(" ");
+    return `<g class="bm-tag" transform="translate(${x} ${c[1]})" style="--rc:${r.col};--n:${n}" data-act="bm" data-m="${m}"><g class="bm-tg"><polygon points="${hx}"/><text y="2.6" text-anchor="middle">${r.L}</text></g></g>`; };
+  const tagsFor = k => tops.map((m, n) => tag(k, m, n)).join("");
+  const fig = (x, side, label, k) => `<g transform="translate(${x} 0)">
+      <ellipse class="bm-floor" cx="50" cy="188" rx="30" ry="4.2"/>
       <g class="bm-out"><path d="${SIL}"/><path d="${SIL}" transform="translate(100 0) scale(-1 1)"/>${HEAD}</g>
       <g class="bm-base"><path d="${SIL}"/><path d="${SIL}" transform="translate(100 0) scale(-1 1)"/>${HEAD}</g>
       <g>${half(side)}</g><g transform="translate(100 0) scale(-1 1)">${half(side)}</g>
+      ${tagsFor(k)}
       <text class="bm-l" x="50" y="205" text-anchor="middle">${label}</text></g>`;
   // ranked list: highest level first; each chip shows the level badge, the rank name and the way to the next level
   const list = MUSCLES.slice().sort((a, b) => R[b[0]].pts - R[a[0]].pts || b[2] - a[2]);
@@ -4675,8 +4720,12 @@ function bodyMap(R) {
       <span class="mg-t"><span class="mg-n">${label}${pr ? `<i class="mg-pr" aria-label="priority muscle"></i>` : ""}</span><span class="mg-s">${r.pts ? r.tier : "Not trained yet"}</span><span class="mg-b"><i></i></span></span></button>`; }).join("");
   const top = list[0], tr = R[top[0]], avg = list.reduce((a, [m]) => a + R[m].L, 0) / list.length;
   const reached = MR_TIERS.filter((t, i) => list.some(([m]) => R[m].pts && R[m].ti === i));
-  return `<div class="bmap"><svg viewBox="0 0 214 210" role="img" aria-label="Body map coloured by each muscle's rank">
-      ${fig(2, F, "Front")}${fig(112, B, "Back")}</svg>
+  const first = !S.bmSeen; S.bmSeen = true; // the muscles light up one after another once per visit
+  return `<div class="bmap${first && !REDUCED ? " bm-in" : ""}" style="--top:${tr.pts ? tr.col : "var(--bm0)"}"><div class="bm-stage"><svg viewBox="0 0 214 210" role="img" aria-label="Body map coloured by each muscle's rank">
+      <defs><linearGradient id="bmBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" class="bm-g0"/><stop offset="1" class="bm-g1"/></linearGradient>
+        <linearGradient id="bmSheen" x1="0" y1="0" x2=".7" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".42"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
+        <radialGradient id="bmFloor"><stop offset="0" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient></defs>
+      ${fig(2, F, "Front", "F")}${fig(112, B, "Back", "B")}</svg></div>
     <p class="small bm-cap" id="bm-cap">${tr.pts ? `Strongest: <b>${top[1]}</b> · level ${tr.L} ${tr.tier}. <span class="muted">Average level ${avg.toFixed(1)}.</span>` : `<span class="muted">Finish a set and its muscle starts climbing.</span>`}</p>
     <div class="bm-key">${MR_TIERS.slice(1).map(([n, name, c]) => `<span class="${reached.some(t => t[1] === name) ? "" : "off"}"><i style="background:${c}"></i>${name} <small class="num">${n}+</small></span>`).join("")}</div>
     <div class="mg">${chips}</div></div>`;
@@ -4882,8 +4931,12 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22i";
+const APP_VER = "2026-11-22j";
 const NEWS = [
+  { v: "2026-11-22j", d: "22 Nov", items: [
+    ["var(--push)", "Swaps always work", "A swap you pick for the day is applied every time, also in travel mode and injury mode (injury mode only makes it lighter)."],
+    ["var(--core)", "A new look for your muscles", "The body on Home is lit up like a stage: rounded muscles, a glow on your best ones, and the level of your three strongest right on the body."],
+    ["#F0AE2E", "Friends, polished", "Your card shows your place this week, streak and regularity. Medals in the race, and the table is easier to follow."]] },
   { v: "2026-11-22i", d: "22 Nov", items: [
     ["var(--push)", "A new Friends tab", "This week is now a race: everyone's lane, the leader in gold, and how many points you need to pass the next person."],
     ["#F0AE2E", "Everything side by side", "Level, regularity, streaks, best lifts and every muscle in one table, one column per friend. No more switching: the best of each row is in gold."]] },
@@ -5369,7 +5422,7 @@ function weekVol(mon) {
 }
 function musclesCard() {
   const R = muscleRanks(); setTimeout(mrPulse, 500);
-  return `<section class="card" style="--c:var(--push)"><h2 class="sec-t">Muscle ranks</h2><p class="small muted" style="margin-bottom:4px">Every finished set gives its muscle 1 point, a record 3. The more you train a muscle, the faster it climbs. A dot marks your priority muscles.</p>${bodyMap(R)}</section>`;
+  return `<section class="card mr-card" style="--c:var(--push)"><h2 class="sec-t">Muscle ranks</h2><p class="small muted" style="margin-bottom:4px">Every finished set gives its muscle 1 point, a record 3. The more you train a muscle, the faster it climbs. A dot marks your priority muscles.</p>${bodyMap(R)}</section>`;
 }
 function weekSection() {
   const mon = addD(mondayOf(today()), S.weekOff * 7), sun = addD(mon, 6), t = today();
@@ -6465,7 +6518,7 @@ document.addEventListener("click", e => {
   if (a === "pick") { S.exSel = b.dataset.v; softRenderAnim(); view.querySelector("#exsel").scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "center" }); return; }
   if (a === "gotoday") return goToday();
   if (a === "demo") return openDemo(b.dataset.w, +b.dataset.v);
-  if (a === "swapui") { const d = S.sel, i = +b.dataset.v; S.swapEdit = d + ":" + i; replaceCard(slotEx(d, i).id + "@" + i) || flipList(); return; }
+  if (a === "swapui") { const d = S.sel, i = +b.dataset.v; S.swapEdit = d + ":" + i; replaceCard(slotEx(d, i).id + "@" + i) || flipList(); revealBelow(".swap-ed"); return; }
   if (a === "swapcancel") { const d = S.sel, i = S.swapEdit ? +S.swapEdit.split(":")[1] : null; S.swapEdit = null; (i != null && replaceCard(slotEx(d, i).id + "@" + i)) || flipList(); return; }
   if (a === "swapdemo") { const d = S.sel; if (!S.swapEdit) return; const i = +S.swapEdit.split(":")[1], base = wkOf(d).ex[i]; return openDemo(wkKey(d), i, slotEx(d, i).alt ? base : altOf(base)); }
   if (a === "swapset") {
@@ -6628,6 +6681,12 @@ function toggleSet(btn) {
 /* ---- reorder / skip / express ---- */
 const foldT = {};
 function scheduleFold(k) { clearTimeout(foldT[k]); foldT[k] = setTimeout(() => { delete foldT[k]; foldCard(k); }, 850); }
+// scroll just enough that a panel that opened low on the screen sits above the rest timer and the tab bar
+function revealBelow(sel) {
+  requestAnimationFrame(() => { const el = $(sel); if (!el) return;
+    let lim = innerHeight - 12; for (const b of document.querySelectorAll(".tabs, #timer.show")) { const r = b.getBoundingClientRect(); if (r.height && r.top < innerHeight && r.bottom > 0) lim = Math.min(lim, r.top - 12); }
+    const r = el.getBoundingClientRect(), dy = r.bottom - lim; if (dy > 0) scrollBy({ top: Math.min(dy, Math.max(0, r.top - 80)), behavior: REDUCED ? "auto" : "smooth" }); });
+}
 function replaceCard(k) {
   const d = S.sel, list = $("#exlist"), card = list && list.querySelector(`.ex[data-card="${k}"]`);
   if (!card || S.edit) return false;
