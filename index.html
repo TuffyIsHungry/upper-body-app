@@ -4816,17 +4816,23 @@ function questFor(d) {
     const okSets = arr.slice(0, n).filter(q => q && q.ok);
     if (last && last.sets.length && !ex.bw && !travelOn(d)) { // weight quests make no sense with hotel dumbbells
       const ls = last.sets[last.sets.length - 1];
-      if (ls && ls.w > 0) C.push({ id: "rep-" + ex.id, ic: "rep", txt: `<b>${ex.n}</b>: one set of <b class="num">${kg(ls.w)} kg × ${ls.r + 1}</b> or better, 1 rep more than your last set last time.`, done: okSets.some(q => q.w >= ls.w && q.r >= ls.r + 1) });
+      if (ls && ls.w > 0) C.push({ id: "rep-" + ex.id, slot: it.i, ic: "rep", txt: `<b>${ex.n}</b>: one set of <b class="num">${kg(ls.w)} kg × ${ls.r + 1}</b> or better, 1 rep more than your last set last time.`, done: okSets.some(q => q.w >= ls.w && q.r >= ls.r + 1) });
       const step = /Dumbbell|lateral|curl|fly|Cable|cable|Face|extension|pushdown|raise/i.test(ex.n) ? 1 : 2.5, tw = last.top.w + step, low = rr ? rr[0] : 6;
-      if (last.top.w > 0) C.push({ id: "top-" + ex.id, ic: "top", txt: `<b>${ex.n}</b>: one set at <b class="num">${kg(tw)} kg</b> for ${low}+ reps, a new top weight.`, done: okSets.some(q => q.w >= tw && q.r >= low) });
+      if (last.top.w > 0) C.push({ id: "top-" + ex.id, slot: it.i, ic: "top", txt: `<b>${ex.n}</b>: one set at <b class="num">${kg(tw)} kg</b> for ${low}+ reps, a new top weight.`, done: okSets.some(q => q.w >= tw && q.r >= low) });
     }
-    if (MUSCLES.some(([m, , pr]) => pr && m === ex.m)) C.push({ id: "xs-" + ex.id, ic: "xs", txt: `<b>${ex.n}</b>: add an <b>extra set</b> and finish it. Your ${ex.m === "Lats" ? "back gets" : ex.m.toLowerCase() + (/s$/.test(ex.m) ? " get" : " gets")} more work today.`, done: xsets(d, it.k) > 0 && !!(arr[n - 1] && arr[n - 1].ok) });
+    if (MUSCLES.some(([m, , pr]) => pr && m === ex.m)) C.push({ id: "xs-" + ex.id, slot: it.i, ic: "xs", txt: `<b>${ex.n}</b>: add an <b>extra set</b> and finish it. Your ${ex.m === "Lats" ? "back gets" : ex.m.toLowerCase() + (/s$/.test(ex.m) ? " get" : " gets")} more work today.`, done: xsets(d, it.k) > 0 && !!(arr[n - 1] && arr[n - 1].ok) });
   }
   const pv = easy ? null : prevTime(d);
   if (pv) C.push({ id: "fast", ic: "fast", txt: `Finish today's <b>${wk.name}</b> faster than last time (<b class="num">${fmtDur(pv.ms)}</b>), with every set done.`, done: !!(doc && doc.done && doc.end && sessionMs(doc) < pv.ms) });
   if (!C.length) return null;
+  C.sort((a, b) => a.id < b.id ? -1 : 1); // the order of the exercises doesn't change the pick
   let h = 0; for (const ch of d) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
-  const q = (doc && doc.qd && C.find(c => c.id === doc.qd)) || C[h % C.length]; q.got = !!(doc && doc.qd); return q;
+  let pk = {}; try { pk = JSON.parse(lsGet("aub.qpick") || "{}") || {}; } catch (e) {}
+  const was = pk[d], same = was && (C.find(c => c.id === was.id) || C.find(c => c.ic === was.ic && was.slot != null && c.slot === was.slot)); // same quest, or the same kind on a swapped exercise
+  // no pick yet for today but one of its quests is already done (done before this version, or on another phone): that one counts
+  const q = (doc && doc.qd && C.find(c => c.id === doc.qd)) || same || (d === t && !was && C.find(c => c.done)) || C[h % C.length];
+  if (d === t && !was && !(doc && doc.qd)) { pk[d] = { id: q.id, ic: q.ic, slot: q.slot }; for (const k of Object.keys(pk).sort().slice(0, -8)) delete pk[k]; lsSet("aub.qpick", JSON.stringify(pk)); }
+  q.got = !!(doc && doc.qd); return q;
 }
 function questCard(d) {
   const q = questFor(d); if (!q) return "";
@@ -4979,7 +4985,8 @@ const CK_IC = '<svg class="i" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.
 setInterval(() => { if (!document.hidden) syncStw(); }, 1000);
 if (needsOB()) obOpen(); else setTimeout(maybeTour, 1400);
 setTimeout(() => maybeNews(), 2200);
-setTimeout(() => { try { checkMuscleRanks(); } catch (e) {} }, 300); // remember today's muscle levels, so the next climb is noticed
+setTimeout(() => { try { checkMuscleRanks(); } catch (e) {} }, 300);
+setTimeout(() => { try { checkQuest(); } catch (e) {} }, 1800); // a quest already finished (see questFor) is given when the app opens // remember today's muscle levels, so the next climb is noticed
 addEventListener("scroll", () => { if (S.tab === "today") { const b = $("#stw"); if (b && !b.hidden) { const row = $("#tmr"); let on = false; if (row && !row.hidden && S.sel === wkDay()) { const r = row.getBoundingClientRect(); on = r.bottom > 70 && r.top < innerHeight; } b.classList.toggle("dim", on); } } }, { passive: true });
 function syncLevelBadge() {
   const b = $("#lvlbtn"); if (!b) return; const v = levelNow(), k = v.L + ":" + v.into;
@@ -4989,8 +4996,11 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-22m";
+const APP_VER = "2026-11-23a";
 const NEWS = [
+  { v: "2026-11-23a", d: "23 Nov", items: [
+    ["#F0AE2E", "Bonus quests stay put", "The day's quest is chosen once and stays, even if you move, skip or swap exercises. A quest you already finished today is given when you open the app."],
+    ["var(--push)", "Extra sets fold like the rest", "An exercise with an extra set now folds away once every set is ticked."]] },
   { v: "2026-11-22m", d: "22 Nov", items: [
     ["var(--good)", "Quieter, sturdier saving", "The phone's storage was getting full with extra copies, so some saves didn't stick. Those copies moved to the phone's larger storage. Repairs now happen quietly and are listed in Settings → Your data."],
     ["var(--core)", "No more level-up bursts", "Opening the app no longer shows a pile of muscle level-ups for things that were simply restored."]] },
@@ -5440,6 +5450,7 @@ function refreshToday() {
     if (card) {
       const was = card.classList.contains("all");
       card.classList.toggle("all", ok === n);
+      const xd = card.querySelector(".xs-del"); if (xd && arr[n - 1] && arr[n - 1].ok) xd.remove(); // a ticked extra set can't be taken back
       if (!was && ok === n) shine(card);
       if (!was && ok === n && !S.open.has(k)) scheduleFold(k);
       if (ok < n && foldT[k]) { clearTimeout(foldT[k]); delete foldT[k]; }
@@ -6542,7 +6553,7 @@ document.addEventListener("click", e => {
     if (a === "xset") { doc.xs[k] = (doc.xs[k] || 0) + 1; if (doc.done) reopenDay(doc, d); }
     else { const it = plan(d).find(x => x.k === k), n = setsFor(d, it.ex, k), arr = doc.ex && doc.ex[k], lx = arr && arr[n - 1];
       if (lx && lx.ok) return toast("Untick the extra set first"); if (arr && arr.length >= n) arr.length = n - 1; doc.xs[k] = Math.max(0, (doc.xs[k] || 0) - 1); if (!doc.xs[k]) delete doc.xs[k]; }
-    touch("d" + d); S.open.add(k); replaceCard(k) || flipList(); refreshToday();
+    touch("d" + d); S.open.delete(k); replaceCard(k) || flipList(); refreshToday(); // the card is open anyway (a set to do), and folds when it's done
     if (a === "xsetdel") { const c = counts(d); if (c.tot && c.ok === c.tot && !doc.done) { doc.done = true; touch("d" + d); celebrate(); refreshToday(); } }
     return;
   }
