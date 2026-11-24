@@ -33,6 +33,13 @@
 #boot{--ba:#FF6A2B;--bon:#0B0E13;--bbg:#06080C;--bs:#1A1F29;--bfg:#F3F5F9;position:fixed;inset:0;z-index:9999;overflow:hidden;background:var(--bbg);box-shadow:0 0 0 100vmax var(--bbg);font-family:-apple-system,"SF Pro Display",system-ui,sans-serif;-webkit-font-smoothing:antialiased;
   --ang:-14deg;--t1:.28s}
 #boot .h{position:absolute;inset:0;overflow:hidden}
+/* the entrance waits at its first frame until the page can really draw it: after a cold start the phone is busy loading
+   for a moment, and an animation already "running" then would be mostly over before the first frame shows */
+#boot.hold,#boot.hold *,#boot.hold *::before,#boot.hold *::after{animation-play-state:paused!important}
+#boot .b-wait{position:absolute;left:50%;top:50%;width:72px;height:3px;margin:-1.5px 0 0 -36px;border-radius:2px;overflow:hidden;z-index:5;background:color-mix(in srgb,var(--bfg) 12%,transparent);opacity:0;transition:opacity .15s}
+#boot .b-wait::after{content:"";position:absolute;top:0;bottom:0;width:40%;border-radius:2px;background:var(--ba);animation:bWait .9s cubic-bezier(.45,0,.55,1) infinite}
+#boot.hold > :not(.b-wait){visibility:hidden}#boot.hold .b-wait{opacity:1;transition:opacity .3s .25s}#boot.hold .b-wait::after{animation-play-state:running!important}
+@keyframes bWait{from{transform:translateX(-100%)}to{transform:translateX(250%)}}
 #boot .h.o{clip-path:polygon(0 0,100% 0,100% 44.5%,0 55.5%);background:linear-gradient(160deg,color-mix(in srgb,var(--ba) 62%,#fff) 0%,var(--ba) 45%,color-mix(in srgb,var(--ba) 80%,#000) 100%);color:var(--bon);animation:bTop var(--t1) cubic-bezier(.6,0,.4,1.35) both}
 #boot .h.d{clip-path:polygon(0 55.5%,100% 44.5%,100% 100%,0 100%);background:radial-gradient(120% 70% at 50% 100%,var(--bs) 0%,var(--bbg) 62%);color:var(--bfg);animation:bBot var(--t1) cubic-bezier(.6,0,.4,1.35) both}
 #boot .h.o::before{content:"";position:absolute;inset:-50%;background:repeating-linear-gradient(-14deg,rgba(255,255,255,.07) 0 2px,transparent 2px 26px);animation:bSlide 6s linear infinite}
@@ -100,7 +107,7 @@ html.booting .app,html.booting .tabs{transition:transform .55s cubic-bezier(.2,.
 @media (prefers-reduced-motion: reduce){#boot *,#boot *::before{animation:none!important}#boot .seam{opacity:.35}#boot.gone{opacity:0;transition:opacity .3s}}
 @media (min-aspect-ratio: 10/19){#boot .b-dbw{left:14vw;right:14vw}#boot .b-dn{top:max(61vh,calc(50% + 25vw))}#boot .b-tg{top:86vh}#boot .b-tk{top:calc(86vh + 7vw)}}
 </style>
-<div id="boot" role="status" aria-label="Loading Upper Body"><div class="b-stage">
+<div id="boot" class="hold" role="status" aria-label="Loading Upper Body"><i class="b-wait"></i><div class="b-stage">
   <div class="h d"><div class="b-art">
     <div class="b-eb">Aesthetic</div>
     <div class="b-up"><span style="--i:0">U</span><span style="--i:1">P</span><span style="--i:2">P</span><span style="--i:3">E</span><span style="--i:4">R</span></div>
@@ -127,7 +134,7 @@ html.booting .app,html.booting .tabs{transition:transform .55s cubic-bezier(.2,.
   <div class="spk l"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div><div class="spk r"><i style="--a:-150deg;--d:70px;--s:0.02s"></i><i style="--a:-120deg;--d:95px;--s:0.04s"></i><i style="--a:-95deg;--d:60px;--s:0s"></i><i style="--a:-60deg;--d:85px;--s:0.03s"></i><i style="--a:-30deg;--d:70px;--s:0.05s"></i><i style="--a:10deg;--d:90px;--s:0.01s"></i><i style="--a:40deg;--d:65px;--s:0.04s"></i><i style="--a:75deg;--d:80px;--s:0s"></i><i style="--a:120deg;--d:70px;--s:0.03s"></i><i style="--a:160deg;--d:90px;--s:0.02s"></i></div>
   <div class="flash"></div>
 </div></div>
-<script>document.documentElement.classList.add("bootin","booting");try{var bt2=JSON.parse(localStorage.getItem("aub.boot2")||"null"),be2=document.getElementById("boot");if(bt2&&be2){for(var k in bt2)if(k!=="cls")be2.style.setProperty("--"+k,bt2[k]);if(bt2.cls)be2.classList.add(bt2.cls);document.documentElement.style.background=bt2.bbg;}var tc=(bt2&&/^#/.test(bt2.ba))?bt2.ba:"#FF6A2B";document.querySelectorAll('meta[name="theme-color"]').forEach(function(m){m.setAttribute("content",tc)});}catch(e){}</script>
+<script>document.documentElement.classList.add("bootin","booting");setTimeout(function(){var b=document.getElementById("boot");if(b)b.classList.remove("hold")},4000);try{var bt2=JSON.parse(localStorage.getItem("aub.boot2")||"null"),be2=document.getElementById("boot");if(bt2&&be2){for(var k in bt2)if(k!=="cls")be2.style.setProperty("--"+k,bt2[k]);if(bt2.cls)be2.classList.add(bt2.cls);document.documentElement.style.background=bt2.bbg;}var tc=(bt2&&/^#/.test(bt2.ba))?bt2.ba:"#FF6A2B";document.querySelectorAll('meta[name="theme-color"]').forEach(function(m){m.setAttribute("content",tc)});}catch(e){}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600;700&display=swap" media="print" onload="this.media='all'">
@@ -4996,8 +5003,10 @@ function syncLevelBadge() {
   if (grew && !REDUCED && b.animate) b.animate([{ transform: "scale(1)" }, { transform: "scale(1.25)" }, { transform: "scale(1)" }], { duration: 520, easing: "cubic-bezier(.3,1.5,.5,1)" });
 }
 /* What's new: shown once after an update (Settings → What's new lists the recent ones) */
-const APP_VER = "2026-11-23a";
+const APP_VER = "2026-11-24a";
 const NEWS = [
+  { v: "2026-11-24a", d: "24 Nov", items: [
+    ["var(--push)", "The opening plays in full", "After a while away, the phone needs a moment to load the app. The opening animation now waits for it and then plays from the start, instead of being half skipped."]] },
   { v: "2026-11-23a", d: "23 Nov", items: [
     ["#F0AE2E", "Bonus quests stay put", "The day's quest is chosen once and stays, even if you move, skip or swap exercises. A quest you already finished today is given when you open the app."],
     ["var(--push)", "Extra sets fold like the rest", "An exercise with an extra set now folds away once every set is ticked."]] },
@@ -7094,7 +7103,9 @@ let BOOT_HTML = "";
 render(true); BOOTED = true;
 { // loading screen: stays at least ~0.95 s so the entrance can finish, then the two halves slide apart
   const bt = document.getElementById("boot");
-  if (bt) { BOOT_HTML = bt.outerHTML; setTimeout(() => bootOut(bt), Math.max(0, (REDUCED ? 250 : 950) - performance.now())); } }
+  // start the entrance once a frame of the page has been drawn, then let it play in full (it used to be timed from when the
+  // app was launched, so a slow start after a while away cut it short)
+  if (bt) { BOOT_HTML = bt.outerHTML; requestAnimationFrame(() => requestAnimationFrame(() => { bt.classList.remove("hold"); setTimeout(() => bootOut(bt), REDUCED ? 250 : 950); })); } }
 // coming back to the app after a while (it was in the background, not closed) plays the loading animation again,
 // except during a workout, so switching to music between sets never gets in the way
 function bootOut(bt) {
@@ -7107,7 +7118,7 @@ function bootOut(bt) {
 }
 function playBoot(vars) {
   if (!BOOT_HTML || document.getElementById("boot")) return;
-  const tpl = document.createElement("template"); tpl.innerHTML = BOOT_HTML; const bt = tpl.content.firstElementChild; bt.classList.remove("gone", "sheen");
+  const tpl = document.createElement("template"); tpl.innerHTML = BOOT_HTML; const bt = tpl.content.firstElementChild; bt.classList.remove("gone", "sheen", "hold");
   if (vars) { for (const k in vars) if (k !== "cls") bt.style.setProperty("--" + k, vars[k]); if (vars.cls) bt.classList.add(vars.cls); }
   document.documentElement.classList.add("bootin", "booting"); document.body.appendChild(bt); setTimeout(() => bootOut(bt), REDUCED ? 250 : 950);
 }
